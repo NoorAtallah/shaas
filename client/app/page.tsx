@@ -7,8 +7,8 @@ export default function Home() {
   return (
     <div>
       <AIHeroSection />
-      {/* <ImpressiveSection />
-      <BenefitsSection />
+      <ImpressiveSection />
+      {/* <BenefitsSection />
       <SplineBreakerSection /> */}
       
 
