@@ -84,7 +84,7 @@ export default function FinalSection() {
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3))
 
     const material = new THREE.PointsMaterial({
-      size: 12,
+      size: 35,
       vertexColors: true,
       transparent: true,
       opacity: 0.9,
@@ -95,7 +95,7 @@ export default function FinalSection() {
     scene.add(points)
 
     let count = 0
-    let animationId: number
+    let animationId: number = 0 // Initialize with 0
 
     const animate = () => {
       animationId = requestAnimationFrame(animate)
