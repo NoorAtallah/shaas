@@ -63,7 +63,7 @@ export default function BreakerSection() {
             <div className="absolute inset-0 bg-gradient-to-br from-[#2de2fa]/20 via-[#0079bf]/10 to-transparent blur-3xl" />
             
             {/* Robot image - completely clean, no borders */}
-            <motion.div
+            {/* <motion.div
               animate={{ 
                 y: [0, -20, 0],
               }}
@@ -73,13 +73,13 @@ export default function BreakerSection() {
                 ease: "easeInOut"
               }}
               className="relative"
-            >
+            > */}
               <img 
                 src="/images/5.png" 
                 alt="AI Robot"
                 className="w-full h-auto relative z-10"
               />
-            </motion.div>
+            {/* </motion.div> */}
 
             {/* Decorative elements around robot */}
             <motion.div

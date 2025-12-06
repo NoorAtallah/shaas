@@ -1,27 +1,99 @@
 'use client'
 
-import { Suspense, lazy, useState, useEffect } from 'react'
+import { Suspense, lazy, useState, useEffect, useRef, useCallback } from 'react'
 import { ArrowRight, Brain, Zap, ChevronRight } from 'lucide-react'
 
 const SplineLoader = lazy(() => import('@splinetool/react-spline'))
 
 export default function InstantLoad3DHero() {
   const [show, setShow] = useState(false)
+  const [isInView, setIsInView] = useState(true)
+  const sectionRef = useRef(null)
+  const splineContainerRef = useRef(null)
+  const rafRef = useRef(null)
 
   useEffect(() => {
-    setShow(true)
+    rafRef.current = requestAnimationFrame(() => {
+      setShow(true)
+    })
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
   }, [])
 
+  const handleVisibilityChange = useCallback((isVisible) => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    
+    rafRef.current = requestAnimationFrame(() => {
+      setIsInView(isVisible)
+      
+      // Fixed: Use splineContainerRef instead and check properly
+      if (splineContainerRef.current) {
+        const canvas = splineContainerRef.current.querySelector('canvas')
+        if (canvas) {
+          if (!isVisible) {
+            canvas.style.visibility = 'hidden'
+            canvas.style.pointerEvents = 'none'
+            canvas.style.display = 'none'
+          } else {
+            canvas.style.visibility = 'visible'
+            canvas.style.pointerEvents = 'auto'
+            canvas.style.display = 'block'
+          }
+        }
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          handleVisibilityChange(entry.isIntersecting)
+        })
+      },
+      {
+        threshold: 0,
+        rootMargin: '-100px 0px'
+      }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current)
+      }
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+      }
+    }
+  }, [handleVisibilityChange])
+
   return (
-    <section className="relative min-h-screen w-full bg-black overflow-hidden">
-      {/* Simple gradient - NO blur */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0079bf]/8 via-black to-[#2de2fa]/8" />
+    <section 
+      ref={sectionRef}
+      className="relative min-h-screen w-full bg-black overflow-hidden"
+      style={{
+        willChange: 'transform',
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden'
+      }}
+    >
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-[#0079bf]/8 via-black to-[#2de2fa]/8"
+        style={{ transform: 'translateZ(0)' }}
+      />
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 py-12 min-h-screen flex items-center">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center w-full">
           
-          {/* Left - Content */}
-          <div className={`space-y-5 transition-opacity duration-300 ${show ? 'opacity-100' : 'opacity-0'}`}>
+          <div 
+            className={`space-y-5 transition-opacity duration-300 ${show ? 'opacity-100' : 'opacity-0'}`}
+            style={{ transform: 'translateZ(0)' }}
+          >
             
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0079bf]/20 border border-[#2de2fa]/30">
               <div className="w-2 h-2 rounded-full bg-[#2de2fa]" />
@@ -82,19 +154,20 @@ export default function InstantLoad3DHero() {
             </div>
           </div>
 
-          {/* Right - 3D loads immediately with simple loader */}
           <div 
+            ref={splineContainerRef}
             className={`relative h-[500px] md:h-[600px] lg:h-[700px] order-first lg:order-last transition-opacity duration-300 ${show ? 'opacity-100' : 'opacity-0'}`}
             style={{ 
-              contain: 'strict', 
-              isolation: 'isolate' 
+              contain: 'layout style paint',
+              contentVisibility: isInView ? 'visible' : 'hidden',
+              isolation: 'isolate',
+              transform: 'translateZ(0)',
+              willChange: isInView ? 'transform' : 'auto'
             }}
           >
-            {/* 3D Scene - loads immediately */}
             <Suspense 
               fallback={
                 <div className="w-full h-full flex items-center justify-center">
-                  {/* Simple minimalist loader */}
                   <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-[#2de2fa]/20 border-t-[#2de2fa] rounded-full animate-spin" />
                     <span className="text-sm text-gray-400">Loading 3D Scene...</span>
@@ -102,7 +175,13 @@ export default function InstantLoad3DHero() {
                 </div>
               }
             >
-              <div style={{ width: '100%', height: '100%' }}>
+              <div 
+                style={{ 
+                  width: '100%', 
+                  height: '100%',
+                  transform: 'translateZ(0)'
+                }}
+              >
                 <SplineLoader
                   scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
                   style={{ width: '100%', height: '100%' }}
@@ -110,8 +189,11 @@ export default function InstantLoad3DHero() {
               </div>
             </Suspense>
 
-            {/* Floating cards */}
-            <div className="absolute top-12 left-0 sm:left-4 bg-black/85 rounded-lg p-4 border border-white/10 shadow-xl pointer-events-none">
+            {/* Floating card 1 */}
+            <div 
+              className="absolute top-12 left-0 sm:left-4 bg-black/85 rounded-lg p-4 border border-white/10 shadow-xl pointer-events-none"
+              style={{ willChange: 'transform' }}
+            >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#0079bf] to-[#2de2fa] flex items-center justify-center flex-shrink-0">
                   <Brain className="w-5 h-5 text-white" />
@@ -123,14 +205,18 @@ export default function InstantLoad3DHero() {
               </div>
             </div>
 
-            <div className="absolute bottom-16 right-0 sm:right-4 bg-black/85 rounded-lg p-4 border border-white/10 shadow-xl pointer-events-none">
+            {/* Floating card 2 */}
+            <div 
+              className="absolute bottom-16 right-0 sm:right-4 bg-black/85 rounded-lg p-4 border border-white/10 shadow-xl pointer-events-none"
+              style={{ willChange: 'transform' }}
+            >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#2de2fa] to-[#0079bf] flex items-center justify-center flex-shrink-0">
                   <Zap className="w-5 h-5 text-white" />
                 </div>
                 <div className="min-w-0">
                   <div className="text-white font-semibold text-sm">Lightning Speed</div>
-                  <div className="text-gray-400 text-xs">Instant Response</div>
+                  <div className="text-xs text-gray-400">Instant Response</div>
                 </div>
               </div>
             </div>
