@@ -8,9 +8,9 @@ const SplineLoader = lazy(() => import('@splinetool/react-spline'))
 export default function InstantLoad3DHero() {
   const [show, setShow] = useState(false)
   const [isInView, setIsInView] = useState(true)
-  const sectionRef = useRef(null)
-  const splineContainerRef = useRef(null)
-  const rafRef = useRef(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const splineContainerRef = useRef<HTMLDivElement>(null)
+  const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
     rafRef.current = requestAnimationFrame(() => {
@@ -21,13 +21,12 @@ export default function InstantLoad3DHero() {
     }
   }, [])
 
-  const handleVisibilityChange = useCallback((isVisible) => {
+  const handleVisibilityChange = useCallback((isVisible: boolean) => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
     
     rafRef.current = requestAnimationFrame(() => {
       setIsInView(isVisible)
       
-      // Fixed: Use splineContainerRef instead and check properly
       if (splineContainerRef.current) {
         const canvas = splineContainerRef.current.querySelector('canvas')
         if (canvas) {
@@ -58,13 +57,14 @@ export default function InstantLoad3DHero() {
       }
     )
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
+    const currentSection = sectionRef.current
+    if (currentSection) {
+      observer.observe(currentSection)
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current)
+      if (currentSection) {
+        observer.unobserve(currentSection)
       }
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current)

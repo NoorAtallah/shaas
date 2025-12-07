@@ -105,10 +105,7 @@ export default function Footer() {
                 src="/images/4.png" 
                 alt="Robot"
                 className="w-full h-full object-contain"
-                animate={{ 
-                  y: [0, -10, 0],
-                  rotate: [0, -5, 5, 0]
-                }}
+              
                 transition={{ 
                   duration: 4,
                   repeat: Infinity,

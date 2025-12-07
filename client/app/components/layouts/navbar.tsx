@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ChevronDown } from 'lucide-react'
 
 export default function Navbar() {
+  const router = useRouter()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -17,10 +19,10 @@ export default function Navbar() {
   }, [])
 
   const navItems = [
-    { name: 'Services', href: '#services' },
-    { name: 'About', href: '#about' },
-    { name: 'Solutions', href: '#solutions' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+    { name: 'Solutions', href: '/solutions' },
+    { name: 'Contact', href: '/contact' },
   ]
 
   return (
@@ -38,8 +40,8 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <a href="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0079bf] to-[#2de2fa] flex items-center justify-center shadow-lg shadow-[#0079bf]/30 group-hover:shadow-[#2de2fa]/50 transition-all duration-300">
-              <span className="text-white font-bold text-xl">S</span>
+            <div className="w-15 h-15 rounded-xl  flex items-center justify-center shadow-lg shadow-[#0079bf]/30 group-hover:shadow-[#2de2fa]/50 transition-all duration-300">
+              <img src="/images/9.png" alt="" />
             </div>
             <div className="flex flex-col">
               <span className="text-white font-bold text-lg leading-none tracking-tight">

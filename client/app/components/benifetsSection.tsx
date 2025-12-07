@@ -13,13 +13,17 @@ export default function ProcessSection() {
       className="relative w-full bg-black overflow-hidden py-32"
     >
       {/* Rich Animated Network Background */}
-      <div className="absolute inset-0 opacity-30">
+      <div className="absolute inset-0 opacity-60">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="lineGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#2de2fa" stopOpacity="0.4" />
               <stop offset="50%" stopColor="#0079bf" stopOpacity="0.7" />
               <stop offset="100%" stopColor="#2de2fa" stopOpacity="0.4" />
+            </linearGradient>
+            <linearGradient id="lineGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#0079bf" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#2de2fa" stopOpacity="0.3" />
             </linearGradient>
           </defs>
           
@@ -121,49 +125,219 @@ export default function ProcessSection() {
         </svg>
       </div>
 
+      {/* Circuit Board Pattern */}
+      <div className="absolute inset-0 opacity-50">
+        <div className="absolute top-[15%] left-[8%] w-40 h-40">
+          <motion.div
+            className="absolute inset-0 border-2 border-[#2de2fa]/70 rounded-lg shadow-[0_0_20px_rgba(45,226,250,0.6)]"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute top-0 left-1/2 w-px h-4 bg-[#2de2fa] shadow-[0_0_10px_rgba(45,226,250,0.8)] -translate-x-1/2" />
+            <div className="absolute bottom-0 left-1/2 w-px h-4 bg-[#2de2fa] shadow-[0_0_10px_rgba(45,226,250,0.8)] -translate-x-1/2" />
+            <div className="absolute left-0 top-1/2 w-4 h-px bg-[#2de2fa] shadow-[0_0_10px_rgba(45,226,250,0.8)] -translate-y-1/2" />
+            <div className="absolute right-0 top-1/2 w-4 h-px bg-[#2de2fa] shadow-[0_0_10px_rgba(45,226,250,0.8)] -translate-y-1/2" />
+          </motion.div>
+        </div>
+        
+        <div className="absolute top-[45%] right-[12%] w-32 h-32">
+          <motion.div
+            className="absolute inset-0 border-2 border-[#0079bf]/70 rounded-lg shadow-[0_0_20px_rgba(0,121,191,0.6)]"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute top-0 left-1/2 w-px h-3 bg-[#0079bf] shadow-[0_0_10px_rgba(0,121,191,0.8)] -translate-x-1/2" />
+            <div className="absolute bottom-0 left-1/2 w-px h-3 bg-[#0079bf] shadow-[0_0_10px_rgba(0,121,191,0.8)] -translate-x-1/2" />
+            <div className="absolute left-0 top-1/2 w-3 h-px bg-[#0079bf] shadow-[0_0_10px_rgba(0,121,191,0.8)] -translate-y-1/2" />
+            <div className="absolute right-0 top-1/2 w-3 h-px bg-[#0079bf] shadow-[0_0_10px_rgba(0,121,191,0.8)] -translate-y-1/2" />
+          </motion.div>
+        </div>
+
+        <div className="absolute bottom-[20%] left-[25%] w-36 h-36">
+          <motion.div
+            className="absolute inset-0 border-2 border-[#2de2fa]/70 shadow-[0_0_20px_rgba(45,226,250,0.6)]"
+            style={{ clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)' }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute top-0 left-1/2 w-px h-5 bg-[#2de2fa] shadow-[0_0_10px_rgba(45,226,250,0.8)] -translate-x-1/2" />
+            <div className="absolute bottom-0 left-1/2 w-px h-5 bg-[#2de2fa] shadow-[0_0_10px_rgba(45,226,250,0.8)] -translate-x-1/2" />
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Floating Data Streams */}
+      <div className="absolute inset-0 overflow-hidden opacity-60">
+        <motion.div
+          className="absolute top-[25%] left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#2de2fa] to-transparent shadow-[0_0_15px_rgba(45,226,250,0.8)]"
+          animate={{ x: ['-100%', '100%'] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="absolute top-[55%] left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#0079bf] to-transparent shadow-[0_0_15px_rgba(0,121,191,0.8)]"
+          animate={{ x: ['100%', '-100%'] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear", delay: 1 }}
+        />
+        <motion.div
+          className="absolute top-[75%] left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#2de2fa] to-transparent shadow-[0_0_15px_rgba(45,226,250,0.8)]"
+          animate={{ x: ['-100%', '100%'] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "linear", delay: 2 }}
+        />
+      </div>
+
+      {/* Geometric Grid Overlay */}
+      <div className="absolute inset-0 opacity-25">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(rgba(45, 226, 250, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(45, 226, 250, 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '100px 100px'
+        }} />
+      </div>
+
+      {/* Neural Network Nodes */}
+      <motion.div
+        className="absolute top-[35%] left-[15%] w-4 h-4 rounded-full bg-[#2de2fa] shadow-[0_0_20px_rgba(45,226,250,0.9)]"
+        animate={{
+          scale: [1, 1.8, 1],
+          opacity: [0.6, 1, 0.6]
+        }}
+        transition={{ duration: 3, repeat: Infinity }}
+      />
+      <motion.div
+        className="absolute top-[38%] left-[18%] w-3 h-3 rounded-full bg-[#0079bf] shadow-[0_0_15px_rgba(0,121,191,0.9)]"
+        animate={{
+          scale: [1, 2, 1],
+          opacity: [0.7, 1, 0.7]
+        }}
+        transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
+      />
+      <motion.div
+        className="absolute top-[32%] left-[20%] w-3.5 h-3.5 rounded-full bg-[#2de2fa] shadow-[0_0_18px_rgba(45,226,250,0.9)]"
+        animate={{
+          scale: [1, 1.9, 1],
+          opacity: [0.6, 1, 0.6]
+        }}
+        transition={{ duration: 3.2, repeat: Infinity, delay: 1 }}
+      />
+      
+      <motion.div
+        className="absolute top-[60%] right-[20%] w-4 h-4 rounded-full bg-[#0079bf] shadow-[0_0_20px_rgba(0,121,191,0.9)]"
+        animate={{
+          scale: [1, 1.8, 1],
+          opacity: [0.6, 1, 0.6]
+        }}
+        transition={{ duration: 2.8, repeat: Infinity }}
+      />
+      <motion.div
+        className="absolute top-[63%] right-[23%] w-3 h-3 rounded-full bg-[#2de2fa] shadow-[0_0_15px_rgba(45,226,250,0.9)]"
+        animate={{
+          scale: [1, 2, 1],
+          opacity: [0.7, 1, 0.7]
+        }}
+        transition={{ duration: 3.5, repeat: Infinity, delay: 0.8 }}
+      />
+      <motion.div
+        className="absolute top-[57%] right-[18%] w-3.5 h-3.5 rounded-full bg-[#0079bf] shadow-[0_0_18px_rgba(0,121,191,0.9)]"
+        animate={{
+          scale: [1, 1.7, 1],
+          opacity: [0.6, 1, 0.6]
+        }}
+        transition={{ duration: 2.2, repeat: Infinity, delay: 1.2 }}
+      />
+
+      {/* Hexagon Tech Elements */}
+      <motion.div
+        className="absolute top-[18%] right-[30%] w-24 h-24"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+      >
+        <div className="absolute inset-0 border-2 border-[#2de2fa]/60 shadow-[0_0_25px_rgba(45,226,250,0.7)]" style={{
+          clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+        }}>
+          <motion.div
+            className="absolute inset-2 border-2 border-[#2de2fa]/80 shadow-[0_0_15px_rgba(45,226,250,0.8)]"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          />
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="absolute bottom-[30%] left-[40%] w-20 h-20"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+      >
+        <div className="absolute inset-0 border-2 border-[#0079bf]/60 shadow-[0_0_25px_rgba(0,121,191,0.7)]" style={{
+          clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+        }}>
+          <motion.div
+            className="absolute inset-2 border-2 border-[#0079bf]/80 shadow-[0_0_15px_rgba(0,121,191,0.8)]"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2.5, repeat: Infinity, delay: 1 }}
+          />
+        </div>
+      </motion.div>
+
       {/* Multiple dynamic glows */}
-      <div className="absolute top-[10%] left-[10%] w-[700px] h-[700px] bg-[#2de2fa]/12 rounded-full blur-[150px] animate-pulse" />
-      <div className="absolute top-[40%] right-[15%] w-[800px] h-[800px] bg-[#0079bf]/12 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute bottom-[15%] left-[25%] w-[600px] h-[600px] bg-[#2de2fa]/12 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '2s' }} />
-      <div className="absolute top-[60%] left-[5%] w-[500px] h-[500px] bg-[#0079bf]/12 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1.5s' }} />
+      <div className="absolute top-[10%] left-[10%] w-[700px] h-[700px] bg-[#2de2fa]/20 rounded-full blur-[120px] animate-pulse" />
+      <div className="absolute top-[40%] right-[15%] w-[800px] h-[800px] bg-[#0079bf]/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute bottom-[15%] left-[25%] w-[600px] h-[600px] bg-[#2de2fa]/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-[60%] left-[5%] w-[500px] h-[500px] bg-[#0079bf]/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1.5s' }} />
+
+      {/* Binary Rain Effect */}
+      <div className="absolute inset-0 overflow-hidden opacity-40">
+        <motion.div
+          className="absolute top-0 left-[10%] text-[#2de2fa] font-mono text-sm font-bold whitespace-pre drop-shadow-[0_0_8px_rgba(45,226,250,0.9)]"
+          animate={{ y: ['0%', '100%'] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        >
+          {`1\n0\n1\n1\n0\n1\n0\n1`}
+        </motion.div>
+        <motion.div
+          className="absolute top-0 left-[30%] text-[#0079bf] font-mono text-sm font-bold whitespace-pre drop-shadow-[0_0_8px_rgba(0,121,191,0.9)]"
+          animate={{ y: ['0%', '100%'] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear", delay: 2 }}
+        >
+          {`0\n1\n0\n1\n1\n0\n1\n0`}
+        </motion.div>
+        <motion.div
+          className="absolute top-0 right-[20%] text-[#2de2fa] font-mono text-sm font-bold whitespace-pre drop-shadow-[0_0_8px_rgba(45,226,250,0.9)]"
+          animate={{ y: ['0%', '100%'] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear", delay: 4 }}
+        >
+          {`1\n1\n0\n1\n0\n0\n1\n1`}
+        </motion.div>
+        <motion.div
+          className="absolute top-0 right-[45%] text-[#0079bf] font-mono text-sm font-bold whitespace-pre drop-shadow-[0_0_8px_rgba(0,121,191,0.9)]"
+          animate={{ y: ['0%', '100%'] }}
+          transition={{ duration: 16, repeat: Infinity, ease: "linear", delay: 1 }}
+        >
+          {`0\n0\n1\n1\n0\n1\n1\n0`}
+        </motion.div>
+      </div>
 
       {/* Floating particles */}
-      <div className="absolute top-[20%] left-[15%] w-2 h-2 rounded-full bg-[#2de2fa]/40 animate-ping" />
-      <div className="absolute top-[35%] right-[20%] w-2 h-2 rounded-full bg-[#0079bf]/40 animate-ping" style={{ animationDelay: '0.5s' }} />
-      <div className="absolute top-[70%] left-[30%] w-2 h-2 rounded-full bg-[#2de2fa]/40 animate-ping" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-[50%] right-[35%] w-2 h-2 rounded-full bg-[#0079bf]/40 animate-ping" style={{ animationDelay: '1.5s' }} />
-      <div className="absolute bottom-[25%] right-[15%] w-2 h-2 rounded-full bg-[#2de2fa]/40 animate-ping" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-[20%] left-[15%] w-3 h-3 rounded-full bg-[#2de2fa] shadow-[0_0_15px_rgba(45,226,250,1)] animate-ping" />
+      <div className="absolute top-[35%] right-[20%] w-3 h-3 rounded-full bg-[#0079bf] shadow-[0_0_15px_rgba(0,121,191,1)] animate-ping" style={{ animationDelay: '0.5s' }} />
+      <div className="absolute top-[70%] left-[30%] w-3 h-3 rounded-full bg-[#2de2fa] shadow-[0_0_15px_rgba(45,226,250,1)] animate-ping" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-[50%] right-[35%] w-3 h-3 rounded-full bg-[#0079bf] shadow-[0_0_15px_rgba(0,121,191,1)] animate-ping" style={{ animationDelay: '1.5s' }} />
+      <div className="absolute bottom-[25%] right-[15%] w-3 h-3 rounded-full bg-[#2de2fa] shadow-[0_0_15px_rgba(45,226,250,1)] animate-ping" style={{ animationDelay: '2s' }} />
+      
+      {/* Additional scattered particles */}
+      <div className="absolute top-[42%] left-[22%] w-2.5 h-2.5 rounded-full bg-[#2de2fa] shadow-[0_0_12px_rgba(45,226,250,1)] animate-ping" style={{ animationDelay: '2.5s' }} />
+      <div className="absolute top-[65%] right-[28%] w-2.5 h-2.5 rounded-full bg-[#0079bf] shadow-[0_0_12px_rgba(0,121,191,1)] animate-ping" style={{ animationDelay: '3s' }} />
+      <div className="absolute bottom-[40%] left-[45%] w-2.5 h-2.5 rounded-full bg-[#2de2fa] shadow-[0_0_12px_rgba(45,226,250,1)] animate-ping" style={{ animationDelay: '1.8s' }} />
 
       <div className="relative z-10 container mx-auto px-6 max-w-7xl">
         
-        {/* Peeking Robot 1 - Top left edge */}
-        {/* <motion.div
-          initial={{ x: -200, opacity: 0, rotate: -15 }}
-          animate={isInView ? { x: 0, opacity: 1, rotate: 0 } : {}}
-          transition={{ 
-            duration: 1.2, 
-            ease: "easeOut", 
-            delay: 0.5,
-            type: "spring",
-            stiffness: 80
-          }}
-          className="absolute -left-32 top-[600px] w-64 h-64 pointer-events-none hidden lg:block z-20"
-        >
-          <motion.img 
-            src="/images/4.png" 
-            alt="Robot"
-            className="w-full h-full object-contain"
-            animate={{ 
-              y: [0, -8, 0],
-            }}
-            transition={{ 
-              duration: 3.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-        </motion.div> */}
-
         {/* Section intro */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -171,30 +345,40 @@ export default function ProcessSection() {
           transition={{ duration: 1 }}
           className="max-w-3xl mb-48 relative"
         >
-          {/* Peeking Robot behind text with pop-up animation */}
+          {/* Peeking Robot 1 - Behind text with elegant entrance */}
           <motion.div
-            initial={{ x: -150, y: 100, opacity: 0, scale: 0.5, rotate: -20 }}
-            animate={isInView ? { x: -80, y: 0, opacity: 1, scale: 1, rotate: 0 } : {}}
+            initial={{ x: -120, y: 80, opacity: 0, scale: 0.8 }}
+            animate={isInView ? { x: -80, y: 0, opacity: 1, scale: 1 } : {}}
             transition={{ 
-              duration: 1.2, 
-              ease: "easeOut", 
-              delay: 0.8,
-              type: "spring",
-              stiffness: 100,
-              damping: 15
+              duration: 1.6, 
+              ease: [0.34, 1.56, 0.64, 1], // Custom elastic ease
+              delay: 0.6,
             }}
             className="absolute -left-20 top-32 w-80 h-80 pointer-events-none hidden lg:block z-0"
           >
             <motion.img 
               src="/images/4.png" 
               alt="Robot"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain drop-shadow-[0_0_30px_rgba(45,226,250,0.3)]"
               animate={{ 
-                y: [0, -10, 0],
-                rotate: [0, 5, -5, 0]
+                y: [0, -8, 0],
               }}
               transition={{ 
-                duration: 3,
+                duration: 4.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                repeatType: "reverse"
+              }}
+            />
+            {/* Subtle glow effect */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-radial from-[#2de2fa]/20 to-transparent rounded-full blur-2xl"
+              animate={{
+                opacity: [0.3, 0.6, 0.3],
+                scale: [0.8, 1.1, 0.8]
+              }}
+              transition={{
+                duration: 4.5,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
@@ -311,29 +495,40 @@ export default function ProcessSection() {
           transition={{ duration: 1, delay: 1 }}
           className="max-w-3xl mx-auto mb-48 text-center relative"
         >
-          {/* Peeking Robot 2 - Right edge */}
+          {/* Peeking Robot 2 - Right edge with graceful slide */}
           <motion.div
-            initial={{ x: 200, opacity: 0, rotate: 15 }}
-            animate={isInView ? { x: 0, opacity: 1, rotate: 0 } : {}}
+            initial={{ x: 150, opacity: 0, scale: 0.85 }}
+            animate={isInView ? { x: 0, opacity: 1, scale: 1 } : {}}
             transition={{ 
-              duration: 1.2, 
-              ease: "easeOut", 
-              delay: 1.5,
-              type: "spring",
-              stiffness: 80
+              duration: 1.8, 
+              ease: [0.22, 1, 0.36, 1], // Smooth deceleration
+              delay: 1.2,
             }}
             className="absolute -right-40 -top-20 w-72 h-72 pointer-events-none hidden xl:block z-20"
           >
             <motion.img 
               src="/images/4.png" 
               alt="Robot"
-              className="w-full h-full object-contain transform scale-x-[-1]"
+              className="w-full h-full object-contain transform scale-x-[-1] drop-shadow-[0_0_30px_rgba(0,121,191,0.3)]"
               animate={{ 
-                y: [0, -10, 0],
-                rotate: [0, -5, 5, 0]
+                y: [0, -6, 0],
               }}
               transition={{ 
-                duration: 4,
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                repeatType: "reverse"
+              }}
+            />
+            {/* Subtle glow effect */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-radial from-[#0079bf]/20 to-transparent rounded-full blur-2xl"
+              animate={{
+                opacity: [0.2, 0.5, 0.2],
+                scale: [0.9, 1.15, 0.9]
+              }}
+              transition={{
+                duration: 5,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
@@ -441,29 +636,40 @@ export default function ProcessSection() {
           transition={{ duration: 1, delay: 1.8 }}
           className="text-center relative"
         >
-          {/* Peeking Robot 3 - Bottom left */}
+          {/* Peeking Robot 3 - Bottom with gentle rise */}
           <motion.div
-            initial={{ x: -200, y: 100, opacity: 0, scale: 0.7 }}
-            animate={isInView ? { x: 0, y: 0, opacity: 1, scale: 1 } : {}}
+            initial={{ y: 100, opacity: 0, scale: 0.9 }}
+            animate={isInView ? { y: 0, opacity: 1, scale: 1 } : {}}
             transition={{ 
-              duration: 1.2, 
-              ease: "easeOut", 
-              delay: 2.2,
-              type: "spring",
-              stiffness: 90
+              duration: 2, 
+              ease: [0.16, 1, 0.3, 1], // Smooth anticipation curve
+              delay: 2,
             }}
             className="absolute -left-24 bottom-0 w-60 h-60 pointer-events-none hidden lg:block z-20"
           >
             <motion.img 
               src="/images/4.png" 
               alt="Robot"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain drop-shadow-[0_0_25px_rgba(45,226,250,0.25)]"
               animate={{ 
-                y: [0, -12, 0],
-                rotate: [0, 3, -3, 0]
+                y: [0, -7, 0],
               }}
               transition={{ 
-                duration: 3.2,
+                duration: 5.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                repeatType: "reverse"
+              }}
+            />
+            {/* Subtle glow effect */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-radial from-[#2de2fa]/15 to-transparent rounded-full blur-xl"
+              animate={{
+                opacity: [0.25, 0.5, 0.25],
+                scale: [0.85, 1.2, 0.85]
+              }}
+              transition={{
+                duration: 5.5,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
