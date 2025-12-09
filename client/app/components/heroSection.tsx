@@ -2,15 +2,30 @@
 
 import { Suspense, lazy, useState, useEffect, useRef, useCallback } from 'react'
 import { ArrowRight, Brain, Zap, ChevronRight } from 'lucide-react'
+import type { Application } from '@splinetool/runtime'
 
 const SplineLoader = lazy(() => import('@splinetool/react-spline'))
 
-export default function InstantLoad3DHero() {
+export default function OptimizedHero() {
   const [show, setShow] = useState(false)
   const [isInView, setIsInView] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const splineContainerRef = useRef<HTMLDivElement>(null)
+  const splineRef = useRef<Application | null>(null)
   const rafRef = useRef<number | null>(null)
+
+  // Detect mobile device and touch capability
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 1024 || 
+                     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      setIsMobile(mobile)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     rafRef.current = requestAnimationFrame(() => {
@@ -20,6 +35,27 @@ export default function InstantLoad3DHero() {
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
   }, [])
+
+  const onSplineLoad = useCallback((spline: Application) => {
+    splineRef.current = spline
+    
+    // Performance optimizations
+    if (spline && isMobile) {
+      try {
+        // Disable orbit controls on mobile to prevent lag
+        spline.setZoom(0.85)
+        
+        // Find and disable auto-rotation/animations on mobile
+        const canvas = splineContainerRef.current?.querySelector('canvas')
+        if (canvas) {
+          // Make it touch-responsive but less resource intensive
+          canvas.style.touchAction = 'pan-y pinch-zoom'
+        }
+      } catch (error) {
+        console.warn('Could not apply mobile optimizations:', error)
+      }
+    }
+  }, [isMobile])
 
   const handleVisibilityChange = useCallback((isVisible: boolean) => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
@@ -156,7 +192,7 @@ export default function InstantLoad3DHero() {
 
           <div 
             ref={splineContainerRef}
-            className={`relative h-[500px] md:h-[600px] lg:h-[700px] order-first lg:order-last transition-opacity duration-300 ${show ? 'opacity-100' : 'opacity-0'}`}
+            className={`relative ${isMobile ? 'h-[400px]' : 'h-[500px] md:h-[600px] lg:h-[700px]'} order-first lg:order-last transition-opacity duration-300 ${show ? 'opacity-100' : 'opacity-0'}`}
             style={{ 
               contain: 'layout style paint',
               contentVisibility: isInView ? 'visible' : 'hidden',
@@ -165,6 +201,12 @@ export default function InstantLoad3DHero() {
               willChange: isInView ? 'transform' : 'auto'
             }}
           >
+            {isMobile && (
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 px-4 py-2 bg-black/70 backdrop-blur-sm rounded-full border border-[#2de2fa]/30 text-xs text-gray-300">
+                Touch & drag to rotate
+              </div>
+            )}
+            
             <Suspense 
               fallback={
                 <div className="w-full h-full flex items-center justify-center">
@@ -179,47 +221,62 @@ export default function InstantLoad3DHero() {
                 style={{ 
                   width: '100%', 
                   height: '100%',
-                  transform: 'translateZ(0)'
+                  transform: 'translateZ(0)',
+                  ...(isMobile && {
+                    // Optimize rendering on mobile
+                    imageRendering: 'crisp-edges',
+                  })
                 }}
               >
                 <SplineLoader
                   scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                  style={{ width: '100%', height: '100%' }}
+                  style={{ 
+                    width: '100%', 
+                    height: '100%',
+                    // Better touch handling on mobile
+                    touchAction: isMobile ? 'pan-y pinch-zoom' : 'none'
+                  }}
+                  onLoad={onSplineLoad}
                 />
               </div>
             </Suspense>
 
-            {/* Floating card 1 */}
-            <div 
-              className="absolute top-12 left-0 sm:left-4 bg-black/85 rounded-lg p-4 border border-white/10 shadow-xl pointer-events-none"
-              style={{ willChange: 'transform' }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#0079bf] to-[#2de2fa] flex items-center justify-center flex-shrink-0">
-                  <Brain className="w-5 h-5 text-white" />
+            {/* Floating cards - hidden on mobile for better performance */}
+            {!isMobile && (
+              <>
+                {/* Floating card 1 */}
+                <div 
+                  className="absolute top-12 left-0 sm:left-4 bg-black/85 rounded-lg p-4 border border-white/10 shadow-xl pointer-events-none"
+                  style={{ willChange: 'transform' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#0079bf] to-[#2de2fa] flex items-center justify-center flex-shrink-0">
+                      <Brain className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-white font-semibold text-sm">Neural Processing</div>
+                      <div className="text-gray-400 text-xs">Advanced AI Core</div>
+                    </div>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <div className="text-white font-semibold text-sm">Neural Processing</div>
-                  <div className="text-gray-400 text-xs">Advanced AI Core</div>
-                </div>
-              </div>
-            </div>
 
-            {/* Floating card 2 */}
-            <div 
-              className="absolute bottom-16 right-0 sm:right-4 bg-black/85 rounded-lg p-4 border border-white/10 shadow-xl pointer-events-none"
-              style={{ willChange: 'transform' }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#2de2fa] to-[#0079bf] flex items-center justify-center flex-shrink-0">
-                  <Zap className="w-5 h-5 text-white" />
+                {/* Floating card 2 */}
+                <div 
+                  className="absolute bottom-16 right-0 sm:right-4 bg-black/85 rounded-lg p-4 border border-white/10 shadow-xl pointer-events-none"
+                  style={{ willChange: 'transform' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#2de2fa] to-[#0079bf] flex items-center justify-center flex-shrink-0">
+                      <Zap className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-white font-semibold text-sm">Lightning Speed</div>
+                      <div className="text-xs text-gray-400">Instant Response</div>
+                    </div>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <div className="text-white font-semibold text-sm">Lightning Speed</div>
-                  <div className="text-xs text-gray-400">Instant Response</div>
-                </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         </div>
       </div>
