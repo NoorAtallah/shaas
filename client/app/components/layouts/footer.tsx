@@ -117,18 +117,18 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-6">Get in Touch</h4>
             <ul className="space-y-3">
               <li className="text-gray-400">
-                <a href="mailto:hello@aistudio.com" className="hover:text-[#2de2fa] transition-colors">
-                  hello@aistudio.com
+                <a href="mailto:info@shaas-consulting.ae" className="hover:text-[#2de2fa] transition-colors">
+                  info@shaas-consulting.ae
                 </a>
               </li>
               <li className="text-gray-400">
                 <a href="tel:+1234567890" className="hover:text-[#2de2fa] transition-colors">
-                  +1 (234) 567-890
+                  +971 568474217
                 </a>
               </li>
               <li className="text-gray-400">
-                123 AI Street<br/>
-                San Francisco, CA 94102
+                AL Bateen <br/>
+                Abu Dhabi, UAE
               </li>
             </ul>
           </motion.div>

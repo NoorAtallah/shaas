@@ -274,12 +274,12 @@ export default function FinalSection() {
               Or reach out directly
             </p>
             <div className="flex flex-wrap justify-center gap-8 text-[#2de2fa]">
-              <a href="mailto:hello@aistudio.com" className="hover:text-white transition-colors text-lg">
-                hello@aistudio.com
+              <a href="mailto:info@shaas-consulting.ae" className="hover:text-white transition-colors text-lg">
+                info@shaas-consulting.ae
               </a>
               <span className="text-gray-600">•</span>
               <a href="tel:+1234567890" className="hover:text-white transition-colors text-lg">
-                +1 (234) 567-890
+                +971 568474217
               </a>
             </div>
           </motion.div>

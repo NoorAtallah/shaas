@@ -154,13 +154,13 @@ const ContactPage = () => {
                 {
                   icon: Mail,
                   label: "Email Us",
-                  primary: "hello@shaas.consulting",
-                  secondary: "business@shaas.consulting"
+                  primary: "info@shaas-consulting.ae",
+                  
                 },
                 {
                   icon: Phone,
                   label: "Call Us",
-                  primary: "+971 XX XXX XXXX",
+                  primary: "+971 568474217",
                   secondary: "Available 24/7"
                 },
                 {
@@ -248,7 +248,7 @@ const ContactPage = () => {
               {[
                 { icon: Linkedin, name: 'LinkedIn', handle: '@shaas-consulting' },
                 { icon: Twitter, name: 'Twitter', handle: '@shaasconsult' },
-                { icon: MessageSquare, name: 'WhatsApp', handle: '+971 XX XXX XXXX' },
+                { icon: MessageSquare, name: 'WhatsApp', handle: '+971 568474217' },
               ].map((social, index) => {
                 const Icon = social.icon;
                 return (
