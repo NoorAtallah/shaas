@@ -1,292 +1,355 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
-import { motion, useInView } from 'framer-motion'
-import * as THREE from 'three'
+import { useState, useEffect, useRef } from 'react'
+import { ArrowRight, ArrowUpRight, Mail, Phone, MapPin } from 'lucide-react'
 
-export default function FinalSection() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(containerRef, { once: true, amount: 0.1 })
-  const canvasContainerRef = useRef<HTMLDivElement>(null)
-  const sceneRef = useRef<{
-    scene: THREE.Scene
-    camera: THREE.PerspectiveCamera
-    renderer: THREE.WebGLRenderer
-    animationId: number
-  } | null>(null)
+export default function ElegantFinalSection() {
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!canvasContainerRef.current) return
-
-    const SEPARATION = 150
-    const AMOUNTX = 40
-    const AMOUNTY = 60
-
-    // Scene setup
-    const scene = new THREE.Scene()
-    scene.fog = new THREE.Fog(0x000000, 2000, 10000)
-
-    const camera = new THREE.PerspectiveCamera(
-      60,
-      (canvasContainerRef.current?.clientWidth || window.innerWidth) / 600,
-      1,
-      10000
-    )
-    camera.position.set(0, 200, 800)
-
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true,
-    })
-    renderer.setPixelRatio(window.devicePixelRatio)
-    
-    // Get container dimensions
-    const containerWidth = canvasContainerRef.current.clientWidth || window.innerWidth
-    const containerHeight = 600 // Match our container height
-    
-    renderer.setSize(containerWidth, containerHeight)
-    renderer.setClearColor(0x000000, 0)
-
-    canvasContainerRef.current.appendChild(renderer.domElement)
-
-    // Create particles
-    const positions: number[] = []
-    const colors: number[] = []
-
-    const geometry = new THREE.BufferGeometry()
-
-    // Brand colors in RGB
-    const color1 = { r: 45, g: 226, b: 250 } // #2de2fa
-    const color2 = { r: 0, g: 121, b: 191 } // #0079bf
-
-    for (let ix = 0; ix < AMOUNTX; ix++) {
-      for (let iy = 0; iy < AMOUNTY; iy++) {
-        const x = ix * SEPARATION - (AMOUNTX * SEPARATION) / 2
-        const y = 0
-        const z = iy * SEPARATION - (AMOUNTY * SEPARATION) / 2
-
-        positions.push(x, y, z)
-
-        // Alternate between brand colors
-        const useColor1 = (ix + iy) % 2 === 0
-        if (useColor1) {
-          colors.push(color1.r / 255, color1.g / 255, color1.b / 255)
-        } else {
-          colors.push(color2.r / 255, color2.g / 255, color2.b / 255)
-        }
-      }
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100
+      })
     }
-
-    geometry.setAttribute(
-      'position',
-      new THREE.Float32BufferAttribute(positions, 3)
-    )
-    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3))
-
-    const material = new THREE.PointsMaterial({
-      size: 15,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.9,
-      sizeAttenuation: true,
-    })
-
-    const points = new THREE.Points(geometry, material)
-    scene.add(points)
-
-    let count = 0
-    let animationId: number = 0 // Initialize with 0
-
-    const animate = () => {
-      animationId = requestAnimationFrame(animate)
-
-      const positionAttribute = geometry.attributes.position
-      const positions = positionAttribute.array as Float32Array
-
-      let i = 0
-      for (let ix = 0; ix < AMOUNTX; ix++) {
-        for (let iy = 0; iy < AMOUNTY; iy++) {
-          const index = i * 3
-
-          positions[index + 1] =
-            Math.sin((ix + count) * 0.3) * 50 +
-            Math.sin((iy + count) * 0.5) * 50
-
-          i++
-        }
-      }
-
-      positionAttribute.needsUpdate = true
-      renderer.render(scene, camera)
-      count += 0.03 // Slower animation (was 0.1)
-    }
-
-    const handleResize = () => {
-      const containerWidth = canvasContainerRef.current?.clientWidth || window.innerWidth
-      const containerHeight = 600
-      
-      camera.aspect = containerWidth / containerHeight
-      camera.updateProjectionMatrix()
-      renderer.setSize(containerWidth, containerHeight)
-    }
-
-    window.addEventListener('resize', handleResize)
-    animate()
-
-    sceneRef.current = {
-      scene,
-      camera,
-      renderer,
-      animationId,
-    }
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-
-      if (sceneRef.current) {
-        cancelAnimationFrame(sceneRef.current.animationId)
-
-        sceneRef.current.scene.traverse((object) => {
-          if (object instanceof THREE.Points) {
-            object.geometry.dispose()
-            if (Array.isArray(object.material)) {
-              object.material.forEach((material) => material.dispose())
-            } else {
-              object.material.dispose()
-            }
-          }
-        })
-
-        sceneRef.current.renderer.dispose()
-
-        if (canvasContainerRef.current && sceneRef.current.renderer.domElement) {
-          canvasContainerRef.current.removeChild(
-            sceneRef.current.renderer.domElement
-          )
-        }
-      }
-    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1 }
+    )
+    
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+    
+    return () => observer.disconnect()
+  }, [])
+
+  const stats = [
+    { value: '500', suffix: '+', label: 'Projects Delivered' },
+    { value: '98', suffix: '%', label: 'Client Satisfaction' },
+    { value: '15', suffix: '+', label: 'Years Excellence' },
+    { value: '50', suffix: '+', label: 'Global Partners' }
+  ]
 
   return (
     <section 
-      ref={containerRef}
-      className="relative w-full bg-black overflow-hidden py-40"
+      ref={sectionRef}
+      className="relative w-full bg-[#050507] overflow-hidden"
     >
-      {/* Animated Dotted Surface Background - positioned at bottom */}
-      <div 
-        ref={canvasContainerRef}
-        className="absolute bottom-0 left-0 right-0 h-[600px] pointer-events-none opacity-60"
-      />
-
-      {/* Gradient overlay for better text readability at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
-
-      <div className="relative z-10 container mx-auto px-6 max-w-7xl">
-        
-        {/* Main Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
-          className="text-center"
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="inline-block mb-12 px-8 py-4 bg-gradient-to-r from-[#2de2fa]/10 via-[#0079bf]/10 to-[#2de2fa]/10 backdrop-blur-xl rounded-full"
-          >
-            <span className="text-sm text-[#2de2fa] font-mono tracking-widest">LET'S BUILD THE FUTURE</span>
-          </motion.div>
-
-          <h2 className="text-6xl lg:text-8xl font-bold leading-tight mb-12">
-            <span className="text-white">Ready to Transform</span>
-            <br/>
-            <span className="text-white">Your Business with</span>
-            <br/>
-            <span className="bg-gradient-to-r from-[#2de2fa] via-[#0079bf] to-[#2de2fa] bg-clip-text text-transparent">
-              AI?
-            </span>
-          </h2>
-
-          <p className="text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto mb-16">
-            Join the innovators who are already leveraging intelligent systems to stay ahead. 
-            Your AI transformation starts with a conversation.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-20">
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="px-14 py-5 bg-gradient-to-r from-[#0079bf] to-[#2de2fa] rounded-full text-white font-bold text-xl hover:shadow-[0_0_60px_rgba(45,226,250,0.6)] transition-all duration-300 hover:scale-105"
-            >
-              Start Your Journey
-            </motion.button>
-            
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="px-14 py-5 rounded-full border-2 border-[#2de2fa]/30 text-white font-bold text-xl hover:bg-[#2de2fa]/10 backdrop-blur-sm transition-all duration-300"
-            >
-              Schedule a Demo
-            </motion.button>
-          </div>
-
-          {/* Stats or Features */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto mb-20"
-          >
-            {[
-              { number: '500+', label: 'Projects Delivered' },
-              { number: '98%', label: 'Client Satisfaction' },
-              { number: '24/7', label: 'Expert Support' },
-              { number: '∞', label: 'Innovation' },
-            ].map((stat, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.7 + idx * 0.1 }}
-                className="text-center"
-              >
-                <div className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#2de2fa] to-[#0079bf] bg-clip-text text-transparent mb-3">
-                  {stat.number}
-                </div>
-                <p className="text-sm text-gray-400">{stat.label}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="space-y-6"
-          >
-            <p className="text-gray-400 text-lg">
-              Or reach out directly
-            </p>
-            <div className="flex flex-wrap justify-center gap-8 text-[#2de2fa]">
-              <a href="mailto:info@shaas-consulting.ae" className="hover:text-white transition-colors text-lg">
-                info@shaas-consulting.ae
-              </a>
-              <span className="text-gray-600">•</span>
-              <a href="tel:+1234567890" className="hover:text-white transition-colors text-lg">
-                +971 568474217
-              </a>
-            </div>
-          </motion.div>
-
-        </motion.div>
-
+      {/* Noise texture */}
+      <div className="absolute inset-0 pointer-events-none z-20 opacity-[0.015]">
+        <svg width="100%" height="100%">
+          <filter id="finalNoise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+          </filter>
+          <rect width="100%" height="100%" filter="url(#finalNoise)"/>
+        </svg>
       </div>
+
+      {/* Animated wave dots background */}
+      <div className="absolute bottom-0 left-0 right-0 h-[500px] overflow-hidden pointer-events-none">
+        <div className="wave-container">
+          {[...Array(20)].map((_, rowIndex) => (
+            <div key={rowIndex} className="wave-row" style={{ '--row': rowIndex } as React.CSSProperties}>
+              {[...Array(40)].map((_, dotIndex) => (
+                <div 
+                  key={dotIndex} 
+                  className="wave-dot"
+                  style={{ 
+                    '--dot': dotIndex,
+                    '--delay': (rowIndex * 0.1 + dotIndex * 0.05)
+                  } as React.CSSProperties}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050507] via-[#050507]/60 to-transparent" />
+      </div>
+
+      {/* Fluid background orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div 
+          className="absolute w-[800px] h-[800px] transition-all duration-[3000ms] ease-out"
+          style={{
+            left: `${mousePos.x - 30}%`,
+            top: '10%',
+            background: 'radial-gradient(ellipse at center, rgba(0,170,255,0.08) 0%, transparent 60%)',
+            filter: 'blur(100px)',
+          }}
+        />
+        <div 
+          className="absolute w-[600px] h-[600px] transition-all duration-[4000ms] ease-out"
+          style={{
+            right: '10%',
+            bottom: '20%',
+            background: 'radial-gradient(ellipse at center, rgba(0,100,200,0.06) 0%, transparent 60%)',
+            filter: 'blur(120px)',
+          }}
+        />
+      </div>
+
+      {/* Main content */}
+      <div className="relative z-10">
+        
+        {/* CTA Section */}
+        <div className="px-8 lg:px-20 pt-32 pb-24">
+          <div className="max-w-5xl mx-auto text-center">
+            
+            {/* Top decorative element */}
+            <div 
+              className={`flex items-center justify-center gap-6 mb-12 transition-all duration-1000 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
+              }`}
+            >
+              <div className="w-20 h-[1px] bg-gradient-to-r from-transparent to-[#0af]/30" />
+              <div className="relative">
+                <div className="w-3 h-3 rotate-45 border border-[#0af]/50" />
+                <div className="absolute inset-0 w-3 h-3 rotate-45 border border-[#0af]/30 animate-ping" />
+              </div>
+              <div className="w-20 h-[1px] bg-gradient-to-l from-transparent to-[#0af]/30" />
+            </div>
+
+            {/* Label */}
+            <div 
+              className={`mb-8 transition-all duration-1000 delay-100 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+            >
+              <span className="text-[#0af] text-[10px] tracking-[0.5em] uppercase">
+                Let's Build The Future
+              </span>
+            </div>
+
+            {/* Main headline */}
+            <div className="mb-8">
+              <div className="overflow-hidden">
+                <h2 
+                  className={`text-[10vw] lg:text-[5vw] font-extralight text-white leading-[1.1] tracking-[-0.03em] transition-all duration-1000 delay-200 ${
+                    isVisible ? 'translate-y-0' : 'translate-y-full'
+                  }`}
+                >
+                  Ready to Transform
+                </h2>
+              </div>
+              <div className="overflow-hidden">
+                <h2 
+                  className={`text-[10vw] lg:text-[5vw] font-extralight text-white/40 leading-[1.1] tracking-[-0.03em] transition-all duration-1000 delay-300 ${
+                    isVisible ? 'translate-y-0' : 'translate-y-full'
+                  }`}
+                >
+                  Your Business?
+                </h2>
+              </div>
+            </div>
+
+            {/* Decorative line */}
+            <div 
+              className={`flex items-center justify-center gap-4 mb-10 transition-all duration-1000 delay-400 ${
+                isVisible ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#0af]/50" />
+              <div className="w-1.5 h-1.5 bg-[#0af]/50 rotate-45" />
+              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#0af]/50" />
+            </div>
+
+            {/* Description */}
+            <p 
+              className={`text-white/40 text-base lg:text-lg font-light leading-relaxed max-w-2xl mx-auto mb-14 transition-all duration-1000 delay-500 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+            >
+              Join visionary enterprises who are already leveraging our expertise. 
+              Your transformation journey starts with a 
+              <span className="text-white/70"> single conversation</span>.
+            </p>
+
+            {/* CTA Buttons */}
+            <div 
+              className={`flex flex-col sm:flex-row items-center justify-center gap-6 mb-20 transition-all duration-1000 delay-600 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+            >
+              <button className="group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0af] to-[#06f]" />
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                <span className="relative flex items-center gap-4 px-10 py-5 text-white text-[11px] tracking-[0.25em]">
+                  START YOUR JOURNEY
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </button>
+
+              <button className="group flex items-center gap-4 px-10 py-5 border border-white/10 hover:border-[#0af]/50 bg-white/[0.02] hover:bg-[#0af]/5 transition-all duration-500">
+                <span className="text-white/50 group-hover:text-white text-[11px] tracking-[0.2em] transition-colors">
+                  SCHEDULE A CALL
+                </span>
+                <ArrowUpRight className="w-4 h-4 text-white/30 group-hover:text-[#0af] transition-colors" />
+              </button>
+            </div>
+
+            {/* Stats */}
+            <div 
+              className={`grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-24 transition-all duration-1000 delay-700 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+            >
+              {stats.map((stat, idx) => (
+                <div 
+                  key={idx} 
+                  className="group text-center"
+                  style={{ transitionDelay: `${800 + idx * 100}ms` }}
+                >
+                  <div className="flex items-baseline justify-center gap-1 mb-2">
+                    <span className="text-4xl lg:text-5xl font-extralight text-white group-hover:text-[#0af] transition-colors duration-500">
+                      {stat.value}
+                    </span>
+                    <span className="text-xl text-[#0af]">{stat.suffix}</span>
+                  </div>
+                  <div className="text-white/30 text-[10px] tracking-[0.2em] uppercase group-hover:text-white/50 transition-colors">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Contact section */}
+        <div className="px-8 lg:px-20 py-16 border-t border-white/5">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid lg:grid-cols-3 gap-12 lg:gap-8">
+              
+              {/* Contact info */}
+              <div 
+                className={`text-center lg:text-left transition-all duration-1000 ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                }`}
+                style={{ transitionDelay: '900ms' }}
+              >
+                <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
+                  <Mail className="w-4 h-4 text-[#0af]" />
+                  <span className="text-white/30 text-[10px] tracking-[0.3em] uppercase">Email</span>
+                </div>
+                <a 
+                  href="mailto:info@shaas-consulting.ae" 
+                  className="text-white/60 hover:text-[#0af] text-sm font-light transition-colors"
+                >
+                  info@shaas-consulting.ae
+                </a>
+              </div>
+
+              <div 
+                className={`text-center transition-all duration-1000 ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                }`}
+                style={{ transitionDelay: '1000ms' }}
+              >
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <Phone className="w-4 h-4 text-[#0af]" />
+                  <span className="text-white/30 text-[10px] tracking-[0.3em] uppercase">Phone</span>
+                </div>
+                <a 
+                  href="tel:+971568474217" 
+                  className="text-white/60 hover:text-[#0af] text-sm font-light transition-colors"
+                >
+                  +971 568 474 217
+                </a>
+              </div>
+
+              <div 
+                className={`text-center lg:text-right transition-all duration-1000 ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                }`}
+                style={{ transitionDelay: '1100ms' }}
+              >
+                <div className="flex items-center justify-center lg:justify-end gap-3 mb-4">
+                  <MapPin className="w-4 h-4 text-[#0af]" />
+                  <span className="text-white/30 text-[10px] tracking-[0.3em] uppercase">Location</span>
+                </div>
+                <span className="text-white/60 text-sm font-light">
+                  Dubai, United Arab Emirates
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+   
+      </div>
+
+      {/* Styles */}
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Karla:wght@300;400;500&display=swap');
+        
+        * {
+          font-family: 'Karla', sans-serif;
+        }
+        
+        h1, h2, h3, h4 {
+          font-family: 'Cormorant Garamond', serif;
+        }
+
+        .wave-container {
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%) perspective(500px) rotateX(60deg);
+          width: 200%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 20px;
+          padding-bottom: 50px;
+        }
+
+        .wave-row {
+          display: flex;
+          gap: 30px;
+          justify-content: center;
+        }
+
+        .wave-dot {
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #0af, #06f);
+          opacity: 0.6;
+          animation: wave-float 4s ease-in-out infinite;
+          animation-delay: calc(var(--delay) * -0.1s);
+        }
+
+        @keyframes wave-float {
+          0%, 100% {
+            transform: translateY(0) scale(1);
+            opacity: 0.3;
+          }
+          50% {
+            transform: translateY(-30px) scale(1.2);
+            opacity: 0.8;
+          }
+        }
+
+        .wave-row:nth-child(odd) .wave-dot {
+          animation-delay: calc(var(--delay) * -0.1s + 0.5s);
+        }
+      `}</style>
     </section>
   )
 }
