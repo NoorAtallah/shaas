@@ -1,493 +1,497 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
 
-export default function ElegantProcessSection() {
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
-  const [isVisible, setIsVisible] = useState(false)
-  const [activeStep, setActiveStep] = useState(0)
-  const sectionRef = useRef<HTMLDivElement>(null)
+const BLUE = '#00aaff'
+const INK  = '#0a0a0a'
+
+const services = [
+  {
+    num: '01', tag: 'Strategy',
+    title: 'Marketing', sub: 'Consultancy',
+    img: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1400&q=85',
+    location: 'Abu Dhabi, UAE',
+    dek: 'Elevating enterprises through precision strategic vision and deep regional market intelligence.',
+    body: 'We craft brand narratives that resonate with Gulf audiences and international investors alike — from positioning frameworks that differentiate to go-to-market strategies that deliver measurable results across the UAE and MENA.',
+  },
+  {
+    num: '02', tag: 'Innovation',
+    title: 'Project', sub: 'Development',
+    img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1400&q=85',
+    location: 'ADGM Square, Abu Dhabi',
+    dek: 'Transforming visionary concepts into operational reality with precision and agility.',
+    body: 'Our project development team brings structured innovation to every engagement. We translate complex initiatives into delivery-ready programmes, managing risk and stakeholder alignment with the rigour Abu Dhabi demands.',
+  },
+  {
+    num: '03', tag: 'Operations',
+    title: 'Administrative', sub: 'Excellence',
+    img: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1400&q=85',
+    location: 'Abu Dhabi Global Market',
+    dek: 'Architecting operational mastery — embedding efficiency and control at every layer.',
+    body: 'Administrative excellence means building organisations that run with precision. We redesign workflows, governance structures, and operating models to eliminate friction and create scalable high-performance enterprises.',
+  },
+  {
+    num: '04', tag: 'People',
+    title: 'Human', sub: 'Capital',
+    img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=85',
+    location: 'Al Maryah Island, Abu Dhabi',
+    dek: 'Cultivating extraordinary talent — the most enduring competitive advantage.',
+    body: 'Our practice covers talent strategy, leadership development, and culture transformation — creating the conditions for people to perform at their highest potential and organisations to thrive across generations.',
+  },
+  {
+    num: '05', tag: 'Systems',
+    title: 'Logistics', sub: 'Intelligence',
+    img: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1400&q=85',
+    location: 'Khalifa Port, Abu Dhabi',
+    dek: 'Optimising global supply networks — resilient, efficient, intelligently adaptive.',
+    body: 'We apply advanced analytics and network modelling to transform supply chains into strategic assets. Leveraging Abu Dhabi\'s world-class logistics infrastructure, we design distribution networks that deliver competitive advantage.',
+  },
+]
+
+export default function ShaasHeroV3() {
+  const [active, setActive]     = useState(0)
+  const [fade, setFade]         = useState(true)
+  const [progressKey, setPK]    = useState(0)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const s = services[active]
+
+  function goTo(idx: number) {
+    if (idx === active) return
+    setFade(false)
+    setTimeout(() => { setActive(idx); setFade(true) }, 320)
+    setPK(k => k + 1)
+  }
+
+  function schedule(from: number) {
+    timerRef.current = setTimeout(() => {
+      const next = (from + 1) % services.length
+      goTo(next)
+      schedule(next)
+    }, 6000)
+  }
+
+  function handleClick(idx: number) {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    goTo(idx)
+    schedule(idx)
+  }
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100
-      })
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    schedule(0)
+    return () => { if (timerRef.current) clearTimeout(timerRef.current) }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
-      },
-      { threshold: 0.1 }
-    )
-    
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-    
-    return () => observer.disconnect()
-  }, [])
-
-  const steps = [
-    {
-      id: '01',
-      phase: 'Discovery',
-      title: 'Understanding',
-      subtitle: 'Your World',
-      desc: 'We immerse ourselves in your challenges through deep analysis and strategic thinking, finding opportunities hidden in complexity.',
-      timeline: 'Weeks 1-2',
-      details: ['Stakeholder Interviews', 'Market Analysis', 'Goal Definition', 'Resource Assessment']
-    },
-    {
-      id: '02',
-      phase: 'Design & Build',
-      title: 'Architecting',
-      subtitle: 'Excellence',
-      desc: 'Custom solutions designed precisely for your unique needs, built with precision methodology and attention to every detail.',
-      timeline: 'Weeks 3-8',
-      details: ['Strategic Planning', 'Solution Design', 'Implementation', 'Quality Assurance']
-    },
-    {
-      id: '03',
-      phase: 'Deploy',
-      title: 'Launch &',
-      subtitle: 'Transform',
-      desc: 'Seamless deployment with real-time monitoring and continuous optimization. Your solution evolves and improves every day.',
-      timeline: 'Week 9+',
-      details: ['System Integration', 'Team Training', 'Performance Monitoring', 'Iterative Refinement']
-    },
-    {
-      id: '04',
-      phase: 'Partnership',
-      title: 'Growing',
-      subtitle: 'Together',
-      desc: 'Your success drives us. We provide ongoing support, strategic guidance, and continuous innovation as your needs evolve.',
-      timeline: 'Ongoing',
-      details: ['Continuous Support', 'Strategic Reviews', 'Scalability Planning', 'Innovation Updates']
-    }
-  ]
 
   return (
-    <section 
-      ref={sectionRef}
-      className="relative w-full bg-[#050507] overflow-hidden"
-    >
-      {/* Noise texture */}
-      <div className="absolute inset-0 pointer-events-none z-10 opacity-[0.015]">
-        <svg width="100%" height="100%">
-          <filter id="processNoise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
-          </filter>
-          <rect width="100%" height="100%" filter="url(#processNoise)"/>
-        </svg>
-      </div>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", background: '#fff', color: INK, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,300;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
 
-      {/* Fluid background orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute w-[800px] h-[800px] transition-all duration-[3000ms] ease-out"
-          style={{
-            left: `${mousePos.x - 30}%`,
-            top: '15%',
-            background: 'radial-gradient(ellipse at center, rgba(0,170,255,0.05) 0%, transparent 60%)',
-            filter: 'blur(80px)',
-          }}
-        />
-        <div 
-          className="absolute w-[600px] h-[600px] transition-all duration-[4000ms] ease-out"
-          style={{
-            right: `${100 - mousePos.x - 20}%`,
-            top: '50%',
-            background: 'radial-gradient(ellipse at center, rgba(0,100,200,0.04) 0%, transparent 60%)',
-            filter: 'blur(100px)',
-          }}
-        />
-        <div 
-          className="absolute w-[700px] h-[700px] transition-all duration-[3500ms] ease-out"
-          style={{
-            left: '30%',
-            bottom: '10%',
-            background: 'radial-gradient(ellipse at center, rgba(0,170,255,0.04) 0%, transparent 60%)',
-            filter: 'blur(120px)',
-          }}
-        />
-      </div>
-
-      {/* Elegant vertical line */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2 pointer-events-none hidden lg:block">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
-      </div>
-
-      {/* Section content */}
-      <div className="relative z-10">
-        
-        {/* Section header */}
-        <div className="px-8 lg:px-20 pt-32 pb-24">
-          <div className="max-w-7xl mx-auto">
-            {/* Label */}
-            <div 
-              className={`flex items-center gap-4 mb-8 transition-all duration-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
-              <div className="w-2 h-2 bg-[#0af]" />
-              <span className="text-[#0af] text-[10px] tracking-[0.5em] uppercase">
-                The Journey
-              </span>
-              <div className="w-20 h-[1px] bg-gradient-to-r from-[#0af]/50 to-transparent" />
-            </div>
-
-            {/* Main heading */}
-            <div className="grid lg:grid-cols-2 gap-12 items-end">
-              <div>
-                <div className="overflow-hidden">
-                  <h2 
-                    className={`text-[12vw] lg:text-[6vw] font-extralight text-white leading-[0.9] tracking-[-0.03em] transition-all duration-1000 delay-100 ${
-                      isVisible ? 'translate-y-0' : 'translate-y-full'
-                    }`}
-                  >
-                    From Vision
-                  </h2>
-                </div>
-                <div className="overflow-hidden">
-                  <h2 
-                    className={`text-[12vw] lg:text-[6vw] font-extralight leading-[0.9] tracking-[-0.03em] transition-all duration-1000 delay-200 ${
-                      isVisible ? 'translate-y-0' : 'translate-y-full'
-                    }`}
-                  >
-                    <span className="text-white/40">To </span>
-                    <span 
-                      className="italic"
-                      style={{
-                        background: 'linear-gradient(90deg, #0af 0%, #06f 50%, #0af 100%)',
-                        backgroundSize: '200% 100%',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        animation: 'shimmer 4s linear infinite'
-                      }}
-                    >
-                      Reality
-                    </span>
-                  </h2>
-                </div>
-              </div>
-
-              <p 
-                className={`text-white/40 text-base lg:text-lg font-light leading-relaxed max-w-md lg:ml-auto transition-all duration-1000 delay-300 ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-              >
-                Every breakthrough starts with a single step. Here's how we transform
-                <span className="text-white/70"> ambitious ideas</span> into 
-                <span className="text-white/70"> intelligent, living systems</span>.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Process steps */}
-        <div className="px-8 lg:px-20 pb-32">
-          <div className="max-w-7xl mx-auto">
-            <div className="space-y-32 lg:space-y-48">
-              {steps.map((step, idx) => {
-                const isEven = idx % 2 === 0
-                
-                return (
-                  <div
-                    key={step.id}
-                    className={`relative transition-all duration-1000 ${
-                      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'
-                    }`}
-                    style={{ transitionDelay: `${400 + idx * 200}ms` }}
-                    onMouseEnter={() => setActiveStep(idx)}
-                  >
-                    {/* Giant background number */}
-                    <div 
-                      className={`absolute -top-24 lg:-top-40 pointer-events-none select-none ${
-                        isEven ? 'left-0 lg:-left-12' : 'right-0 lg:-right-12'
-                      }`}
-                    >
-                      <span 
-                        className={`text-[18rem] lg:text-[25rem] font-extralight leading-none transition-all duration-700 ${
-                          activeStep === idx ? 'opacity-100' : 'opacity-50'
-                        }`}
-                        style={{ 
-                          color: 'transparent',
-                          WebkitTextStroke: activeStep === idx ? '1px rgba(0,170,255,0.12)' : '1px rgba(0,170,255,0.04)',
-                        }}
-                      >
-                        {step.id}
-                      </span>
-                    </div>
-
-                    {/* Content grid */}
-                    <div className={`grid lg:grid-cols-12 gap-8 lg:gap-16 items-start ${
-                      isEven ? '' : 'lg:text-right'
-                    }`}>
-                      
-                      {/* Timeline indicator - Mobile */}
-                      <div className={`lg:hidden flex items-center gap-4 ${isEven ? '' : 'justify-end'}`}>
-                        <div className={`w-2 h-2 ${activeStep === idx ? 'bg-[#0af]' : 'bg-white/20'} transition-colors`} />
-                        <span className="text-white/30 text-[10px] tracking-[0.3em] uppercase">{step.phase}</span>
-                      </div>
-
-                      {/* Left column */}
-                      <div className={`lg:col-span-5 ${isEven ? 'lg:order-1' : 'lg:order-2 lg:col-start-8'}`}>
-                        {/* Phase tag */}
-                        <div className={`hidden lg:flex items-center gap-4 mb-8 ${isEven ? '' : 'justify-end'}`}>
-                          <div className={`flex items-center gap-3 px-4 py-2 border backdrop-blur-sm transition-all duration-500 ${
-                            activeStep === idx 
-                              ? 'border-[#0af]/30 bg-[#0af]/5' 
-                              : 'border-white/5 bg-white/[0.02]'
-                          }`}>
-                            <div className={`w-1.5 h-1.5 transition-colors duration-500 ${
-                              activeStep === idx ? 'bg-[#0af]' : 'bg-white/20'
-                            }`} />
-                            <span className={`text-[10px] tracking-[0.3em] uppercase transition-colors duration-500 ${
-                              activeStep === idx ? 'text-[#0af]' : 'text-white/40'
-                            }`}>
-                              {step.phase}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Title */}
-                        <div className={`mb-6 ${isEven ? '' : 'lg:text-right'}`}>
-                          <h3 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white leading-[1.1] tracking-[-0.02em]">
-                            {step.title}
-                            <br />
-                            <span className={`italic transition-colors duration-500 ${
-                              activeStep === idx ? 'text-[#0af]' : 'text-white/40'
-                            }`}>
-                              {step.subtitle}
-                            </span>
-                          </h3>
-                        </div>
-
-                        {/* Description */}
-                        <p className={`text-white/50 text-base lg:text-lg font-light leading-relaxed mb-8 ${
-                          isEven ? 'max-w-md' : 'max-w-md lg:ml-auto'
-                        }`}>
-                          {step.desc}
-                        </p>
-
-                        {/* Timeline */}
-                        <div className={`flex items-center gap-4 ${isEven ? '' : 'lg:justify-end'}`}>
-                          <div className={`h-[1px] transition-all duration-500 ${
-                            activeStep === idx ? 'w-12 bg-[#0af]' : 'w-8 bg-white/20'
-                          }`} />
-                          <span className="text-white/30 text-sm font-light">{step.timeline}</span>
-                        </div>
-                      </div>
-
-                      {/* Center spacer with connecting line */}
-                      <div className="hidden lg:flex lg:col-span-2 justify-center relative order-2">
-                        <div className="absolute top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent" />
-                        
-                        {/* Step indicator dot */}
-                        <div className={`sticky top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 transition-all duration-500 ${
-                          activeStep === idx 
-                            ? 'border-[#0af] bg-[#0af]/20 shadow-[0_0_20px_rgba(0,170,255,0.5)]' 
-                            : 'border-white/20 bg-[#050507]'
-                        }`}>
-                          <div className={`absolute inset-1 rounded-full transition-colors duration-500 ${
-                            activeStep === idx ? 'bg-[#0af]' : 'bg-transparent'
-                          }`} />
-                        </div>
-                      </div>
-
-                      {/* Right column - Details card */}
-                      <div className={`lg:col-span-5 ${isEven ? 'lg:order-3' : 'lg:order-1'}`}>
-                        <div className={`relative p-8 lg:p-10 transition-all duration-500 ${
-                          activeStep === idx 
-                            ? 'bg-white/[0.03] border border-[#0af]/20' 
-                            : 'bg-white/[0.01] border border-white/5'
-                        }`}>
-                          {/* Corner accents */}
-                          <div className={`absolute top-0 left-0 w-6 h-6 border-l border-t transition-colors duration-500 ${
-                            activeStep === idx ? 'border-[#0af]' : 'border-white/10'
-                          }`} />
-                          <div className={`absolute bottom-0 right-0 w-6 h-6 border-r border-b transition-colors duration-500 ${
-                            activeStep === idx ? 'border-[#0af]' : 'border-white/10'
-                          }`} />
-
-                          {/* Card header */}
-                          <div className="flex items-center justify-between mb-8">
-                            <span className={`text-3xl font-extralight transition-colors duration-500 ${
-                              activeStep === idx ? 'text-[#0af]' : 'text-white/20'
-                            }`}>
-                              {step.id}
-                            </span>
-                            <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 ${
-                              activeStep === idx 
-                                ? 'border-[#0af]/50 bg-[#0af]/10' 
-                                : 'border-white/10'
-                            }`}>
-                              <ArrowUpRight className={`w-4 h-4 transition-colors duration-500 ${
-                                activeStep === idx ? 'text-[#0af]' : 'text-white/30'
-                              }`} />
-                            </div>
-                          </div>
-
-                          {/* Details list */}
-                          <div className="space-y-4">
-                            {step.details.map((detail, didx) => (
-                              <div 
-                                key={didx}
-                                className="flex items-center gap-4 group"
-                              >
-                                <div className={`w-1.5 h-1.5 transition-colors duration-300 ${
-                                  activeStep === idx ? 'bg-[#0af]' : 'bg-white/20 group-hover:bg-white/40'
-                                }`} />
-                                <span className={`text-sm font-light transition-colors duration-300 ${
-                                  activeStep === idx ? 'text-white/70' : 'text-white/40 group-hover:text-white/60'
-                                }`}>
-                                  {detail}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Quote section */}
-        <div className="px-8 lg:px-20 py-24">
-          <div className="max-w-4xl mx-auto">
-            <div 
-              className={`relative text-center transition-all duration-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-              style={{ transitionDelay: '1200ms' }}
-            >
-              {/* Decorative lines */}
-              <div className="flex items-center justify-center gap-4 mb-12">
-                <div className="w-20 h-[1px] bg-gradient-to-r from-transparent to-[#0af]/30" />
-                <div className="w-2 h-2 rotate-45 border border-[#0af]/30" />
-                <div className="w-20 h-[1px] bg-gradient-to-l from-transparent to-[#0af]/30" />
-              </div>
-
-              <blockquote className="relative">
-                <p className="text-2xl lg:text-3xl font-light text-white/70 leading-relaxed italic">
-                  "Innovation isn't just building something new—it's building something that
-                  <span className="text-[#0af] not-italic font-normal"> transforms</span> how you work."
-                </p>
-              </blockquote>
-
-              {/* Decorative lines */}
-              <div className="flex items-center justify-center gap-4 mt-12">
-                <div className="w-20 h-[1px] bg-gradient-to-r from-transparent to-[#0af]/30" />
-                <div className="w-2 h-2 rotate-45 border border-[#0af]/30" />
-                <div className="w-20 h-[1px] bg-gradient-to-l from-transparent to-[#0af]/30" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="relative px-8 lg:px-20 py-32 border-t border-white/5">
-          {/* Background glow */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
-            <div className="w-[800px] h-[800px] bg-[#0af]/5 rounded-full blur-[200px]" />
-          </div>
-
-          <div className="max-w-4xl mx-auto text-center relative z-10">
-            {/* Decorative element */}
-            <div 
-              className={`flex items-center justify-center gap-4 mb-10 transition-all duration-1000 ${
-                isVisible ? 'opacity-100' : 'opacity-0'
-              }`}
-              style={{ transitionDelay: '1400ms' }}
-            >
-              <div className="w-16 h-[1px] bg-gradient-to-r from-transparent to-[#0af]/30" />
-              <div className="w-2 h-2 bg-[#0af] animate-pulse" />
-              <div className="w-16 h-[1px] bg-gradient-to-l from-transparent to-[#0af]/30" />
-            </div>
-
-            {/* Heading */}
-            <div className="overflow-hidden mb-8">
-              <h2 
-                className={`text-[10vw] lg:text-[5vw] font-extralight text-white leading-[1.1] tracking-[-0.03em] transition-all duration-1000 ${
-                  isVisible ? 'translate-y-0' : 'translate-y-full'
-                }`}
-                style={{ transitionDelay: '1500ms' }}
-              >
-                Ready to
-                <span 
-                  className="italic ml-4"
-                  style={{
-                    background: 'linear-gradient(90deg, #0af, #06f)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}
-                >
-                  Begin?
-                </span>
-              </h2>
-            </div>
-
-            <p 
-              className={`text-white/40 text-base lg:text-lg font-light leading-relaxed max-w-xl mx-auto mb-12 transition-all duration-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-              style={{ transitionDelay: '1600ms' }}
-            >
-              Your transformation starts with a conversation. 
-              Let's build the future together.
-            </p>
-
-            {/* Button */}
-            <div 
-              className={`transition-all duration-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-              style={{ transitionDelay: '1700ms' }}
-            >
-              <button className="group relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0af] to-[#06f]" />
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                <span className="relative flex items-center gap-4 px-12 py-5 text-white text-[11px] tracking-[0.25em]">
-                  START YOUR JOURNEY
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Styles */}
-      <style jsx>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Karla:wght@300;400;500&display=swap');
-        
-        * {
-          font-family: 'Karla', sans-serif;
+        /* ── HEADER ── */
+        .v3-header {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 0 48px; height: 64px;
+          border-bottom: 1px solid ${INK};
+          flex-shrink: 0;
         }
-        
-        h1, h2, h3, h4, blockquote {
-          font-family: 'Cormorant Garamond', serif;
+        .v3-logo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.18em; }
+        .v3-nav { display: flex; gap: 32px; }
+        .v3-nav a {
+          font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+          color: #888; text-decoration: none; cursor: pointer;
+          transition: color 0.2s;
+        }
+        .v3-nav a:hover { color: ${INK}; }
+        .v3-header-right { display: flex; align-items: center; gap: 20px; }
+        .v3-location-badge {
+          display: flex; align-items: center; gap: 7px;
+          font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #aaa;
+        }
+        .v3-loc-dot {
+          width: 6px; height: 6px; border-radius: 50%; background: ${BLUE};
+          animation: v3pulse 2s infinite;
+        }
+        @keyframes v3pulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(0,170,255,0.5); }
+          50%      { box-shadow: 0 0 0 5px rgba(0,170,255,0); }
+        }
+        .v3-cta-btn {
+          background: ${INK}; color: #fff; border: none;
+          padding: 10px 22px; font-size: 10px; letter-spacing: 0.25em;
+          text-transform: uppercase; font-family: 'DM Sans', sans-serif;
+          font-weight: 500; cursor: pointer; transition: background 0.25s;
+        }
+        .v3-cta-btn:hover { background: ${BLUE}; }
+
+        /* ── MAIN AREA ── */
+        .v3-main {
+          flex: 1; display: grid;
+          grid-template-rows: 1fr auto;
         }
 
-        @keyframes shimmer {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
+        /* ── HERO ROW ── */
+        .v3-hero {
+          display: grid;
+          grid-template-columns: 380px 1fr;
+          border-bottom: 1px solid ${INK};
+          overflow: hidden;
+          min-height: 0;
+        }
+
+        /* LEFT PANEL — stacked service list */
+        .v3-sidebar {
+          border-right: 1px solid ${INK};
+          display: flex; flex-direction: column;
+          overflow: hidden;
+        }
+
+        .v3-sidebar-head {
+          padding: 20px 28px 16px;
+          border-bottom: 1px solid rgba(0,0,0,0.08);
+          font-size: 9px; letter-spacing: 0.45em;
+          text-transform: uppercase; color: #aaa;
+        }
+
+        .v3-svc-row {
+          display: grid;
+          grid-template-columns: 40px 1fr 28px;
+          align-items: center;
+          padding: 0 28px;
+          height: 72px;
+          border-bottom: 1px solid rgba(0,0,0,0.07);
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          transition: background 0.2s;
+        }
+        .v3-svc-row::before {
+          content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+          width: 0; background: ${BLUE};
+          transition: width 0.3s ease;
+        }
+        .v3-svc-row.active::before { width: 3px; }
+        .v3-svc-row:hover { background: rgba(0,170,255,0.03); }
+
+        .v3-svc-n {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 13px; letter-spacing: 0.15em;
+          color: #ccc; transition: color 0.3s;
+        }
+        .v3-svc-row.active .v3-svc-n { color: ${BLUE}; }
+
+        .v3-svc-info { padding-left: 4px; }
+        .v3-svc-t {
+          font-family: 'Fraunces', serif;
+          font-size: 15px; font-weight: 800;
+          color: #bbb; transition: color 0.3s; line-height: 1.1;
+        }
+        .v3-svc-row.active .v3-svc-t { color: ${INK}; }
+        .v3-svc-s {
+          font-size: 10px; color: #ccc; font-style: italic;
+          font-family: 'Fraunces', serif; font-weight: 300;
+          transition: color 0.3s;
+        }
+        .v3-svc-row.active .v3-svc-s { color: #888; }
+
+        .v3-svc-arr {
+          font-size: 14px; color: #ddd;
+          transition: color 0.3s, transform 0.3s;
+          text-align: right;
+        }
+        .v3-svc-row.active .v3-svc-arr { color: ${BLUE}; transform: translateX(2px); }
+
+        /* sidebar bottom stats */
+        .v3-sidebar-stats {
+          margin-top: auto;
+          display: grid; grid-template-columns: 1fr 1fr;
+          border-top: 1px solid rgba(0,0,0,0.08);
+        }
+        .v3-ss-cell {
+          padding: 16px 20px;
+          border-right: 1px solid rgba(0,0,0,0.08);
+        }
+        .v3-ss-cell:nth-child(2), .v3-ss-cell:nth-child(4) { border-right: none; }
+        .v3-ss-cell:nth-child(3), .v3-ss-cell:nth-child(4) { border-top: 1px solid rgba(0,0,0,0.08); }
+        .v3-ss-val {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 26px; line-height: 1; color: ${INK};
+        }
+        .v3-ss-sym { color: ${BLUE}; font-size: 16px; }
+        .v3-ss-lbl {
+          font-size: 8px; letter-spacing: 0.25em;
+          text-transform: uppercase; color: #aaa; margin-top: 2px;
+        }
+
+        /* RIGHT PANEL — photo + content stacked */
+        .v3-content {
+          display: grid;
+          grid-template-rows: 1fr auto;
+          overflow: hidden;
+        }
+
+        /* photo fills top */
+        .v3-img-wrap {
+          position: relative; overflow: hidden;
+        }
+        .v3-img-wrap img {
+          width: 100%; height: 100%; object-fit: cover; display: block;
+          transition: opacity 0.4s ease, transform 1s ease;
+        }
+        .v3-img-grad {
+          position: absolute; inset: 0;
+          background: linear-gradient(to bottom, transparent 40%, rgba(255,255,255,0.9) 100%);
+          pointer-events: none;
+        }
+
+        /* floating tag on image */
+        .v3-img-tag {
+          position: absolute; top: 24px; left: 28px;
+          background: ${BLUE}; color: #fff;
+          font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase;
+          padding: 5px 14px; font-family: 'DM Sans', sans-serif; font-weight: 500;
+        }
+
+        /* Big ghost number */
+        .v3-ghost-num {
+          position: absolute; bottom: -10px; right: 24px;
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 160px; line-height: 1; letter-spacing: -0.03em;
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(0,0,0,0.07);
+          pointer-events: none; user-select: none;
+          transition: opacity 0.4s;
+        }
+
+        /* text block below image */
+        .v3-text-block {
+          padding: 28px 40px 28px;
+          border-top: 1px solid rgba(0,0,0,0.08);
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 32px;
+          align-items: start;
+        }
+
+        .v3-headline-wrap {}
+        .v3-h-eyebrow {
+          display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+        }
+        .v3-h-line { width: 20px; height: 2px; background: ${BLUE}; flex-shrink: 0; }
+        .v3-h-etxt {
+          font-size: 9px; letter-spacing: 0.45em; text-transform: uppercase;
+          color: ${BLUE}; font-weight: 500;
+        }
+        .v3-headline {
+          font-family: 'Fraunces', serif; font-weight: 800;
+          font-size: clamp(38px, 4.5vw, 60px);
+          line-height: 0.92; letter-spacing: -0.02em; color: ${INK};
+        }
+        .v3-headline-i {
+          font-family: 'Fraunces', serif; font-weight: 300; font-style: italic;
+          font-size: clamp(38px, 4.5vw, 60px);
+          line-height: 0.92; letter-spacing: -0.02em; color: #555;
+          margin-bottom: 16px;
+        }
+        .v3-dek {
+          font-family: 'Fraunces', serif; font-style: italic;
+          font-size: 13px; color: #777; line-height: 1.55;
+        }
+
+        .v3-body-wrap {
+          display: flex; flex-direction: column; gap: 16px;
+        }
+        .v3-body-text {
+          font-size: 12px; line-height: 1.75; color: #555; font-weight: 300;
+        }
+        .v3-actions {
+          display: flex; gap: 12px; align-items: center;
+        }
+        .v3-btn-p {
+          background: ${INK}; color: #fff; border: none;
+          padding: 10px 22px; font-size: 10px; letter-spacing: 0.25em;
+          text-transform: uppercase; font-family: 'DM Sans', sans-serif;
+          font-weight: 500; cursor: pointer; transition: background 0.25s;
+          white-space: nowrap;
+        }
+        .v3-btn-p:hover { background: ${BLUE}; }
+        .v3-btn-g {
+          background: none; border: none; border-bottom: 1px solid transparent;
+          font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+          color: #aaa; font-family: 'DM Sans', sans-serif; cursor: pointer;
+          padding: 10px 0; transition: color 0.2s, border-color 0.2s;
+          white-space: nowrap;
+        }
+        .v3-btn-g:hover { color: ${INK}; border-bottom-color: ${INK}; }
+
+        /* ── BOTTOM STRIP ── */
+        .v3-bottom {
+          display: grid;
+          grid-template-columns: 380px 1fr;
+          border-top: 1px solid ${INK};
+          flex-shrink: 0;
+        }
+        .v3-bottom-left {
+          border-right: 1px solid ${INK};
+          padding: 14px 28px;
+          display: flex; align-items: center; gap: 12px;
+        }
+        .v3-progress-track {
+          flex: 1; height: 2px; background: rgba(0,0,0,0.08);
+          position: relative; overflow: hidden;
+        }
+        .v3-progress-fill {
+          position: absolute; left: 0; top: 0; bottom: 0;
+          background: ${BLUE}; width: 0%;
+        }
+        .v3-progress-fill.run {
+          animation: v3prog 6s linear forwards;
+        }
+        @keyframes v3prog { from { width:0% } to { width:100% } }
+        .v3-prog-label {
+          font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #aaa;
+          white-space: nowrap;
+        }
+        .v3-counter {
+          font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.1em;
+          color: ${BLUE};
+        }
+
+        .v3-bottom-right {
+          padding: 14px 40px;
+          display: flex; align-items: center; justify-content: space-between;
+        }
+        .v3-addr {
+          font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: #aaa;
+        }
+        .v3-copy {
+          font-size: 9px; letter-spacing: 0.2em; color: #ccc;
+        }
+        .v3-social {
+          display: flex; gap: 16px;
+        }
+        .v3-social span {
+          font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+          color: #aaa; cursor: pointer; transition: color 0.2s;
+        }
+        .v3-social span:hover { color: ${BLUE}; }
+
+        @media (max-width: 960px) {
+          .v3-hero { grid-template-columns: 1fr; }
+          .v3-sidebar { display: none; }
+          .v3-text-block { grid-template-columns: 1fr; gap: 16px; }
+          .v3-bottom { grid-template-columns: 1fr; }
+          .v3-bottom-left { border-right: none; border-bottom: 1px solid ${INK}; }
         }
       `}</style>
-    </section>
+
+      {/* ── HEADER ──────────────────────────────── */}
+      <header className="v3-header">
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
+          <div className="v3-logo">SHAAS</div>
+          <div style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#aaa' }}>General Consulting</div>
+        </div>
+        <nav className="v3-nav">
+          {['Home', 'About', 'Solutions', 'Contact'].map(n => <a key={n}>{n}</a>)}
+        </nav>
+        <div className="v3-header-right">
+          <div className="v3-location-badge">
+            <div className="v3-loc-dot" />
+            Abu Dhabi, UAE
+          </div>
+          <button className="v3-cta-btn">Get Started ↗</button>
+        </div>
+      </header>
+
+      {/* ── MAIN ────────────────────────────────── */}
+      <div className="v3-main">
+        <div className="v3-hero">
+
+          {/* SIDEBAR */}
+          <div className="v3-sidebar">
+            <div className="v3-sidebar-head">Our Services</div>
+
+            {services.map((svc, idx) => (
+              <div
+                key={svc.num}
+                className={`v3-svc-row${idx === active ? ' active' : ''}`}
+                onClick={() => handleClick(idx)}
+              >
+                <div className="v3-svc-n">{svc.num}</div>
+                <div className="v3-svc-info">
+                  <div className="v3-svc-t">{svc.title}</div>
+                  <div className="v3-svc-s">{svc.sub}</div>
+                </div>
+                <div className="v3-svc-arr">→</div>
+              </div>
+            ))}
+
+            <div className="v3-sidebar-stats">
+              {[['500+','Projects'],['98%','Satisfaction'],['15+','Years'],['50+','Partners']].map(([v,l],i)=>(
+                <div className="v3-ss-cell" key={i}>
+                  <div className="v3-ss-val" style={{ color: i===3 ? BLUE : INK }}>
+                    {v.replace(/[^0-9]/g,'')}
+                    <span className="v3-ss-sym">{v.replace(/[0-9]/g,'')}</span>
+                  </div>
+                  <div className="v3-ss-lbl">{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CONTENT AREA */}
+          <div className="v3-content">
+            {/* Photo */}
+            <div className="v3-img-wrap">
+              <img
+                src={s.img} alt={s.title}
+                style={{ opacity: fade ? 1 : 0, transform: fade ? 'scale(1)' : 'scale(1.04)' }}
+              />
+              <div className="v3-img-grad" />
+              <div className="v3-img-tag">{s.tag}</div>
+              <div className="v3-ghost-num" style={{ opacity: fade ? 1 : 0 }}>{s.num}</div>
+            </div>
+
+            {/* Text block */}
+            <div className="v3-text-block">
+              <div className="v3-headline-wrap">
+                <div className="v3-h-eyebrow">
+                  <div className="v3-h-line" />
+                  <div className="v3-h-etxt">{s.tag} · {s.num}</div>
+                </div>
+                <div className="v3-headline" style={{ opacity: fade ? 1 : 0 }}>{s.title}</div>
+                <div className="v3-headline-i" style={{ opacity: fade ? 1 : 0 }}>{s.sub}</div>
+                <p className="v3-dek" style={{ opacity: fade ? 1 : 0 }}>{s.dek}</p>
+              </div>
+
+              <div className="v3-body-wrap">
+                <p className="v3-body-text" style={{ opacity: fade ? 1 : 0 }}>{s.body}</p>
+                <div className="v3-actions">
+                  <button className="v3-btn-p">Engage Now →</button>
+                  <button className="v3-btn-g">Case Studies</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── BOTTOM STRIP ─────────────────────── */}
+        <div className="v3-bottom">
+          <div className="v3-bottom-left">
+            <span className="v3-counter">{String(active + 1).padStart(2,'0')} / {String(services.length).padStart(2,'0')}</span>
+            <div className="v3-progress-track">
+              <div key={progressKey} className="v3-progress-fill run" />
+            </div>
+            <span className="v3-prog-label">Auto-advance</span>
+          </div>
+          <div className="v3-bottom-right">
+            <div className="v3-addr">ADGM Square · Al Maryah Island · Abu Dhabi</div>
+            <div className="v3-social">
+              {['LinkedIn','X','Instagram'].map(s => <span key={s}>{s}</span>)}
+            </div>
+            <div className="v3-copy">© 2025 SHAAS</div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

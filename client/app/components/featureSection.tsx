@@ -1,540 +1,337 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { ArrowUpRight, ArrowRight } from 'lucide-react'
 
-export default function ElegantServicesSection() {
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
-  const [isVisible, setIsVisible] = useState(false)
-  const [hoveredService, setHoveredService] = useState<number | null>(null)
-  const sectionRef = useRef<HTMLDivElement>(null)
+const services = [
+  {
+    num: '01', tag: 'Strategy', caption: 'Marketing Consultancy · 01',
+    img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
+    eyebrow: 'Featured Service',
+    h1line1: 'Strategic', h1line2: 'Excellence',
+    dek: 'Elevating brands through precision strategic vision — where insight meets execution at the highest level of consultancy.',
+    body: 'Our marketing consultancy practice combines rigorous market analysis with creative strategic thinking. We partner with leading enterprises to develop brand narratives that resonate, positioning frameworks that differentiate, and go-to-market strategies that deliver measurable results across the MENA region and beyond.'
+  },
+  {
+    num: '02', tag: 'Innovation', caption: 'Project Development · 02',
+    img: 'https://images.unsplash.com/photo-1497215842964-222b430dc094?w=1200&q=80',
+    eyebrow: 'Core Practice',
+    h1line1: 'Transforming', h1line2: 'Concepts',
+    dek: 'From ideation to delivery — we architect and execute complex initiatives that redefine what your organisation can achieve.',
+    body: 'Our project development team brings structured innovation to every engagement. With deep expertise across industries, we translate visionary concepts into operational reality, managing risk, stakeholder alignment, and delivery timelines with precision and agility.'
+  },
+  {
+    num: '03', tag: 'Operations', caption: 'Administrative Excellence · 03',
+    img: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&q=80',
+    eyebrow: 'Operational Mastery',
+    h1line1: 'Architecting', h1line2: 'Systems',
+    dek: 'Operational excellence is not a destination — it is a discipline. We embed efficiency, clarity, and control into every layer of your organisation.',
+    body: 'Administrative excellence means building organisations that run with precision. Our consultants redesign workflows, governance structures, and operational frameworks to eliminate friction and create scalable, high-performance operating models that sustain competitive advantage.'
+  },
+  {
+    num: '04', tag: 'People', caption: 'Human Capital · 04',
+    img: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80',
+    eyebrow: 'Talent Practice',
+    h1line1: 'Cultivating', h1line2: 'Talent',
+    dek: 'The most enduring competitive advantage is people. We help organisations attract, develop, and retain extraordinary talent at every level.',
+    body: 'Human capital is the ultimate differentiator. Our practice covers talent strategy, leadership development, culture transformation, and organisational design — creating the conditions for people to perform at their highest potential and organisations to thrive long-term.'
+  },
+  {
+    num: '05', tag: 'Systems', caption: 'Logistics Intelligence · 05',
+    img: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&q=80',
+    eyebrow: 'Supply Intelligence',
+    h1line1: 'Optimising', h1line2: 'Networks',
+    dek: 'In a connected world, logistics is strategy. We design and optimise supply chains that are resilient, efficient, and intelligently adaptive.',
+    body: 'Our logistics intelligence practice applies advanced analytics, network modelling, and process engineering to transform supply chains into strategic assets. We work with clients across the GCC to design distribution networks that deliver competitive speed and cost advantage.'
+  }
+]
+
+const stats = [
+  { val: '500', sym: '+', desc: 'Projects Completed' },
+  { val: '98',  sym: '%', desc: 'Client Satisfaction' },
+  { val: '50',  sym: '+', desc: 'Global Partners' },
+  { val: '15',  sym: '+', desc: 'Years of Excellence', blue: true },
+]
+
+export default function ShaasEditorialHero() {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [imgFade, setImgFade] = useState(true)
+  const [progressKey, setProgressKey] = useState(0)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const s = services[activeIndex]
+
+  function goTo(idx: number) {
+    if (idx === activeIndex) return
+    setImgFade(false)
+    setTimeout(() => { setActiveIndex(idx); setImgFade(true) }, 280)
+    setProgressKey(k => k + 1)
+  }
+
+  function schedule(from: number) {
+    timerRef.current = setTimeout(() => {
+      const next = (from + 1) % services.length
+      goTo(next)
+      schedule(next)
+    }, 6000)
+  }
+
+  function handleClick(idx: number) {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    goTo(idx)
+    schedule(idx)
+  }
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100
-      })
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    schedule(0)
+    return () => { if (timerRef.current) clearTimeout(timerRef.current) }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
-      },
-      { threshold: 0.1 }
-    )
-    
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-    
-    return () => observer.disconnect()
-  }, [])
-
-  const services = [
-    {
-      id: '01',
-      title: 'Marketing',
-      subtitle: 'Consultancy',
-      desc: 'Strategic brand elevation and market positioning that transforms emerging companies into industry-defining leaders through data-driven insights.',
-      features: ['Brand Strategy', 'Market Analysis', 'Growth Planning', 'Digital Presence'],
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
-      tag: 'Strategy'
-    },
-    {
-      id: '02',
-      title: 'Project',
-      subtitle: 'Development',
-      desc: 'End-to-end execution frameworks converting ambitious visions into measurable market success stories with precision methodology.',
-      features: ['Agile Methodology', 'Risk Management', 'Quality Assurance', 'Delivery Excellence'],
-      image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80',
-      tag: 'Innovation'
-    },
-    {
-      id: '03',
-      title: 'Administrative',
-      subtitle: 'Excellence',
-      desc: 'Operational frameworks engineered for sustainable excellence and organizational transformation across all business verticals.',
-      features: ['Process Optimization', 'Compliance', 'Documentation', 'Workflow Design'],
-      image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80',
-      tag: 'Operations'
-    },
-    {
-      id: '04',
-      title: 'Human',
-      subtitle: 'Capital',
-      desc: 'Building extraordinary teams through strategic talent architecture, leadership development, and culture transformation initiatives.',
-      features: ['Talent Acquisition', 'Leadership Dev', 'Culture Building', 'Performance'],
-      image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80',
-      tag: 'People'
-    },
-    {
-      id: '05',
-      title: 'Logistics',
-      subtitle: 'Intelligence',
-      desc: 'Optimizing global supply networks through advanced analytics, innovative distribution strategies, and cost optimization.',
-      features: ['Supply Chain', 'Distribution', 'Inventory Mgmt', 'Cost Optimization'],
-      image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80',
-      tag: 'Systems'
-    }
-  ]
-
-  const stats = [
-    { value: '500', suffix: '+', label: 'Projects Delivered' },
-    { value: '98', suffix: '%', label: 'Client Satisfaction' },
-    { value: '15', suffix: '+', label: 'Years Excellence' },
-    { value: '50', suffix: '+', label: 'Global Partners' }
-  ]
 
   return (
-    <section 
-      ref={sectionRef}
-      className="relative w-full bg-[#050507] overflow-hidden"
-    >
-      {/* Noise texture */}
-      <div className="absolute inset-0 pointer-events-none z-10 opacity-[0.015]">
-        <svg width="100%" height="100%">
-          <filter id="sectionNoise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
-          </filter>
-          <rect width="100%" height="100%" filter="url(#sectionNoise)"/>
-        </svg>
-      </div>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", background: '#fff', color: '#0a0a0a', minHeight: '100vh', overflow: 'hidden' }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
 
-      {/* Fluid background orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute w-[800px] h-[800px] transition-all duration-[3000ms] ease-out"
-          style={{
-            left: `${mousePos.x - 30}%`,
-            top: '10%',
-            background: 'radial-gradient(ellipse at center, rgba(0,170,255,0.06) 0%, transparent 60%)',
-            filter: 'blur(80px)',
-          }}
-        />
-        <div 
-          className="absolute w-[600px] h-[600px] transition-all duration-[4000ms] ease-out"
-          style={{
-            right: `${100 - mousePos.x - 20}%`,
-            top: '50%',
-            background: 'radial-gradient(ellipse at center, rgba(0,100,200,0.05) 0%, transparent 60%)',
-            filter: 'blur(100px)',
-          }}
-        />
-        <div 
-          className="absolute w-[500px] h-[500px] transition-all duration-[3500ms] ease-out"
-          style={{
-            left: '20%',
-            bottom: '10%',
-            background: 'radial-gradient(ellipse at center, rgba(0,170,255,0.04) 0%, transparent 60%)',
-            filter: 'blur(100px)',
-          }}
-        />
-      </div>
-
-      {/* Section content */}
-      <div className="relative z-10">
-        
-        {/* Section header */}
-        <div className="px-8 lg:px-20 pt-32 pb-24">
-          <div className="max-w-7xl mx-auto">
-            {/* Label */}
-            <div 
-              className={`flex items-center gap-4 mb-8 transition-all duration-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
-              <div className="w-2 h-2 bg-[#0af]" />
-              <span className="text-[#0af] text-[10px] tracking-[0.5em] uppercase">
-                Our Expertise
-              </span>
-              <div className="w-20 h-[1px] bg-gradient-to-r from-[#0af]/50 to-transparent" />
-            </div>
-
-            {/* Main heading */}
-            <div className="grid lg:grid-cols-2 gap-12 items-end">
-              <div>
-                <div className="overflow-hidden">
-                  <h2 
-                    className={`text-[12vw] lg:text-[6vw] font-extralight text-white leading-[0.9] tracking-[-0.03em] transition-all duration-1000 delay-100 ${
-                      isVisible ? 'translate-y-0' : 'translate-y-full'
-                    }`}
-                  >
-                    Services
-                  </h2>
-                </div>
-                <div className="overflow-hidden">
-                  <h2 
-                    className={`text-[12vw] lg:text-[6vw] font-extralight italic leading-[0.9] tracking-[-0.03em] transition-all duration-1000 delay-200 ${
-                      isVisible ? 'translate-y-0' : 'translate-y-full'
-                    }`}
-                    style={{
-                      background: 'linear-gradient(90deg, #0af 0%, #06f 50%, #0af 100%)',
-                      backgroundSize: '200% 100%',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      animation: 'shimmer 4s linear infinite'
-                    }}
-                  >
-                    & Solutions
-                  </h2>
-                </div>
-              </div>
-
-              <p 
-                className={`text-white/40 text-base lg:text-lg font-light leading-relaxed max-w-md lg:ml-auto transition-all duration-1000 delay-300 ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-              >
-                Five core disciplines working in harmony to transform 
-                <span className="text-white/70"> ambitious visions</span> into 
-                <span className="text-white/70"> measurable success</span>.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Services - Alternating layout */}
-        <div className="px-8 lg:px-20">
-          <div className="max-w-7xl mx-auto space-y-32 lg:space-y-48">
-            {services.map((service, idx) => {
-              const isEven = idx % 2 === 0
-              
-              return (
-                <div
-                  key={service.id}
-                  className={`transition-all duration-1000 ${
-                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'
-                  }`}
-                  style={{ transitionDelay: `${400 + idx * 150}ms` }}
-                  onMouseEnter={() => setHoveredService(idx)}
-                  onMouseLeave={() => setHoveredService(null)}
-                >
-                  <div className={`grid lg:grid-cols-2 gap-12 lg:gap-20 items-center ${
-                    isEven ? '' : 'lg:grid-flow-dense'
-                  }`}>
-                    
-                    {/* Image side */}
-                    <div className={`relative ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
-                      {/* Large background number */}
-                      <div 
-                        className={`absolute -top-16 ${isEven ? '-left-8' : '-right-8'} pointer-events-none select-none z-0`}
-                      >
-                        <span 
-                          className="text-[20rem] lg:text-[25rem] font-extralight leading-none transition-all duration-700"
-                          style={{ 
-                            color: 'transparent',
-                            WebkitTextStroke: hoveredService === idx ? '1px rgba(0,170,255,0.15)' : '1px rgba(0,170,255,0.05)',
-                          }}
-                        >
-                          {service.id}
-                        </span>
-                      </div>
-
-                      {/* Image container */}
-                      <div className="relative z-10 group">
-                        <div className="relative aspect-[4/5] overflow-hidden">
-                          <img
-                            src={service.image}
-                            alt={service.title}
-                            className={`w-full h-full object-cover transition-all duration-1000 ${
-                              hoveredService === idx ? 'scale-105' : 'scale-100'
-                            }`}
-                          />
-                          
-                          {/* Overlays */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#050507] via-[#050507]/30 to-transparent" />
-                          <div className={`absolute inset-0 bg-[#0af]/10 mix-blend-overlay transition-opacity duration-500 ${
-                            hoveredService === idx ? 'opacity-100' : 'opacity-0'
-                          }`} />
-
-                          {/* Frame border */}
-                          <div className={`absolute inset-0 border transition-colors duration-500 ${
-                            hoveredService === idx ? 'border-[#0af]/30' : 'border-white/5'
-                          }`} />
-                          
-                          {/* Corner accents */}
-                          <div className={`absolute top-0 left-0 w-12 h-12 border-l-2 border-t-2 transition-all duration-500 ${
-                            hoveredService === idx ? 'border-[#0af] w-16 h-16' : 'border-[#0af]/30'
-                          }`} />
-                          <div className={`absolute bottom-0 right-0 w-12 h-12 border-r-2 border-b-2 transition-all duration-500 ${
-                            hoveredService === idx ? 'border-[#0af] w-16 h-16' : 'border-[#0af]/30'
-                          }`} />
-
-                          {/* Service tag */}
-                          <div className="absolute top-6 right-6">
-                            <span className={`text-[10px] tracking-[0.3em] uppercase px-4 py-2 border backdrop-blur-sm transition-all duration-500 ${
-                              hoveredService === idx 
-                                ? 'border-[#0af]/50 text-[#0af] bg-[#0af]/10' 
-                                : 'border-white/10 text-white/40 bg-white/5'
-                            }`}>
-                              {service.tag}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Content side */}
-                    <div className={`relative z-10 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
-                      {/* Service number & title */}
-                      <div className="mb-8">
-                        <div className="flex items-center gap-4 mb-4">
-                          <span className={`text-4xl font-extralight transition-colors duration-500 ${
-                            hoveredService === idx ? 'text-[#0af]' : 'text-white/20'
-                          }`}>
-                            {service.id}
-                          </span>
-                          <div className={`h-[1px] transition-all duration-500 ${
-                            hoveredService === idx ? 'w-16 bg-[#0af]' : 'w-8 bg-white/20'
-                          }`} />
-                        </div>
-                        
-                        <h3 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white leading-[1.1] tracking-[-0.02em]">
-                          {service.title}
-                          <br />
-                          <span className={`italic transition-colors duration-500 ${
-                            hoveredService === idx ? 'text-[#0af]' : 'text-white/50'
-                          }`}>
-                            {service.subtitle}
-                          </span>
-                        </h3>
-                      </div>
-
-                      {/* Description */}
-                      <p className="text-white/50 text-base lg:text-lg font-light leading-relaxed mb-10 max-w-lg">
-                        {service.desc}
-                      </p>
-
-                      {/* Features grid */}
-                      <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-10">
-                        {service.features.map((feature, fidx) => (
-                          <div 
-                            key={fidx}
-                            className="flex items-center gap-3 group/feature"
-                          >
-                            <div className={`w-1.5 h-1.5 transition-colors duration-300 ${
-                              hoveredService === idx ? 'bg-[#0af]' : 'bg-white/20'
-                            }`} />
-                            <span className="text-white/40 text-sm font-light group-hover/feature:text-white/70 transition-colors">
-                              {feature}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* CTA */}
-                      <a 
-                        href="#"
-                        className="group/btn inline-flex items-center gap-4"
-                      >
-                        <span className={`text-[11px] tracking-[0.25em] transition-all duration-500 ${
-                          hoveredService === idx ? 'text-[#0af]' : 'text-white/50'
-                        }`}>
-                          EXPLORE SERVICE
-                        </span>
-                        <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 ${
-                          hoveredService === idx 
-                            ? 'border-[#0af] bg-[#0af]/10' 
-                            : 'border-white/20 group-hover/btn:border-white/40'
-                        }`}>
-                          <ArrowUpRight className={`w-4 h-4 transition-all duration-300 ${
-                            hoveredService === idx ? 'text-[#0af]' : 'text-white/40'
-                          } group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5`} />
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Decorative divider */}
-        <div className="px-8 lg:px-20 py-32">
-          <div className="max-w-7xl mx-auto flex items-center gap-8">
-            <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-            <div className="w-3 h-3 border border-[#0af]/30 rotate-45" />
-            <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-          </div>
-        </div>
-
-        {/* Stats section */}
-        <div className="px-8 lg:px-20 pb-32">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-              {stats.map((stat, idx) => (
-                <div 
-                  key={idx}
-                  className={`group relative text-center transition-all duration-1000 ${
-                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`}
-                  style={{ transitionDelay: `${1200 + idx * 100}ms` }}
-                >
-                  {/* Hover glow */}
-                  <div className="absolute inset-0 bg-[#0af]/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <div className="relative">
-                    <div className="flex items-baseline justify-center gap-1 mb-3">
-                      <span className="text-5xl lg:text-6xl font-extralight text-white group-hover:text-[#0af] transition-colors duration-500">
-                        {stat.value}
-                      </span>
-                      <span className="text-2xl text-[#0af]">{stat.suffix}</span>
-                    </div>
-                    <div className="text-white/30 text-[10px] tracking-[0.2em] uppercase group-hover:text-white/50 transition-colors">
-                      {stat.label}
-                    </div>
-                    {/* Underline */}
-                    <div className="w-0 group-hover:w-12 h-[1px] bg-[#0af] mt-4 mx-auto transition-all duration-500" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="relative px-8 lg:px-20 py-32 border-t border-white/5">
-          {/* Background glow */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
-            <div className="w-[800px] h-[800px] bg-[#0af]/5 rounded-full blur-[200px]" />
-          </div>
-
-          <div className="max-w-4xl mx-auto text-center relative z-10">
-            {/* Decorative element */}
-            <div 
-              className={`flex items-center justify-center gap-4 mb-10 transition-all duration-1000 ${
-                isVisible ? 'opacity-100' : 'opacity-0'
-              }`}
-              style={{ transitionDelay: '1600ms' }}
-            >
-              <div className="w-16 h-[1px] bg-gradient-to-r from-transparent to-[#0af]/30" />
-              <div className="w-2 h-2 bg-[#0af] animate-pulse" />
-              <div className="w-16 h-[1px] bg-gradient-to-l from-transparent to-[#0af]/30" />
-            </div>
-
-            {/* Heading */}
-            <div className="overflow-hidden mb-8">
-              <h2 
-                className={`text-[10vw] lg:text-[5vw] font-extralight text-white leading-[1.1] tracking-[-0.03em] transition-all duration-1000 ${
-                  isVisible ? 'translate-y-0' : 'translate-y-full'
-                }`}
-                style={{ transitionDelay: '1700ms' }}
-              >
-                Ready to
-                <span 
-                  className="italic ml-4"
-                  style={{
-                    background: 'linear-gradient(90deg, #0af, #06f)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}
-                >
-                  Transform?
-                </span>
-              </h2>
-            </div>
-
-            <p 
-              className={`text-white/40 text-base lg:text-lg font-light leading-relaxed max-w-xl mx-auto mb-12 transition-all duration-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-              style={{ transitionDelay: '1800ms' }}
-            >
-              Join visionary enterprises who trust us to architect their success. 
-              Let's build something extraordinary together.
-            </p>
-
-            {/* Buttons */}
-            <div 
-              className={`flex flex-col sm:flex-row items-center justify-center gap-6 transition-all duration-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-              style={{ transitionDelay: '1900ms' }}
-            >
-              <button className="group relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0af] to-[#06f]" />
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                <span className="relative flex items-center gap-4 px-10 py-5 text-white text-[11px] tracking-[0.25em]">
-                  START A PROJECT
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </button>
-
-              <button className="group flex items-center gap-4 px-8 py-5 border border-white/10 hover:border-[#0af]/50 transition-colors duration-500">
-                <span className="text-white/50 group-hover:text-white text-[11px] tracking-[0.2em] transition-colors">
-                  VIEW PORTFOLIO
-                </span>
-                <ArrowUpRight className="w-4 h-4 text-white/30 group-hover:text-[#0af] transition-colors" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <footer className="px-8 lg:px-20 py-12 border-t border-white/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-              {/* Logo */}
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <div className="w-10 h-10 border border-[#0af]/30 flex items-center justify-center">
-                    <span className="text-[#0af] text-lg font-light">S</span>
-                  </div>
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#0af]" />
-                </div>
-                <div>
-                  <div className="text-white/90 text-xs tracking-[0.3em] font-light">SHAAS</div>
-                  <div className="text-white/30 text-[8px] tracking-[0.2em]">CONSULTING GROUP</div>
-                </div>
-              </div>
-
-              {/* Social links */}
-              <div className="flex items-center gap-6">
-                {['LinkedIn', 'Twitter', 'Instagram'].map((social, idx) => (
-                  <a 
-                    key={idx}
-                    href="#"
-                    className="text-white/30 hover:text-[#0af] text-[10px] tracking-[0.15em] transition-colors duration-300"
-                  >
-                    {social}
-                  </a>
-                ))}
-              </div>
-
-              {/* Copyright */}
-              <div className="text-white/20 text-[10px] tracking-[0.1em]">
-                © 2024 SHAAS CONSULTING
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
-
-      {/* Styles */}
-      <style jsx>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Karla:wght@300;400;500&display=swap');
-        
-        * {
-          font-family: 'Karla', sans-serif;
-        }
-        
-        h1, h2, h3, h4 {
-          font-family: 'Cormorant Garamond', serif;
+        .sh-body-cols {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+          font-size: 12px;
+          line-height: 1.75;
+          color: #555;
+          font-weight: 300;
         }
 
-        @keyframes shimmer {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
+        .sh-progress-fill {
+          position: absolute;
+          left: 0; top: 0; bottom: 0;
+          background: #00aaff;
+          width: 0%;
+        }
+        .sh-progress-fill.run {
+          animation: shprog 6s linear forwards;
+        }
+        @keyframes shprog { from { width: 0% } to { width: 100% } }
+
+        .sh-btn-primary {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          background: #0a0a0a;
+          color: #fff;
+          padding: 11px 22px;
+          font-size: 10px;
+          letter-spacing: 0.25em;
+          text-transform: uppercase;
+          border: none;
+          font-family: 'DM Sans', sans-serif;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background 0.25s;
+        }
+        .sh-btn-primary:hover { background: #00aaff; }
+
+        .sh-btn-ghost {
+          background: none;
+          border: none;
+          border-bottom: 1px solid transparent;
+          font-size: 10px;
+          letter-spacing: 0.25em;
+          text-transform: uppercase;
+          color: #888;
+          font-family: 'DM Sans', sans-serif;
+          cursor: pointer;
+          padding: 11px 0;
+          transition: color 0.2s, border-color 0.2s;
+        }
+        .sh-btn-ghost:hover { color: #0a0a0a; border-bottom-color: #0a0a0a; }
+
+        .sh-svc-item { cursor: pointer; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+        .sh-svc-item:hover { opacity: 0.65; }
+        .sh-svc-item.active .sh-svc-num { color: #00aaff; }
+        .sh-svc-item.active .sh-svc-name { color: #0a0a0a; }
+
+        .sh-tick { opacity: 0.4; cursor: pointer; transition: opacity 0.3s, color 0.3s; padding: 0 14px; white-space: nowrap; }
+        .sh-tick.active { opacity: 1; color: #00aaff; }
+
+        @media (max-width: 900px) {
+          .sh-main-grid { grid-template-columns: 1fr !important; }
+          .sh-col-left { display: none !important; }
+          .sh-col-right { border-top: 1px solid #0a0a0a; padding: 24px 20px !important; }
+          .sh-body-cols { grid-template-columns: 1fr !important; }
+          .sh-headline { font-size: 40px !important; }
         }
       `}</style>
-    </section>
+
+      {/* ── TOP BAR ─────────────────────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 32px', borderBottom: '1px solid #0a0a0a' }}>
+        <span style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#888' }}>Est. 2009 · Riyadh, KSA</span>
+        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, letterSpacing: '0.15em' }}>SHAAS Consulting</span>
+        <span style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#888' }}>
+          Vol. XVI · <span style={{ color: '#00aaff' }}>2025</span>
+        </span>
+      </div>
+
+      {/* ── EDITION BAR ─────────────────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 0, padding: '8px 32px', background: '#0a0a0a', borderBottom: '2px solid #0a0a0a' }}>
+        {['◆  Strategic Advisory', 'Project Development', 'Human Capital', 'Logistics Intelligence', '↗  50+ Global Partners'].map((item, i) => (
+          <span key={i} style={{ fontSize: 9, letterSpacing: '0.35em', textTransform: 'uppercase', color: i === 0 || i === 4 ? '#00aaff' : '#fff', paddingRight: 20, marginRight: 20, borderRight: i < 4 ? '1px solid rgba(255,255,255,0.15)' : 'none', whiteSpace: 'nowrap' }}>
+            {item}
+          </span>
+        ))}
+      </div>
+
+      {/* ── MAIN 3-COLUMN GRID ──────────────────────────── */}
+      <div className="sh-main-grid" style={{ display: 'grid', gridTemplateColumns: '220px 1px 1fr 1px 280px', minHeight: 'calc(100vh - 90px)' }}>
+
+        {/* LEFT — Service Index */}
+        <div className="sh-col-left" style={{ padding: '28px 20px 28px 32px', borderRight: '1px solid #0a0a0a', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: '#aaa', paddingBottom: 10, borderBottom: '1px solid rgba(0,0,0,0.1)', marginBottom: 4 }}>
+            Services Index
+          </div>
+
+          {services.map((svc, idx) => (
+            <div key={svc.num} className={`sh-svc-item${idx === activeIndex ? ' active' : ''}`} onClick={() => handleClick(idx)}>
+              <div className="sh-svc-num" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 11, letterSpacing: '0.2em', color: '#bbb', marginBottom: 2, transition: 'color 0.3s' }}>
+                {svc.num}
+              </div>
+              <div className="sh-svc-name" style={{ fontFamily: "'Playfair Display', serif", fontSize: 12, fontWeight: 400, color: '#666', lineHeight: 1.3, transition: 'color 0.3s' }}>
+                {svc.caption.split(' · ')[0]}
+              </div>
+              <div style={{ fontSize: 9, color: '#aaa', letterSpacing: '0.1em', marginTop: 1 }}>{svc.tag}</div>
+              <div style={{ height: 2, background: '#00aaff', marginTop: 6, width: idx === activeIndex ? 20 : 0, transition: 'width 0.4s ease' }} />
+            </div>
+          ))}
+
+          {/* Left stat */}
+          <div style={{ marginTop: 'auto', paddingTop: 20, borderTop: '1px solid rgba(0,0,0,0.1)' }}>
+            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 36, letterSpacing: '0.05em', lineHeight: 1 }}>
+              15<span style={{ color: '#00aaff', fontSize: 22 }}>+</span>
+            </div>
+            <div style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#999', marginTop: 3 }}>Years of Excellence</div>
+          </div>
+        </div>
+
+        {/* DIVIDER */}
+        <div style={{ background: '#0a0a0a', width: 1 }} />
+
+        {/* CENTER — Editorial */}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {/* Hero image */}
+          <div style={{ position: 'relative', width: '100%', height: 340, overflow: 'hidden', flexShrink: 0 }}>
+            <img
+              src={s.img}
+              alt={s.caption}
+              style={{
+                width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+                filter: 'grayscale(20%) contrast(1.05)',
+                opacity: imgFade ? 1 : 0,
+                transition: 'opacity 0.4s ease',
+              }}
+            />
+            {/* gradient overlay */}
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 50%, rgba(255,255,255,0.55) 100%)', pointerEvents: 'none' }} />
+            {/* stamp */}
+            <div style={{ position: 'absolute', top: 20, right: 20, background: '#00aaff', color: '#fff', fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', padding: '5px 12px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>
+              {s.tag}
+            </div>
+            {/* caption */}
+            <div style={{ position: 'absolute', bottom: 14, left: 24, fontSize: 10, color: '#444', letterSpacing: '0.1em' }}>
+              {s.caption}
+            </div>
+          </div>
+
+          {/* Text content */}
+          <div style={{ padding: '28px 36px', flex: 1 }}>
+            {/* Eyebrow */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+              <div style={{ width: 24, height: 2, background: '#00aaff', flexShrink: 0 }} />
+              <span style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: '#00aaff', fontWeight: 500 }}>{s.eyebrow}</span>
+            </div>
+
+            {/* Headline */}
+            <div className="sh-headline" style={{ fontFamily: "'Playfair Display', serif", fontSize: 58, fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.02em', color: '#0a0a0a' }}>
+              {s.h1line1}
+            </div>
+            <div className="sh-headline" style={{ fontFamily: "'Playfair Display', serif", fontSize: 58, fontWeight: 400, fontStyle: 'italic', lineHeight: 0.95, letterSpacing: '-0.02em', color: '#333', marginBottom: 20 }}>
+              {s.h1line2}
+            </div>
+
+            {/* Dek */}
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 14, fontStyle: 'italic', color: '#666', lineHeight: 1.55, padding: '14px 0', borderTop: '1px solid rgba(0,0,0,0.1)', borderBottom: '1px solid rgba(0,0,0,0.1)', marginBottom: 20 }}>
+              {s.dek}
+            </div>
+
+            {/* Body copy — proper 2-col grid */}
+            <div className="sh-body-cols">
+              <p style={{ margin: 0 }}>{s.body.slice(0, Math.floor(s.body.length / 2))}…</p>
+              <p style={{ margin: 0 }}>…{s.body.slice(Math.floor(s.body.length / 2))}</p>
+            </div>
+
+            {/* CTAs */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 24, paddingTop: 16, borderTop: '1px solid rgba(0,0,0,0.1)' }}>
+              <button className="sh-btn-primary">Engage Now &nbsp;→</button>
+              <button className="sh-btn-ghost">View Case Studies</button>
+            </div>
+          </div>
+        </div>
+
+        {/* DIVIDER */}
+        <div style={{ background: '#0a0a0a', width: 1 }} />
+
+        {/* RIGHT — Stats + Pull Quote */}
+        <div className="sh-col-right" style={{ padding: '28px 32px 28px 24px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: '#aaa', marginBottom: 16 }}>Performance Record</div>
+
+          {/* Pull quote */}
+          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, lineHeight: 1.35, color: '#0a0a0a', padding: '18px 0', borderTop: '2px solid #00aaff', borderBottom: '1px solid rgba(0,0,0,0.1)', marginBottom: 24 }}>
+            "Precision strategy meets{' '}
+            <em style={{ color: '#00aaff', fontStyle: 'italic' }}>visionary</em>{' '}
+            execution."
+          </div>
+
+          {/* Stats — clean 2x2 grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'rgba(0,0,0,0.08)', marginBottom: 24 }}>
+            {stats.map((st, i) => (
+              <div key={i} style={{ background: '#fff', padding: '16px 14px' }}>
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 34, letterSpacing: '0.05em', lineHeight: 1, color: st.blue ? '#00aaff' : '#0a0a0a' }}>
+                  {st.val}<span style={{ color: '#00aaff', fontSize: 20 }}>{st.sym}</span>
+                </div>
+                <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#999', marginTop: 4, lineHeight: 1.4 }}>
+                  {st.desc}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Contact */}
+          <div style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: 20, marginTop: 'auto' }}>
+            <div style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: '#aaa', marginBottom: 10 }}>Enquiries</div>
+            {['Riyadh · Saudi Arabia', 'info@shaas.consulting', '+966 XX XXX XXXX'].map(line => (
+              <div key={line} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: '#555', marginBottom: 5 }}>
+                <span style={{ width: 4, height: 4, background: '#00aaff', flexShrink: 0, display: 'inline-block' }} />
+                {line}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── TICKER BAR ──────────────────────────────────── */}
+      <div style={{ background: '#0a0a0a', color: '#fff', padding: '8px 32px', display: 'flex', alignItems: 'center', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+        {services.map((svc, idx) => (
+          <span key={svc.num} style={{ display: 'flex', alignItems: 'center' }}>
+            {idx > 0 && <span style={{ color: 'rgba(255,255,255,0.15)', padding: '0 8px' }}>—</span>}
+            <span className={`sh-tick${idx === activeIndex ? ' active' : ''}`} onClick={() => handleClick(idx)}>
+              {svc.num} · {svc.tag}
+            </span>
+          </span>
+        ))}
+        {/* Progress bar */}
+        <div style={{ flex: 1, marginLeft: 20, height: 2, background: 'rgba(255,255,255,0.1)', position: 'relative', overflow: 'hidden' }}>
+          <div key={progressKey} className="sh-progress-fill run" />
+        </div>
+      </div>
+    </div>
   )
 }
