@@ -34,6 +34,7 @@ export default function ShaasFooter() {
       background: '#fff',
       fontFamily: "'DM Sans', sans-serif",
       borderTop: `2px solid ${INK}`,
+      overflow: 'hidden',
     }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,300&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
@@ -61,45 +62,107 @@ export default function ShaasFooter() {
           0%,100% { box-shadow: 0 0 0 0 rgba(0,170,255,0.5); }
           50%      { box-shadow: 0 0 0 5px rgba(0,170,255,0); }
         }
+
+        /* MAIN GRID — desktop */
+        .ft-main-grid {
+          display: grid;
+          grid-template-columns: 1.4fr repeat(3, 1fr);
+          border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .ft-brand-col {
+          padding: 48px 40px;
+          border-right: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .ft-link-col {
+          padding: 48px 28px;
+          border-right: 1px solid rgba(0,0,0,0.08);
+        }
+        .ft-link-col:last-child { border-right: none; }
+
+        .ft-col-heading {
+          font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase;
+          color: #aaa; margin-bottom: 16px;
+          display: flex; align-items: center; gap: 8px;
+        }
+        .ft-col-heading-line {
+          width: 12px; height: 1px; background: ${BLUE}; flex-shrink: 0;
+        }
+
+        /* BOTTOM BAR */
+        .ft-bottom-bar {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 14px 40px; flex-wrap: wrap; gap: 10px;
+        }
+        .ft-bottom-left {
+          display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+        }
+        .ft-bottom-right {
+          display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+        }
+        .ft-divider { width: 1px; height: 12px; background: rgba(0,0,0,0.1); flex-shrink: 0; }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+          .ft-main-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+          .ft-brand-col {
+            grid-column: 1 / -1;
+            border-right: none;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            padding: 32px 24px;
+          }
+          .ft-link-col {
+            padding: 28px 24px;
+            border-right: 1px solid rgba(0,0,0,0.08);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+          }
+          .ft-link-col:nth-child(3) { border-right: none; }
+          .ft-link-col:last-child { border-right: none; }
+          .ft-bottom-bar { padding: 14px 24px; }
+        }
+
+        @media (max-width: 480px) {
+          .ft-main-grid { grid-template-columns: 1fr; }
+          .ft-link-col { border-right: none !important; }
+          .ft-brand-col { padding: 28px 20px; }
+          .ft-link-col { padding: 20px 20px; }
+          .ft-bottom-bar { padding: 14px 20px; flex-direction: column; align-items: flex-start; }
+        }
       `}</style>
 
       {/* Main grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1.4fr 1px repeat(3, 1fr)',
-        borderBottom: `1px solid rgba(0,0,0,0.08)`,
-      }}>
+      <div className="ft-main-grid">
 
         {/* Brand col */}
-        <div style={{ padding: '56px 48px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
-            <img src="/images/9.png" alt="SHAAS" style={{ width: 36, height: 36, objectFit: 'contain' }} />
+        <div className="ft-brand-col">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+            <img src="/images/9.png" alt="SHAAS" style={{ width: 32, height: 32, objectFit: 'contain' }} />
             <div>
-              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 22, letterSpacing: '0.18em', color: INK, lineHeight: 1 }}>SHAAS</div>
+              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 20, letterSpacing: '0.18em', color: INK, lineHeight: 1 }}>SHAAS</div>
               <div style={{ fontSize: 8, letterSpacing: '0.35em', textTransform: 'uppercase', color: '#aaa', marginTop: 1 }}>General Consulting</div>
             </div>
           </div>
 
-          <p style={{ fontFamily: "'Fraunces', serif", fontStyle: 'italic', fontSize: 13, color: '#999', lineHeight: 1.7, maxWidth: 260, fontWeight: 300, margin: '0 0 32px' }}>
+          <p style={{ fontFamily: "'Fraunces', serif", fontStyle: 'italic', fontSize: 12, color: '#999', lineHeight: 1.7, maxWidth: 240, fontWeight: 300, margin: '0 0 24px' }}>
             Abu Dhabi's trusted consultancy across strategy, innovation, operations, and beyond.
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-            <div className="ft-loc-dot" style={{ marginTop: 4 }} />
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+            <div className="ft-loc-dot" style={{ marginTop: 3 }} />
             <div style={{ fontSize: 11, color: '#999', fontWeight: 300, lineHeight: 1.6 }}>
               ADGM Square, Al Maryah Island<br />Abu Dhabi, UAE
             </div>
           </div>
         </div>
 
-        {/* Vertical divider */}
-        <div style={{ background: 'rgba(0,0,0,0.08)' }} />
-
         {/* Link columns */}
         {Object.entries(footerLinks).map(([heading, links]) => (
-          <div key={heading} style={{ padding: '56px 36px', borderLeft: '1px solid rgba(0,0,0,0.07)' }}>
-            <div style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: '#aaa', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{ width: 12, height: 1, background: BLUE, flexShrink: 0 }} />
+          <div key={heading} className="ft-link-col">
+            <div className="ft-col-heading">
+              <div className="ft-col-heading-line" />
               {heading}
             </div>
             {links.map(link => (
@@ -110,24 +173,21 @@ export default function ShaasFooter() {
       </div>
 
       {/* Bottom bar */}
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 48px', flexWrap: 'wrap', gap: 12,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <span style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#ccc' }}>
+      <div className="ft-bottom-bar">
+        <div className="ft-bottom-left">
+          <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#ccc' }}>
             © 2025 SHAAS General Consulting
           </span>
-          <div style={{ width: 1, height: 12, background: 'rgba(0,0,0,0.1)' }} />
-          <span style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#ccc' }}>
+          <div className="ft-divider" />
+          <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#ccc' }}>
             Est. 2009
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+        <div className="ft-bottom-right">
           {['Privacy', 'Terms', 'Cookies'].map((l, i) => (
-            <span key={l} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-              {i > 0 && <div style={{ width: 1, height: 10, background: 'rgba(0,0,0,0.1)' }} />}
+            <span key={l} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              {i > 0 && <div className="ft-divider" />}
               <a className="ft-bottom-link">{l}</a>
             </span>
           ))}

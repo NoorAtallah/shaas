@@ -48,6 +48,64 @@ const services = [
   },
 ]
 
+const licencedServices = [
+  {
+    code: '7020039',
+    en: 'Innovation & AI Research and Consultancies',
+    ar: 'الاستشارات والدراسات في مجال الإبتكار والذكاء الاصطناعي',
+    icon: '◈',
+    desc: 'Harnessing artificial intelligence and cutting-edge research to drive transformative innovation across industries.',
+  },
+  {
+    code: '7320001',
+    en: 'Marketing Consultancy And Studies',
+    ar: 'استشارات ودراسات تسويقية',
+    icon: '◇',
+    desc: 'Strategic marketing analysis and go-to-market frameworks tailored to the UAE and MENA markets.',
+  },
+  {
+    code: '7020020',
+    en: 'Consultancy Project Development',
+    ar: 'استشارات تطوير المشاريع',
+    icon: '△',
+    desc: 'End-to-end project development consultancy — from feasibility through delivery and operational handover.',
+  },
+  {
+    code: '0910018',
+    en: 'Onshore & Offshore Oil and Gas Fields and Facilities Services',
+    ar: 'خدمات حقول ومنشآت النفط والغاز البرية والبحرية',
+    icon: '◉',
+    desc: 'Specialist consultancy for oil and gas infrastructure, operations optimisation, and regulatory compliance.',
+  },
+  {
+    code: '7020003',
+    en: 'Administrative Consultancy And Studies',
+    ar: 'استشارات ودراسات إدارية',
+    icon: '▣',
+    desc: 'Governance frameworks, organisational design, and operational excellence programmes for leading enterprises.',
+  },
+  {
+    code: '7020008',
+    en: 'Human Resources Consultancy',
+    ar: 'استشارات الموارد البشرية',
+    icon: '○',
+    desc: 'Talent strategy, workforce planning, and HR transformation aligned with UAE Emiratisation objectives.',
+  },
+  {
+    code: '7020028',
+    en: 'Logistics Consultancy',
+    ar: 'الإستشارات اللوجستية',
+    icon: '◻',
+    desc: 'Supply chain optimisation and logistics network design leveraging Abu Dhabi\'s world-class infrastructure.',
+  },
+  {
+    code: '7220005',
+    en: 'Consultancy and Studies and Researches In Legal Sciences',
+    ar: 'الاستشارات والدراسات والبحوث في مجال العلوم القانونية',
+    icon: '⬡',
+    desc: 'Legal research, regulatory advisory, and compliance studies across UAE federal and emirate-level frameworks.',
+  },
+]
 
 export default function ShaasHeroV3() {
   const [active, setActive]  = useState(0)
@@ -85,7 +143,7 @@ export default function ShaasHeroV3() {
   }, [])
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", background: '#fff', color: INK }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", background: '#fff', color: INK, overflow: 'hidden' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,300;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
 
@@ -266,9 +324,33 @@ export default function ShaasHeroV3() {
           .svc-card:nth-child(2n) { border-right: none; }
           .svc-section-head { flex-direction: column; gap: 12px; }
           .svc-section-sub { text-align: left; }
+          .v3-content { overflow: hidden; }
+          .v3-img-wrap { height: 260px; }
+          .v3-ghost-num { font-size: 80px; }
+          .v3-text-block { padding: 20px 20px; }
+        }
+        @media (max-width: 480px) {
+          .svc-grid { grid-template-columns: 1fr; }
+          .svc-card { border-right: none !important; }
         }
       `}</style>
 
+      {/* ── HEADER ── */}
+      <header className="v3-header">
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
+          <div className="v3-logo">SHAAS</div>
+          <div style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#aaa' }}>General Consulting</div>
+        </div>
+        <nav className="v3-nav">
+          {['Home', 'About', 'Solutions', 'Contact'].map(n => <a key={n}>{n}</a>)}
+        </nav>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#aaa' }}>
+            <div className="v3-loc-dot" /> Abu Dhabi, UAE
+          </div>
+          <button className="v3-cta-btn">Get Started ↗</button>
+        </div>
+      </header>
 
       {/* ── HERO ── */}
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -343,6 +425,48 @@ export default function ShaasHeroV3() {
           </div>
         </div>
       </div>
+
+      {/* ── LICENSED SERVICES SECTION ── */}
+      <section className="svc-section">
+        <div className="svc-section-head">
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: BLUE, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 20, height: 2, background: BLUE }} />
+              Licensed Activities · Abu Dhabi
+            </div>
+            <div className="svc-section-title">
+              What We <em>Do</em>
+            </div>
+          </div>
+          <div className="svc-section-sub">
+            <span>8 Licensed Services</span>
+            Registered & Authorised<br />by Abu Dhabi Authorities
+          </div>
+        </div>
+
+        <div className="svc-grid">
+          {licencedServices.map((svc, idx) => (
+            <div
+              key={svc.code}
+              className="svc-card"
+              onMouseEnter={() => setHoveredSvc(idx)}
+              onMouseLeave={() => setHoveredSvc(null)}
+            >
+              <div className="svc-card-top">
+                <div className="svc-card-code">{svc.code}</div>
+                <div className="svc-card-icon">{svc.icon}</div>
+              </div>
+              <div className="svc-card-en">{svc.en}</div>
+              <div className="svc-card-ar">{svc.ar}</div>
+              <div className="svc-card-desc">{svc.desc}</div>
+              <div className="svc-card-footer">
+                <div className="svc-card-footer-line" />
+                Learn More
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   )
 }

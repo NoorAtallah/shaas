@@ -56,7 +56,7 @@ const services = [
 
 export default function ShaasServicesSection() {
   return (
-    <section style={{ background: '#fff', borderTop: `2px solid ${INK}`, fontFamily: "'DM Sans', sans-serif" }}>
+    <section style={{ background: '#fff', borderTop: `2px solid ${INK}`, fontFamily: "'DM Sans', sans-serif", overflow: 'hidden' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
 
@@ -64,6 +64,7 @@ export default function ShaasServicesSection() {
           display: flex; align-items: flex-end; justify-content: space-between;
           padding: 48px 48px 28px;
           border-bottom: 1px solid rgba(0,0,0,0.08);
+          flex-wrap: wrap; gap: 16px;
         }
         .ss-title {
           font-family: 'Fraunces', serif; font-weight: 800;
@@ -147,6 +148,11 @@ export default function ShaasServicesSection() {
           .ss-head { flex-direction: column; gap: 16px; padding: 32px 24px 20px; }
           .ss-badge { text-align: left; }
           .ss-title { font-size: 38px; }
+          .ss-card { padding: 20px 16px 20px; }
+        }
+        @media (max-width: 480px) {
+          .ss-grid { grid-template-columns: 1fr; }
+          .ss-card { border-right: none !important; }
         }
       `}</style>
 
