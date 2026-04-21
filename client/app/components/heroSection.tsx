@@ -28,7 +28,7 @@ const services = [
     img: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1400&q=85',
     location: 'Abu Dhabi Global Market',
     dek: 'Architecting operational mastery — embedding efficiency and control at every layer.',
-    body: 'Administrative excellence means building organisations that run with precision. We redesign workflows, governance structures, and operating models to eliminate friction and create scalable, high-performance enterprises.',
+    body: 'Administrative excellence means building organisations that run with precision. We redesign workflows, governance structures, and operating models to eliminate friction and create scalable high-performance enterprises.',
   },
   {
     num: '04', tag: 'People',
@@ -48,28 +48,20 @@ const services = [
   },
 ]
 
-const stats = [
-  { val: '500', sym: '+', label: 'Projects' },
-  { val: '98',  sym: '%', label: 'Satisfaction' },
-  { val: '15',  sym: '+', label: 'Years' },
-  { val: '50',  sym: '+', label: 'Partners' },
-]
 
-export default function ShaasHeroV2() {
-  const [active, setActive]       = useState(0)
-  const [imgFade, setImgFade]     = useState(true)
-  const [textFade, setTextFade]   = useState(true)
-  const [progressKey, setProgressKey] = useState(0)
+export default function ShaasHeroV3() {
+  const [active, setActive]  = useState(0)
+  const [fade, setFade]      = useState(true)
+  const [progressKey, setPK] = useState(0)
+  const [hoveredSvc, setHoveredSvc] = useState<number | null>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
   const s = services[active]
 
   function goTo(idx: number) {
     if (idx === active) return
-    setImgFade(false)
-    setTextFade(false)
-    setTimeout(() => { setActive(idx); setImgFade(true); setTextFade(true) }, 300)
-    setProgressKey(k => k + 1)
+    setFade(false)
+    setTimeout(() => { setActive(idx); setFade(true) }, 320)
+    setPK(k => k + 1)
   }
 
   function schedule(from: number) {
@@ -93,376 +85,263 @@ export default function ShaasHeroV2() {
   }, [])
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", background: '#fff', color: INK, minHeight: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", background: '#fff', color: INK }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,600;0,700;1,300;1,600&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,300;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
 
-        .sv2-root { position: relative; }
-
-        /* NAV */
-        .sv2-nav {
-          position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+        .v3-header {
           display: flex; align-items: center; justify-content: space-between;
-          padding: 22px 48px;
-          mix-blend-mode: normal;
+          padding: 0 48px; height: 64px;
+          border-bottom: 1px solid ${INK};
         }
-        .sv2-nav-logo {
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: 22px; letter-spacing: 0.18em; color: #fff;
-          text-shadow: 0 1px 8px rgba(0,0,0,0.4);
-        }
-        .sv2-nav-tagline {
-          font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase;
-          color: rgba(255,255,255,0.6);
-        }
-        .sv2-nav-cta {
-          display: flex; align-items: center; gap: 10px;
-          font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
-          color: #fff; background: none; border: 1px solid rgba(255,255,255,0.4);
-          padding: 9px 20px; cursor: pointer;
-          font-family: 'DM Sans', sans-serif; font-weight: 500;
-          transition: background 0.25s, border-color 0.25s;
-        }
-        .sv2-nav-cta:hover { background: ${BLUE}; border-color: ${BLUE}; }
-
-        /* SPLIT LAYOUT */
-        .sv2-split {
-          display: grid;
-          grid-template-columns: 52% 48%;
-          min-height: 100vh;
-        }
-
-        /* LEFT PHOTO PANEL */
-        .sv2-photo {
-          position: relative; overflow: hidden;
-        }
-        .sv2-photo img {
-          width: 100%; height: 100%; object-fit: cover; display: block;
-          transition: opacity 0.45s ease, transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
-        }
-        .sv2-photo-overlay {
-          position: absolute; inset: 0;
-          background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
-          pointer-events: none;
-        }
-        .sv2-photo-overlay-right {
-          position: absolute; inset: 0;
-          background: linear-gradient(to right, transparent 70%, #fff 100%);
-          pointer-events: none;
-        }
-
-        /* Big service number on photo */
-        .sv2-photo-num {
-          position: absolute; bottom: 60px; left: 48px;
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: 140px; line-height: 1; letter-spacing: -0.02em;
-          color: transparent;
-          -webkit-text-stroke: 1px rgba(255,255,255,0.25);
-          pointer-events: none; user-select: none;
-          transition: opacity 0.4s;
-        }
-
-        /* Location tag */
-        .sv2-location {
-          position: absolute; top: 100px; left: 48px;
-          display: flex; align-items: center; gap: 10px;
-        }
-        .sv2-location-dot {
-          width: 6px; height: 6px; border-radius: 50%;
-          background: ${BLUE}; flex-shrink: 0;
-          animation: sv2-pulse 2s ease-in-out infinite;
-        }
-        @keyframes sv2-pulse {
-          0%,100% { box-shadow: 0 0 0 0 rgba(0,170,255,0.6); }
-          50% { box-shadow: 0 0 0 6px rgba(0,170,255,0); }
-        }
-        .sv2-location-text {
+        .v3-logo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.18em; }
+        .v3-nav { display: flex; gap: 32px; }
+        .v3-nav a {
           font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
-          color: rgba(255,255,255,0.75);
+          color: #888; text-decoration: none; cursor: pointer; transition: color 0.2s;
         }
-
-        /* Diagonal slash accent on photo */
-        .sv2-slash {
-          position: absolute; top: 0; right: -1px; bottom: 0;
-          width: 80px;
-          background: #fff;
-          clip-path: polygon(60% 0, 100% 0, 100% 100%, 0% 100%);
-          pointer-events: none;
+        .v3-nav a:hover { color: ${INK}; }
+        .v3-loc-dot {
+          width: 6px; height: 6px; border-radius: 50%; background: ${BLUE};
+          animation: v3pulse 2s infinite; flex-shrink: 0;
         }
+        @keyframes v3pulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(0,170,255,0.5); }
+          50%      { box-shadow: 0 0 0 5px rgba(0,170,255,0); }
+        }
+        .v3-cta-btn {
+          background: ${INK}; color: #fff; border: none;
+          padding: 10px 22px; font-size: 10px; letter-spacing: 0.25em;
+          text-transform: uppercase; font-family: 'DM Sans', sans-serif;
+          font-weight: 500; cursor: pointer; transition: background 0.25s;
+        }
+        .v3-cta-btn:hover { background: ${BLUE}; }
 
-        /* RIGHT TEXT PANEL */
-        .sv2-text {
+        /* HERO */
+        .v3-hero {
+          display: grid; grid-template-columns: 380px 1fr;
+          border-bottom: 1px solid ${INK}; overflow: hidden;
+          height: calc(100vh - 64px - 48px);
+        }
+        .v3-sidebar {
+          border-right: 1px solid ${INK};
           display: flex; flex-direction: column;
-          padding: 120px 56px 40px 48px;
+        }
+        .v3-sidebar-head {
+          padding: 20px 28px 16px; border-bottom: 1px solid rgba(0,0,0,0.08);
+          font-size: 9px; letter-spacing: 0.45em; text-transform: uppercase; color: #aaa;
+        }
+        .v3-svc-row {
+          display: grid; grid-template-columns: 40px 1fr 28px;
+          align-items: center; padding: 0 28px; height: 72px;
+          border-bottom: 1px solid rgba(0,0,0,0.07);
+          cursor: pointer; position: relative; overflow: hidden; transition: background 0.2s;
+        }
+        .v3-svc-row::before {
+          content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+          width: 0; background: ${BLUE}; transition: width 0.3s ease;
+        }
+        .v3-svc-row.active::before { width: 3px; }
+        .v3-svc-row:hover { background: rgba(0,170,255,0.03); }
+        .v3-svc-n { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.15em; color: #ccc; transition: color 0.3s; }
+        .v3-svc-row.active .v3-svc-n { color: ${BLUE}; }
+        .v3-svc-t { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 800; color: #bbb; transition: color 0.3s; line-height: 1.1; }
+        .v3-svc-row.active .v3-svc-t { color: ${INK}; }
+        .v3-svc-s { font-size: 10px; color: #ccc; font-style: italic; font-family: 'Fraunces', serif; font-weight: 300; transition: color 0.3s; }
+        .v3-svc-row.active .v3-svc-s { color: #888; }
+        .v3-svc-arr { font-size: 14px; color: #ddd; transition: color 0.3s, transform 0.3s; text-align: right; }
+        .v3-svc-row.active .v3-svc-arr { color: ${BLUE}; transform: translateX(2px); }
+        .v3-sidebar-stats { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid rgba(0,0,0,0.08); }
+        .v3-ss-cell { padding: 16px 20px; border-right: 1px solid rgba(0,0,0,0.08); }
+        .v3-ss-cell:nth-child(2), .v3-ss-cell:nth-child(4) { border-right: none; }
+        .v3-ss-cell:nth-child(3), .v3-ss-cell:nth-child(4) { border-top: 1px solid rgba(0,0,0,0.08); }
+        .v3-ss-val { font-family: 'Bebas Neue', sans-serif; font-size: 26px; line-height: 1; }
+        .v3-ss-sym { color: ${BLUE}; font-size: 16px; }
+        .v3-ss-lbl { font-size: 8px; letter-spacing: 0.25em; text-transform: uppercase; color: #aaa; margin-top: 2px; }
+        .v3-content { display: grid; grid-template-rows: 1fr auto; overflow: hidden; }
+        .v3-img-wrap { position: relative; overflow: hidden; }
+        .v3-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 0.4s ease, transform 1s ease; }
+        .v3-img-grad { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(255,255,255,0.9) 100%); pointer-events: none; }
+        .v3-img-tag { position: absolute; top: 24px; left: 28px; background: ${BLUE}; color: #fff; font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase; padding: 5px 14px; font-family: 'DM Sans', sans-serif; font-weight: 500; }
+        .v3-ghost-num { position: absolute; bottom: -10px; right: 24px; font-family: 'Bebas Neue', sans-serif; font-size: 160px; line-height: 1; letter-spacing: -0.03em; color: transparent; -webkit-text-stroke: 1px rgba(0,0,0,0.07); pointer-events: none; user-select: none; transition: opacity 0.4s; }
+        .v3-text-block { padding: 28px 40px; border-top: 1px solid rgba(0,0,0,0.08); display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+        .v3-h-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .v3-h-line { width: 20px; height: 2px; background: ${BLUE}; flex-shrink: 0; }
+        .v3-h-etxt { font-size: 9px; letter-spacing: 0.45em; text-transform: uppercase; color: ${BLUE}; font-weight: 500; }
+        .v3-headline { font-family: 'Fraunces', serif; font-weight: 800; font-size: clamp(38px, 4.5vw, 60px); line-height: 0.92; letter-spacing: -0.02em; color: ${INK}; }
+        .v3-headline-i { font-family: 'Fraunces', serif; font-weight: 300; font-style: italic; font-size: clamp(38px, 4.5vw, 60px); line-height: 0.92; letter-spacing: -0.02em; color: #555; margin-bottom: 16px; }
+        .v3-dek { font-family: 'Fraunces', serif; font-style: italic; font-size: 13px; color: #777; line-height: 1.55; }
+        .v3-body-text { font-size: 12px; line-height: 1.75; color: #555; font-weight: 300; }
+        .v3-btn-p { background: ${INK}; color: #fff; border: none; padding: 10px 22px; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer; transition: background 0.25s; white-space: nowrap; }
+        .v3-btn-p:hover { background: ${BLUE}; }
+        .v3-btn-g { background: none; border: none; border-bottom: 1px solid transparent; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #aaa; font-family: 'DM Sans', sans-serif; cursor: pointer; padding: 10px 0; transition: color 0.2s, border-color 0.2s; white-space: nowrap; }
+        .v3-btn-g:hover { color: ${INK}; border-bottom-color: ${INK}; }
+        .v3-bottom { display: grid; grid-template-columns: 380px 1fr; border-top: 1px solid ${INK}; }
+        .v3-bottom-left { border-right: 1px solid ${INK}; padding: 14px 28px; display: flex; align-items: center; gap: 12px; }
+        .v3-progress-track { flex: 1; height: 2px; background: rgba(0,0,0,0.08); position: relative; overflow: hidden; }
+        .v3-progress-fill { position: absolute; left: 0; top: 0; bottom: 0; background: ${BLUE}; width: 0%; }
+        .v3-progress-fill.run { animation: v3prog 6s linear forwards; }
+        @keyframes v3prog { from { width:0% } to { width:100% } }
+        .v3-counter { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.1em; color: ${BLUE}; }
+        .v3-bottom-right { padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; }
+        .v3-addr { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: #aaa; }
+        .v3-social span { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: #aaa; cursor: pointer; transition: color 0.2s; }
+        .v3-social span:hover { color: ${BLUE}; }
+
+        /* ── SERVICES SECTION ── */
+        .svc-section { background: #fff; border-top: 2px solid ${INK}; }
+        .svc-section-head {
+          display: flex; align-items: flex-end; justify-content: space-between;
+          padding: 48px 48px 0;
+          border-bottom: 1px solid rgba(0,0,0,0.08);
+          padding-bottom: 28px;
+        }
+        .svc-section-title {
+          font-family: 'Fraunces', serif; font-weight: 800;
+          font-size: 48px; line-height: 0.95; letter-spacing: -0.02em; color: ${INK};
+        }
+        .svc-section-title em { font-weight: 300; font-style: italic; color: #777; }
+        .svc-section-sub {
+          font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; color: #aaa;
+          text-align: right; line-height: 1.6;
+        }
+        .svc-section-sub span { color: ${BLUE}; display: block; font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.15em; margin-bottom: 2px; }
+
+        .svc-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .svc-card {
+          padding: 32px 28px 28px;
+          border-right: 1px solid rgba(0,0,0,0.07);
+          border-bottom: 1px solid rgba(0,0,0,0.07);
+          cursor: pointer;
           position: relative;
-        }
-
-        /* Thin vertical blue rule */
-        .sv2-vrule {
-          position: absolute; left: 0; top: 80px; bottom: 80px;
-          width: 2px; background: ${BLUE};
-        }
-
-        .sv2-eyebrow {
-          display: flex; align-items: center; gap: 12px;
-          margin-bottom: 20px;
-        }
-        .sv2-eyebrow-num {
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: 13px; letter-spacing: 0.2em;
-          color: ${BLUE};
-        }
-        .sv2-eyebrow-sep { width: 32px; height: 1px; background: ${BLUE}; }
-        .sv2-eyebrow-tag {
-          font-size: 9px; letter-spacing: 0.45em; text-transform: uppercase;
-          color: #aaa; font-weight: 500;
-        }
-
-        /* Giant headline */
-        .sv2-h1-line1 {
-          font-family: 'Cormorant', serif;
-          font-size: clamp(56px, 7vw, 88px);
-          font-weight: 700;
-          line-height: 0.9;
-          letter-spacing: -0.02em;
-          color: ${INK};
-          transition: opacity 0.3s ease;
-        }
-        .sv2-h1-line2 {
-          font-family: 'Cormorant', serif;
-          font-size: clamp(56px, 7vw, 88px);
-          font-weight: 300;
-          font-style: italic;
-          line-height: 0.9;
-          letter-spacing: -0.02em;
-          color: #444;
-          margin-bottom: 32px;
-          transition: opacity 0.3s ease;
-        }
-
-        /* Blue underline accent under headline */
-        .sv2-h1-underline {
-          width: 60px; height: 3px; background: ${BLUE}; margin-bottom: 28px;
-        }
-
-        .sv2-dek {
-          font-family: 'Cormorant', serif;
-          font-size: 17px; font-style: italic;
-          color: #666; line-height: 1.55;
-          padding-bottom: 20px;
-          border-bottom: 1px solid rgba(0,0,0,0.1);
-          margin-bottom: 20px;
-          transition: opacity 0.3s ease;
-        }
-
-        .sv2-body {
-          font-size: 13px; line-height: 1.75;
-          color: #555; font-weight: 300;
-          flex: 1;
-          transition: opacity 0.3s ease;
-        }
-
-        /* Stats row */
-        .sv2-stats {
-          display: grid; grid-template-columns: repeat(4, 1fr);
-          border-top: 1px solid rgba(0,0,0,0.1);
-          margin-top: 32px;
-        }
-        .sv2-stat {
-          padding: 16px 0;
-          border-right: 1px solid rgba(0,0,0,0.08);
-        }
-        .sv2-stat:last-child { border-right: none; }
-        .sv2-stat-val {
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: 30px; letter-spacing: 0.05em;
-          line-height: 1; color: ${INK};
-        }
-        .sv2-stat-sym { color: ${BLUE}; font-size: 18px; }
-        .sv2-stat-label {
-          font-size: 9px; letter-spacing: 0.25em;
-          text-transform: uppercase; color: #aaa; margin-top: 3px;
-        }
-
-        /* BOTTOM SERVICE TABS */
-        .sv2-tabs {
-          background: ${INK};
-          display: grid; grid-template-columns: repeat(5, 1fr);
-          border-top: 2px solid ${INK};
-        }
-        .sv2-tab {
-          padding: 20px 24px; cursor: pointer;
-          border-right: 1px solid rgba(255,255,255,0.07);
-          position: relative; overflow: hidden;
+          overflow: hidden;
           transition: background 0.25s;
         }
-        .sv2-tab:last-child { border-right: none; }
-        .sv2-tab:hover { background: rgba(255,255,255,0.05); }
-        .sv2-tab.active { background: rgba(0,170,255,0.1); }
-        .sv2-tab-num {
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: 10px; letter-spacing: 0.2em;
-          color: rgba(255,255,255,0.3); margin-bottom: 4px;
-          transition: color 0.25s;
-        }
-        .sv2-tab.active .sv2-tab-num { color: ${BLUE}; }
-        .sv2-tab-title {
-          font-family: 'Cormorant', serif;
-          font-size: 14px; font-weight: 600;
-          color: rgba(255,255,255,0.5);
-          transition: color 0.25s;
-        }
-        .sv2-tab.active .sv2-tab-title { color: #fff; }
-        .sv2-tab-sub {
-          font-size: 9px; letter-spacing: 0.1em;
-          color: rgba(255,255,255,0.25); margin-top: 1px;
-          font-style: italic;
-        }
-        /* Blue bottom border on active tab */
-        .sv2-tab-bar {
-          position: absolute; bottom: 0; left: 0; right: 0;
+        .svc-card:nth-child(4n) { border-right: none; }
+        .svc-card::after {
+          content: ''; position: absolute; bottom: 0; left: 0; right: 0;
           height: 2px; background: ${BLUE};
-          transform: scaleX(0); transition: transform 0.35s ease;
-          transform-origin: left;
+          transform: scaleX(0); transform-origin: left;
+          transition: transform 0.35s ease;
         }
-        .sv2-tab.active .sv2-tab-bar { transform: scaleX(1); }
+        .svc-card:hover::after { transform: scaleX(1); }
+        .svc-card:hover { background: rgba(0,170,255,0.02); }
 
-        /* Progress bar */
-        .sv2-progress {
-          position: absolute; bottom: 0; left: 0; right: 0;
-          height: 2px; background: rgba(255,255,255,0.06);
-          overflow: hidden;
-        }
-        .sv2-progress-fill {
-          position: absolute; left: 0; top: 0; bottom: 0;
-          background: ${BLUE}; width: 0%;
-        }
-        .sv2-progress-fill.run {
-          animation: sv2prog 6s linear forwards;
-        }
-        @keyframes sv2prog { from { width: 0% } to { width: 100% } }
+        .svc-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+        .svc-card-code { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 0.2em; color: #ddd; }
+        .svc-card-icon { font-size: 18px; color: rgba(0,170,255,0.25); transition: color 0.25s; }
+        .svc-card:hover .svc-card-icon { color: ${BLUE}; }
 
-        @media (max-width: 900px) {
-          .sv2-split { grid-template-columns: 1fr; }
-          .sv2-photo { height: 50vh; }
-          .sv2-text { padding: 40px 24px 32px; }
-          .sv2-tabs { grid-template-columns: repeat(3, 1fr); flex-wrap: wrap; }
-          .sv2-stats { grid-template-columns: repeat(2, 1fr); }
+        .svc-card-en {
+          font-family: 'Fraunces', serif; font-weight: 800;
+          font-size: 15px; line-height: 1.2; color: ${INK}; margin-bottom: 6px;
+        }
+        .svc-card-ar {
+          font-size: 13px; color: #aaa; line-height: 1.5; text-align: right;
+          direction: rtl; font-family: system-ui, sans-serif;
+          margin-bottom: 14px;
+        }
+        .svc-card-desc {
+          font-size: 11px; line-height: 1.65; color: #888; font-weight: 300;
+        }
+        .svc-card-footer {
+          display: flex; align-items: center; gap: 8px; margin-top: 20px;
+          font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: #ccc;
+          transition: color 0.25s;
+        }
+        .svc-card:hover .svc-card-footer { color: ${BLUE}; }
+        .svc-card-footer-line { flex: 0 0 16px; height: 1px; background: currentColor; }
+
+        @media (max-width: 960px) {
+          .v3-hero { grid-template-columns: 1fr; height: auto; }
+          .v3-sidebar { display: none; }
+          .v3-text-block { grid-template-columns: 1fr; gap: 16px; }
+          .v3-bottom { grid-template-columns: 1fr; }
+          .v3-bottom-left { border-right: none; border-bottom: 1px solid ${INK}; }
+          .svc-grid { grid-template-columns: repeat(2, 1fr); }
+          .svc-card:nth-child(4n) { border-right: 1px solid rgba(0,0,0,0.07); }
+          .svc-card:nth-child(2n) { border-right: none; }
+          .svc-section-head { flex-direction: column; gap: 12px; }
+          .svc-section-sub { text-align: left; }
         }
       `}</style>
 
-      {/* ── NAVBAR ─────────────────────────────────── */}
-      <nav className="sv2-nav">
-        <div>
-          <div className="sv2-nav-logo">SHAAS</div>
-          <div className="sv2-nav-tagline">General Consulting · Abu Dhabi</div>
-        </div>
-        <div style={{ display: 'flex', gap: 36, alignItems: 'center' }}>
-          {['Home', 'About', 'Solutions', 'Contact'].map(item => (
-            <span key={item} style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)', cursor: 'pointer', transition: 'color 0.2s' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
-            >{item}</span>
-          ))}
-        </div>
-        <button className="sv2-nav-cta">Get Started ↗</button>
-      </nav>
 
-      {/* ── SPLIT HERO ─────────────────────────────── */}
-      <div className="sv2-split sv2-root" style={{ flex: 1 }}>
-
-        {/* LEFT — Photo */}
-        <div className="sv2-photo">
-          <img
-            src={s.img}
-            alt={s.title}
-            style={{ opacity: imgFade ? 1 : 0, transform: imgFade ? 'scale(1)' : 'scale(1.03)' }}
-          />
-          <div className="sv2-photo-overlay" />
-          <div className="sv2-photo-overlay-right" />
-
-          {/* Diagonal slash */}
-          <div className="sv2-slash" />
-
-          {/* Location pill */}
-          <div className="sv2-location">
-            <div className="sv2-location-dot" />
-            <span className="sv2-location-text">{s.location}</span>
-          </div>
-
-          {/* Ghost number */}
-          <div className="sv2-photo-num" style={{ opacity: imgFade ? 1 : 0 }}>{s.num}</div>
-        </div>
-
-        {/* RIGHT — Text */}
-        <div className="sv2-text">
-          <div className="sv2-vrule" />
-
-          {/* Eyebrow */}
-          <div className="sv2-eyebrow">
-            <span className="sv2-eyebrow-num">{s.num}</span>
-            <div className="sv2-eyebrow-sep" />
-            <span className="sv2-eyebrow-tag">{s.tag}</span>
-          </div>
-
-          {/* Headline */}
-          <div className="sv2-h1-line1" style={{ opacity: textFade ? 1 : 0 }}>{s.title}</div>
-          <div className="sv2-h1-line2" style={{ opacity: textFade ? 1 : 0 }}>{s.sub}</div>
-
-          {/* Blue rule */}
-          <div className="sv2-h1-underline" />
-
-          {/* Dek */}
-          <p className="sv2-dek" style={{ opacity: textFade ? 1 : 0 }}>{s.dek}</p>
-
-          {/* Body */}
-          <p className="sv2-body" style={{ opacity: textFade ? 1 : 0 }}>{s.body}</p>
-
-          {/* CTAs */}
-          <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginTop: 28 }}>
-            <button style={{ background: INK, color: '#fff', border: 'none', padding: '12px 28px', fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, cursor: 'pointer', transition: 'background 0.25s' }}
-              onMouseEnter={e => (e.currentTarget.style.background = BLUE)}
-              onMouseLeave={e => (e.currentTarget.style.background = INK)}
-            >Engage Now →</button>
-            <button style={{ background: 'none', border: 'none', borderBottom: `1px solid transparent`, fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#888', fontFamily: "'DM Sans', sans-serif", cursor: 'pointer', padding: '12px 0', transition: 'color 0.2s, border-color 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.color = INK; e.currentTarget.style.borderBottomColor = INK }}
-              onMouseLeave={e => { e.currentTarget.style.color = '#888'; e.currentTarget.style.borderBottomColor = 'transparent' }}
-            >View Case Studies</button>
-          </div>
-
-          {/* Stats */}
-          <div className="sv2-stats">
-            {stats.map((st, i) => (
-              <div className="sv2-stat" key={i} style={{ paddingLeft: i === 0 ? 0 : 16 }}>
-                <div className="sv2-stat-val">{st.val}<span className="sv2-stat-sym">{st.sym}</span></div>
-                <div className="sv2-stat-label">{st.label}</div>
+      {/* ── HERO ── */}
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="v3-hero">
+          <div className="v3-sidebar">
+            <div className="v3-sidebar-head">Our Services</div>
+            {services.map((svc, idx) => (
+              <div key={svc.num} className={`v3-svc-row${idx === active ? ' active' : ''}`} onClick={() => handleClick(idx)}>
+                <div className="v3-svc-n">{svc.num}</div>
+                <div>
+                  <div className="v3-svc-t">{svc.title}</div>
+                  <div className="v3-svc-s">{svc.sub}</div>
+                </div>
+                <div className="v3-svc-arr">→</div>
               </div>
             ))}
+            <div className="v3-sidebar-stats">
+              {[['500+','Projects'],['98%','Satisfaction'],['15+','Years'],['50+','Partners']].map(([v,l],i) => (
+                <div className="v3-ss-cell" key={i}>
+                  <div className="v3-ss-val" style={{ color: i === 3 ? BLUE : INK }}>
+                    {v.replace(/[^0-9]/g,'')}
+                    <span className="v3-ss-sym">{v.replace(/[0-9]/g,'')}</span>
+                  </div>
+                  <div className="v3-ss-lbl">{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="v3-content">
+            <div className="v3-img-wrap">
+              <img src={s.img} alt={s.title} style={{ opacity: fade ? 1 : 0, transform: fade ? 'scale(1)' : 'scale(1.04)' }} />
+              <div className="v3-img-grad" />
+              <div className="v3-img-tag">{s.tag}</div>
+              <div className="v3-ghost-num" style={{ opacity: fade ? 1 : 0 }}>{s.num}</div>
+            </div>
+            <div className="v3-text-block">
+              <div>
+                <div className="v3-h-eyebrow">
+                  <div className="v3-h-line" />
+                  <div className="v3-h-etxt">{s.tag} · {s.num}</div>
+                </div>
+                <div className="v3-headline" style={{ opacity: fade ? 1 : 0 }}>{s.title}</div>
+                <div className="v3-headline-i" style={{ opacity: fade ? 1 : 0 }}>{s.sub}</div>
+                <p className="v3-dek" style={{ opacity: fade ? 1 : 0, margin: 0 }}>{s.dek}</p>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <p className="v3-body-text" style={{ opacity: fade ? 1 : 0, margin: 0 }}>{s.body}</p>
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                  <button className="v3-btn-p">Engage Now →</button>
+                  <button className="v3-btn-g">Case Studies</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* ── SERVICE TABS ───────────────────────────── */}
-      <div className="sv2-tabs">
-        {services.map((svc, idx) => (
-          <div
-            key={svc.num}
-            className={`sv2-tab${idx === active ? ' active' : ''}`}
-            onClick={() => handleClick(idx)}
-            style={{ position: 'relative' }}
-          >
-            <div className="sv2-tab-num">{svc.num}</div>
-            <div className="sv2-tab-title">{svc.title}</div>
-            <div className="sv2-tab-sub">{svc.sub}</div>
-            <div className="sv2-tab-bar" />
-            {/* Progress only under active tab */}
-            {idx === active && (
-              <div className="sv2-progress">
-                <div key={progressKey} className="sv2-progress-fill run" />
-              </div>
-            )}
+        <div className="v3-bottom">
+          <div className="v3-bottom-left">
+            <span className="v3-counter">{String(active + 1).padStart(2,'0')} / {String(services.length).padStart(2,'0')}</span>
+            <div className="v3-progress-track">
+              <div key={progressKey} className="v3-progress-fill run" />
+            </div>
+            <span style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#aaa', whiteSpace: 'nowrap' }}>Auto-advance</span>
           </div>
-        ))}
+          <div className="v3-bottom-right">
+            <div className="v3-addr">ADGM Square · Al Maryah Island · Abu Dhabi</div>
+            <div style={{ display: 'flex', gap: 16 }} className="v3-social">
+              {['LinkedIn','X','Instagram'].map(n => <span key={n}>{n}</span>)}
+            </div>
+            <div style={{ fontSize: 9, letterSpacing: '0.2em', color: '#ccc' }}>© 2025 SHAAS</div>
+          </div>
+        </div>
       </div>
     </div>
   )

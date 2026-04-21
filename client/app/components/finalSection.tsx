@@ -1,355 +1,215 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { ArrowRight, ArrowUpRight, Mail, Phone, MapPin } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
-export default function ElegantFinalSection() {
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLDivElement>(null)
+const BLUE = '#00aaff'
+const INK  = '#0a0a0a'
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100
-      })
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+export default function ShaasCTA() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [inView, setInView] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
-      },
-      { threshold: 0.1 }
+      ([entry]) => { if (entry.isIntersecting) setInView(true) },
+      { threshold: 0.15 }
     )
-    
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-    
+    if (ref.current) observer.observe(ref.current)
     return () => observer.disconnect()
   }, [])
 
-  const stats = [
-    { value: '500', suffix: '+', label: 'Projects Delivered' },
-    { value: '98', suffix: '%', label: 'Client Satisfaction' },
-    { value: '15', suffix: '+', label: 'Years Excellence' },
-    { value: '50', suffix: '+', label: 'Global Partners' }
-  ]
-
   return (
-    <section 
-      ref={sectionRef}
-      className="relative w-full bg-[#050507] overflow-hidden"
+    <footer
+      ref={ref}
+      style={{
+        background: '#fff',
+        borderTop: `2px solid ${INK}`,
+        fontFamily: "'DM Sans', sans-serif",
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
-      {/* Noise texture */}
-      <div className="absolute inset-0 pointer-events-none z-20 opacity-[0.015]">
-        <svg width="100%" height="100%">
-          <filter id="finalNoise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
-          </filter>
-          <rect width="100%" height="100%" filter="url(#finalNoise)"/>
-        </svg>
-      </div>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,300&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
 
-      {/* Animated wave dots background */}
-      <div className="absolute bottom-0 left-0 right-0 h-[500px] overflow-hidden pointer-events-none">
-        <div className="wave-container">
-          {[...Array(20)].map((_, rowIndex) => (
-            <div key={rowIndex} className="wave-row" style={{ '--row': rowIndex } as React.CSSProperties}>
-              {[...Array(40)].map((_, dotIndex) => (
-                <div 
-                  key={dotIndex} 
-                  className="wave-dot"
-                  style={{ 
-                    '--dot': dotIndex,
-                    '--delay': (rowIndex * 0.1 + dotIndex * 0.05)
-                  } as React.CSSProperties}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050507] via-[#050507]/60 to-transparent" />
-      </div>
-
-      {/* Fluid background orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute w-[800px] h-[800px] transition-all duration-[3000ms] ease-out"
-          style={{
-            left: `${mousePos.x - 30}%`,
-            top: '10%',
-            background: 'radial-gradient(ellipse at center, rgba(0,170,255,0.08) 0%, transparent 60%)',
-            filter: 'blur(100px)',
-          }}
-        />
-        <div 
-          className="absolute w-[600px] h-[600px] transition-all duration-[4000ms] ease-out"
-          style={{
-            right: '10%',
-            bottom: '20%',
-            background: 'radial-gradient(ellipse at center, rgba(0,100,200,0.06) 0%, transparent 60%)',
-            filter: 'blur(120px)',
-          }}
-        />
-      </div>
-
-      {/* Main content */}
-      <div className="relative z-10">
-        
-        {/* CTA Section */}
-        <div className="px-8 lg:px-20 pt-32 pb-24">
-          <div className="max-w-5xl mx-auto text-center">
-            
-            {/* Top decorative element */}
-            <div 
-              className={`flex items-center justify-center gap-6 mb-12 transition-all duration-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
-              }`}
-            >
-              <div className="w-20 h-[1px] bg-gradient-to-r from-transparent to-[#0af]/30" />
-              <div className="relative">
-                <div className="w-3 h-3 rotate-45 border border-[#0af]/50" />
-                <div className="absolute inset-0 w-3 h-3 rotate-45 border border-[#0af]/30 animate-ping" />
-              </div>
-              <div className="w-20 h-[1px] bg-gradient-to-l from-transparent to-[#0af]/30" />
-            </div>
-
-            {/* Label */}
-            <div 
-              className={`mb-8 transition-all duration-1000 delay-100 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
-              <span className="text-[#0af] text-[10px] tracking-[0.5em] uppercase">
-                Let's Build The Future
-              </span>
-            </div>
-
-            {/* Main headline */}
-            <div className="mb-8">
-              <div className="overflow-hidden">
-                <h2 
-                  className={`text-[10vw] lg:text-[5vw] font-extralight text-white leading-[1.1] tracking-[-0.03em] transition-all duration-1000 delay-200 ${
-                    isVisible ? 'translate-y-0' : 'translate-y-full'
-                  }`}
-                >
-                  Ready to Transform
-                </h2>
-              </div>
-              <div className="overflow-hidden">
-                <h2 
-                  className={`text-[10vw] lg:text-[5vw] font-extralight text-white/40 leading-[1.1] tracking-[-0.03em] transition-all duration-1000 delay-300 ${
-                    isVisible ? 'translate-y-0' : 'translate-y-full'
-                  }`}
-                >
-                  Your Business?
-                </h2>
-              </div>
-            </div>
-
-            {/* Decorative line */}
-            <div 
-              className={`flex items-center justify-center gap-4 mb-10 transition-all duration-1000 delay-400 ${
-                isVisible ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#0af]/50" />
-              <div className="w-1.5 h-1.5 bg-[#0af]/50 rotate-45" />
-              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#0af]/50" />
-            </div>
-
-            {/* Description */}
-            <p 
-              className={`text-white/40 text-base lg:text-lg font-light leading-relaxed max-w-2xl mx-auto mb-14 transition-all duration-1000 delay-500 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
-              Join visionary enterprises who are already leveraging our expertise. 
-              Your transformation journey starts with a 
-              <span className="text-white/70"> single conversation</span>.
-            </p>
-
-            {/* CTA Buttons */}
-            <div 
-              className={`flex flex-col sm:flex-row items-center justify-center gap-6 mb-20 transition-all duration-1000 delay-600 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
-              <button className="group relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0af] to-[#06f]" />
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                <span className="relative flex items-center gap-4 px-10 py-5 text-white text-[11px] tracking-[0.25em]">
-                  START YOUR JOURNEY
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </button>
-
-              <button className="group flex items-center gap-4 px-10 py-5 border border-white/10 hover:border-[#0af]/50 bg-white/[0.02] hover:bg-[#0af]/5 transition-all duration-500">
-                <span className="text-white/50 group-hover:text-white text-[11px] tracking-[0.2em] transition-colors">
-                  SCHEDULE A CALL
-                </span>
-                <ArrowUpRight className="w-4 h-4 text-white/30 group-hover:text-[#0af] transition-colors" />
-              </button>
-            </div>
-
-            {/* Stats */}
-            <div 
-              className={`grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-24 transition-all duration-1000 delay-700 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
-              {stats.map((stat, idx) => (
-                <div 
-                  key={idx} 
-                  className="group text-center"
-                  style={{ transitionDelay: `${800 + idx * 100}ms` }}
-                >
-                  <div className="flex items-baseline justify-center gap-1 mb-2">
-                    <span className="text-4xl lg:text-5xl font-extralight text-white group-hover:text-[#0af] transition-colors duration-500">
-                      {stat.value}
-                    </span>
-                    <span className="text-xl text-[#0af]">{stat.suffix}</span>
-                  </div>
-                  <div className="text-white/30 text-[10px] tracking-[0.2em] uppercase group-hover:text-white/50 transition-colors">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Contact section */}
-        <div className="px-8 lg:px-20 py-16 border-t border-white/5">
-          <div className="max-w-5xl mx-auto">
-            <div className="grid lg:grid-cols-3 gap-12 lg:gap-8">
-              
-              {/* Contact info */}
-              <div 
-                className={`text-center lg:text-left transition-all duration-1000 ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: '900ms' }}
-              >
-                <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
-                  <Mail className="w-4 h-4 text-[#0af]" />
-                  <span className="text-white/30 text-[10px] tracking-[0.3em] uppercase">Email</span>
-                </div>
-                <a 
-                  href="mailto:info@shaas-consulting.ae" 
-                  className="text-white/60 hover:text-[#0af] text-sm font-light transition-colors"
-                >
-                  info@shaas-consulting.ae
-                </a>
-              </div>
-
-              <div 
-                className={`text-center transition-all duration-1000 ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: '1000ms' }}
-              >
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <Phone className="w-4 h-4 text-[#0af]" />
-                  <span className="text-white/30 text-[10px] tracking-[0.3em] uppercase">Phone</span>
-                </div>
-                <a 
-                  href="tel:+971568474217" 
-                  className="text-white/60 hover:text-[#0af] text-sm font-light transition-colors"
-                >
-                  +971 568 474 217
-                </a>
-              </div>
-
-              <div 
-                className={`text-center lg:text-right transition-all duration-1000 ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: '1100ms' }}
-              >
-                <div className="flex items-center justify-center lg:justify-end gap-3 mb-4">
-                  <MapPin className="w-4 h-4 text-[#0af]" />
-                  <span className="text-white/30 text-[10px] tracking-[0.3em] uppercase">Location</span>
-                </div>
-                <span className="text-white/60 text-sm font-light">
-                  Dubai, United Arab Emirates
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-   
-      </div>
-
-      {/* Styles */}
-      <style jsx>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Karla:wght@300;400;500&display=swap');
-        
-        * {
-          font-family: 'Karla', sans-serif;
+        .cta-reveal {
+          opacity: 0; transform: translateY(28px);
+          transition: opacity 0.65s ease, transform 0.65s ease;
         }
-        
-        h1, h2, h3, h4 {
-          font-family: 'Cormorant Garamond', serif;
+        .cta-reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .cta-input {
+          flex: 1; height: 52px; border: 1px solid rgba(0,0,0,0.15);
+          border-right: none; padding: 0 20px;
+          font-size: 12px; font-family: 'DM Sans', sans-serif;
+          font-weight: 300; color: ${INK}; background: #fff;
+          outline: none; transition: border-color 0.2s;
+          min-width: 0;
+        }
+        .cta-input::placeholder { color: #bbb; }
+        .cta-input:focus { border-color: ${BLUE}; }
+
+        .cta-submit {
+          height: 52px; padding: 0 28px;
+          background: ${INK}; color: #fff; border: none;
+          font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+          font-family: 'DM Sans', sans-serif; font-weight: 500;
+          cursor: pointer; white-space: nowrap;
+          transition: background 0.25s;
+          flex-shrink: 0;
+        }
+        .cta-submit:hover { background: ${BLUE}; }
+
+        .cta-social-link {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 14px 0;
+          border-bottom: 1px solid rgba(0,0,0,0.07);
+          text-decoration: none; cursor: pointer;
+          transition: padding-left 0.25s;
+        }
+        .cta-social-link:hover { padding-left: 6px; }
+        .cta-social-link:hover .cta-social-name { color: ${BLUE}; }
+        .cta-social-link:hover .cta-social-arr { color: ${BLUE}; transform: translate(2px,-2px); }
+        .cta-social-name {
+          font-family: 'Fraunces', serif; font-weight: 800;
+          font-size: 15px; color: ${INK}; transition: color 0.25s;
+        }
+        .cta-social-arr {
+          font-size: 14px; color: #ccc;
+          transition: color 0.25s, transform 0.25s; display: inline-block;
         }
 
-        .wave-container {
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%) perspective(500px) rotateX(60deg);
-          width: 200%;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-end;
-          gap: 20px;
-          padding-bottom: 50px;
+        .cta-footer-link {
+          font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+          color: #aaa; text-decoration: none; cursor: pointer;
+          transition: color 0.2s;
         }
+        .cta-footer-link:hover { color: ${BLUE}; }
 
-        .wave-row {
-          display: flex;
-          gap: 30px;
-          justify-content: center;
+        .cta-loc-dot {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: ${BLUE}; flex-shrink: 0;
+          animation: ctaloc 2s infinite;
         }
-
-        .wave-dot {
-          width: 4px;
-          height: 4px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #0af, #06f);
-          opacity: 0.6;
-          animation: wave-float 4s ease-in-out infinite;
-          animation-delay: calc(var(--delay) * -0.1s);
-        }
-
-        @keyframes wave-float {
-          0%, 100% {
-            transform: translateY(0) scale(1);
-            opacity: 0.3;
-          }
-          50% {
-            transform: translateY(-30px) scale(1.2);
-            opacity: 0.8;
-          }
-        }
-
-        .wave-row:nth-child(odd) .wave-dot {
-          animation-delay: calc(var(--delay) * -0.1s + 0.5s);
+        @keyframes ctaloc {
+          0%,100% { box-shadow: 0 0 0 0 rgba(0,170,255,0.5); }
+          50%      { box-shadow: 0 0 0 5px rgba(0,170,255,0); }
         }
       `}</style>
-    </section>
+
+      {/* ── TOP — Main CTA ── */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1px 420px',
+        borderBottom: `1px solid rgba(0,0,0,0.08)`,
+      }}>
+
+        {/* Left — headline */}
+        <div style={{ padding: '64px 48px' }}>
+          <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '0ms', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 24 }}>
+            <div style={{ width: 20, height: 2, background: BLUE }} />
+            <span style={{ fontSize: 9, letterSpacing: '0.45em', textTransform: 'uppercase', color: BLUE, fontWeight: 500 }}>
+              Get In Touch
+            </span>
+          </div>
+
+          <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '80ms' }}>
+            <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 'clamp(40px, 5vw, 68px)', lineHeight: 0.92, letterSpacing: '-0.025em', color: INK }}>
+              Let's build
+            </div>
+          </div>
+          <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '150ms', marginBottom: 32 }}>
+            <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 300, fontStyle: 'italic', fontSize: 'clamp(40px, 5vw, 68px)', lineHeight: 0.92, letterSpacing: '-0.025em', color: BLUE }}>
+              something great.
+            </div>
+          </div>
+
+          <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '220ms', marginBottom: 36 }}>
+            <p style={{ fontFamily: "'Fraunces', serif", fontStyle: 'italic', fontSize: 14, color: '#999', lineHeight: 1.7, maxWidth: 380, margin: 0, fontWeight: 300 }}>
+              Reach out to our Abu Dhabi team and discover how SHAAS can elevate your enterprise across all eight of our licensed disciplines.
+            </p>
+          </div>
+
+          {/* Email form */}
+          <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '290ms' }}>
+            <div style={{ display: 'flex', maxWidth: 440 }}>
+              <input className="cta-input" type="email" placeholder="Your email address" />
+              <button className="cta-submit">Send ↗</button>
+            </div>
+            <div style={{ marginTop: 10, fontSize: 10, color: '#bbb', letterSpacing: '0.1em' }}>
+              We'll respond within 24 hours.
+            </div>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div style={{ background: 'rgba(0,0,0,0.08)' }} />
+
+        {/* Right — contact details + social */}
+        <div style={{ padding: '64px 40px', display: 'flex', flexDirection: 'column', gap: 0 }}>
+
+          <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '100ms', marginBottom: 32 }}>
+            <div style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: '#aaa', marginBottom: 16 }}>Contact</div>
+            {[
+              { label: 'Email',   val: 'info@shaas.com' },
+              { label: 'Phone',   val: '+971 XX XXX XXXX' },
+              { label: 'Address', val: 'ADGM Square, Al Maryah Island\nAbu Dhabi, UAE' },
+            ].map(item => (
+              <div key={item.label} style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 8, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#ccc', marginBottom: 3 }}>{item.label}</div>
+                <div style={{ fontSize: 12, color: '#555', fontWeight: 300, lineHeight: 1.6, whiteSpace: 'pre-line' }}>{item.val}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', marginBottom: 24 }} />
+
+          {/* Social links */}
+          <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '180ms' }}>
+            <div style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: '#aaa', marginBottom: 8 }}>Follow</div>
+            {['LinkedIn', 'X (Twitter)', 'Instagram'].map(s => (
+              <div key={s} className="cta-social-link">
+                <span className="cta-social-name">{s}</span>
+                <span className="cta-social-arr">↗</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── BOTTOM BAR ── */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr auto 1fr',
+        alignItems: 'center',
+        padding: '16px 48px',
+        borderTop: `1px solid rgba(0,0,0,0.08)`,
+      }}>
+        {/* Left */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div className="cta-loc-dot" />
+          <span style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#aaa' }}>
+            Abu Dhabi, UAE
+          </span>
+        </div>
+
+        {/* Center — logo */}
+        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, letterSpacing: '0.2em', color: INK, textAlign: 'center' }}>
+          SHAAS
+        </div>
+
+        {/* Right */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, justifyContent: 'flex-end' }}>
+          {['Privacy', 'Terms', 'Sitemap'].map((l, i) => (
+            <span key={l} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+              {i > 0 && <span style={{ color: '#ddd', fontSize: 10 }}>·</span>}
+              <a className="cta-footer-link">{l}</a>
+            </span>
+          ))}
+          <span style={{ color: '#ddd', fontSize: 10 }}>·</span>
+          <span style={{ fontSize: 9, letterSpacing: '0.15em', color: '#ccc' }}>© 2025 SHAAS</span>
+        </div>
+      </div>
+    </footer>
   )
 }

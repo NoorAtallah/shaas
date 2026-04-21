@@ -1,235 +1,346 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
 import { Menu, X, ArrowUpRight } from 'lucide-react'
 
+const BLUE = '#00aaff'
+const INK  = '#0a0a0a'
+
+const navItems = [
+  { name: 'Home',      href: '/' },
+  { name: 'About',     href: '/about' },
+  { name: 'Solutions', href: '/solutions' },
+  { name: 'Contact',   href: '/contact' },
+]
+
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isRevealed, setIsRevealed] = useState(false)
+  const [isScrolled, setIsScrolled]       = useState(false)
+  const [mobileOpen, setMobileOpen]       = useState(false)
+  const [mounted, setMounted]             = useState(false)
+  const [activeItem, setActiveItem]       = useState<string | null>(null)
+  const drawerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+    setMounted(true)
+    const onScroll = () => setIsScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // close drawer on outside click
+  useEffect(() => {
+    if (!mobileOpen) return
+    const handler = (e: MouseEvent) => {
+      if (drawerRef.current && !drawerRef.current.contains(e.target as Node)) {
+        setMobileOpen(false)
+      }
     }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [mobileOpen])
 
+  // lock body scroll when drawer open
   useEffect(() => {
-    setTimeout(() => setIsRevealed(true), 1200)
-  }, [])
-
-  const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'Solutions', href: '/solutions' },
-    { name: 'Contact', href: '/contact' },
-  ]
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [mobileOpen])
 
   return (
     <>
-      {/* Elegant noise texture overlay */}
-      <div className="fixed inset-0 pointer-events-none z-40 opacity-[0.015]">
-        <svg width="100%" height="100%">
-          <filter id="navNoise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
-          </filter>
-          <rect width="100%" height="100%" filter="url(#navNoise)"/>
-        </svg>
-      </div>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,800;1,9..144,300&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
 
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-          isRevealed ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
-        } ${
-          isScrolled
-            ? 'bg-[#050507]/90 backdrop-blur-xl border-b border-[#0af]/10'
-            : 'bg-transparent'
-        }`}
-      >
-        <div className="px-8 lg:px-20">
-          <div className="flex items-center justify-between h-24">
-            {/* Logo */}
-            <a href="/" className="group flex items-center gap-4 relative z-10">
-              <div className="relative">
-                <div className="w-12 h-12 flex items-center justify-center overflow-hidden">
-                  <img 
-                    src="/images/9.png" 
-                    alt="SHAAS" 
-                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
-                  />
-                </div>
-                {/* Accent corner */}
-                <div className="absolute -top-1 -left-1 w-3 h-3 border-l border-t border-[#0af] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute -bottom-1 -right-1 w-3 h-3 border-r border-b border-[#0af] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-white font-light text-xl tracking-[-0.02em]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                  SHAAS
-                </span>
-                <span className="text-white/30 text-[9px] tracking-[0.3em] uppercase font-light">
-                  General Consulting
-                </span>
-              </div>
-            </a>
+        .nb-root {
+          position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+          transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+          font-family: 'DM Sans', sans-serif;
+        }
+        .nb-root.hidden-nav { transform: translateY(-100%); opacity: 0; }
+        .nb-root.visible-nav { transform: translateY(0); opacity: 1; }
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-12">
-              {navItems.map((item, idx) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="group relative py-2"
-                  style={{ transitionDelay: `${1400 + idx * 100}ms` }}
-                >
-                  <span className="text-white/60 hover:text-white text-[11px] tracking-[0.2em] uppercase font-light transition-colors duration-500">
-                    {item.name}
-                  </span>
-                  {/* Underline animation */}
-                  <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#0af] group-hover:w-full transition-all duration-500" />
-                </a>
-              ))}
+        /* scrolled state — add a crisp bottom border */
+        .nb-inner {
+          display: flex; align-items: center; justify-content: space-between;
+          height: 64px; padding: 0 48px;
+          background: #fff;
+          border-bottom: 1px solid ${INK};
+          transition: box-shadow 0.3s ease;
+        }
+        .nb-inner.scrolled {
+          box-shadow: 0 1px 0 ${INK};
+        }
+
+        /* LOGO */
+        .nb-logo {
+          display: flex; align-items: center; gap: 10px;
+          text-decoration: none; cursor: pointer;
+        }
+        .nb-logo-img {
+          width: 36px; height: 36px; object-fit: contain;
+        }
+        .nb-logo-text {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 22px; letter-spacing: 0.18em; color: ${INK};
+          line-height: 1;
+        }
+        .nb-logo-sub {
+          font-size: 8px; letter-spacing: 0.35em; text-transform: uppercase;
+          color: #aaa; margin-top: 1px;
+        }
+
+        /* NAV LINKS */
+        .nb-links {
+          display: flex; align-items: center; gap: 36px;
+        }
+        .nb-link {
+          position: relative; padding: 4px 0;
+          font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+          color: #888; text-decoration: none; cursor: pointer;
+          transition: color 0.2s ease;
+          background: none; border: none; font-family: 'DM Sans', sans-serif;
+        }
+        .nb-link::after {
+          content: ''; position: absolute; bottom: 0; left: 0;
+          width: 0; height: 1px; background: ${BLUE};
+          transition: width 0.3s ease;
+        }
+        .nb-link:hover { color: ${INK}; }
+        .nb-link:hover::after { width: 100%; }
+        .nb-link.nb-active { color: ${INK}; }
+        .nb-link.nb-active::after { width: 100%; background: ${BLUE}; }
+
+        /* LOCATION BADGE */
+        .nb-loc {
+          display: flex; align-items: center; gap: 7px;
+          font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #aaa;
+        }
+        .nb-loc-dot {
+          width: 6px; height: 6px; border-radius: 50%; background: ${BLUE};
+          flex-shrink: 0; animation: nbpulse 2s infinite;
+        }
+        @keyframes nbpulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(0,170,255,0.5); }
+          50%      { box-shadow: 0 0 0 5px rgba(0,170,255,0); }
+        }
+
+        /* CTA */
+        .nb-cta {
+          display: flex; align-items: center; gap: 10px;
+          background: ${INK}; color: #fff; border: none;
+          padding: 9px 20px; cursor: pointer;
+          font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+          font-family: 'DM Sans', sans-serif; font-weight: 500;
+          transition: background 0.25s ease;
+          white-space: nowrap;
+        }
+        .nb-cta:hover { background: ${BLUE}; }
+        .nb-cta svg { width: 13px; height: 13px; }
+
+        /* MOBILE TOGGLE */
+        .nb-toggle {
+          display: none; align-items: center; justify-content: center;
+          width: 40px; height: 40px;
+          background: none; border: 1px solid rgba(0,0,0,0.12); cursor: pointer;
+          transition: border-color 0.2s;
+        }
+        .nb-toggle:hover { border-color: ${BLUE}; }
+        .nb-toggle svg { width: 18px; height: 18px; color: ${INK}; }
+
+        /* ── MOBILE DRAWER ── */
+        .nb-overlay {
+          position: fixed; inset: 0; z-index: 98;
+          background: rgba(10,10,10,0.4);
+          opacity: 0; pointer-events: none;
+          transition: opacity 0.35s ease;
+        }
+        .nb-overlay.open { opacity: 1; pointer-events: all; }
+
+        .nb-drawer {
+          position: fixed; top: 0; right: 0; bottom: 0; z-index: 99;
+          width: 100%; max-width: 360px;
+          background: #fff;
+          border-left: 1px solid ${INK};
+          display: flex; flex-direction: column;
+          transform: translateX(100%);
+          transition: transform 0.45s cubic-bezier(0.16,1,0.3,1);
+        }
+        .nb-drawer.open { transform: translateX(0); }
+
+        .nb-drawer-head {
+          display: flex; align-items: center; justify-content: space-between;
+          height: 64px; padding: 0 28px;
+          border-bottom: 1px solid ${INK};
+          flex-shrink: 0;
+        }
+        .nb-drawer-label {
+          font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: #aaa;
+        }
+        .nb-drawer-close {
+          width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+          background: none; border: 1px solid rgba(0,0,0,0.1); cursor: pointer;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .nb-drawer-close:hover { border-color: ${BLUE}; background: rgba(0,170,255,0.05); }
+        .nb-drawer-close svg { width: 16px; height: 16px; color: ${INK}; }
+
+        .nb-drawer-links { flex: 1; padding: 8px 0; overflow-y: auto; }
+
+        .nb-drawer-link {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 0 28px; height: 72px;
+          border-bottom: 1px solid rgba(0,0,0,0.07);
+          text-decoration: none; cursor: pointer;
+          transition: background 0.2s;
+          position: relative; overflow: hidden;
+        }
+        .nb-drawer-link::before {
+          content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+          width: 0; background: ${BLUE};
+          transition: width 0.3s ease;
+        }
+        .nb-drawer-link:hover::before { width: 3px; }
+        .nb-drawer-link:hover { background: rgba(0,170,255,0.02); }
+
+        .nb-drawer-link-left {}
+        .nb-drawer-link-num {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 11px; letter-spacing: 0.15em; color: #ddd; margin-bottom: 2px;
+        }
+        .nb-drawer-link-name {
+          font-family: 'Fraunces', serif; font-weight: 800;
+          font-size: 18px; color: ${INK}; line-height: 1;
+        }
+        .nb-drawer-link svg {
+          width: 16px; height: 16px; color: #ccc;
+          transition: color 0.2s, transform 0.2s;
+          flex-shrink: 0;
+        }
+        .nb-drawer-link:hover svg { color: ${BLUE}; transform: translate(2px, -2px); }
+
+        .nb-drawer-footer {
+          padding: 24px 28px;
+          border-top: 1px solid rgba(0,0,0,0.08);
+          flex-shrink: 0;
+        }
+        .nb-drawer-cta {
+          width: 100%; display: flex; align-items: center; justify-content: space-between;
+          background: ${INK}; color: #fff; border: none;
+          padding: 14px 20px; cursor: pointer;
+          font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+          font-family: 'DM Sans', sans-serif; font-weight: 500;
+          transition: background 0.25s; margin-bottom: 20px;
+        }
+        .nb-drawer-cta:hover { background: ${BLUE}; }
+        .nb-drawer-cta svg { width: 14px; height: 14px; }
+
+        .nb-drawer-contact-label {
+          font-size: 8px; letter-spacing: 0.35em; text-transform: uppercase;
+          color: #bbb; margin-bottom: 8px;
+        }
+        .nb-drawer-contact-val {
+          font-size: 12px; color: #555; font-weight: 300;
+          transition: color 0.2s; text-decoration: none; display: block; margin-bottom: 4px;
+        }
+        .nb-drawer-contact-val:hover { color: ${BLUE}; }
+
+        /* RESPONSIVE */
+        @media (max-width: 960px) {
+          .nb-links, .nb-loc, .nb-cta { display: none !important; }
+          .nb-toggle { display: flex !important; }
+          .nb-inner { padding: 0 24px; }
+        }
+      `}</style>
+
+      {/* ── NAVBAR ── */}
+      <nav className={`nb-root ${mounted ? 'visible-nav' : 'hidden-nav'}`}>
+        <div className={`nb-inner${isScrolled ? ' scrolled' : ''}`}>
+
+          {/* Logo */}
+          <a href="/" className="nb-logo">
+            <img src="/images/9.png" alt="SHAAS" className="nb-logo-img" />
+            <div>
+              <div className="nb-logo-text">SHAAS</div>
+              <div className="nb-logo-sub">General Consulting</div>
             </div>
+          </a>
 
-            {/* CTA Button - Desktop */}
-            <div className="hidden lg:flex items-center gap-6">
-              <button className="group flex items-center gap-4">
-                <span className="text-[#0af] text-[10px] tracking-[0.3em] uppercase group-hover:text-white transition-colors duration-500">
-                  Get Started
-                </span>
-                <div className="w-11 h-11 rounded-full border border-[#0af]/30 group-hover:border-[#0af] flex items-center justify-center relative overflow-hidden transition-all duration-500">
-                  <div className="absolute inset-0 bg-[#0af] scale-0 group-hover:scale-100 transition-transform duration-500 rounded-full" />
-                  <ArrowUpRight className="w-4 h-4 text-[#0af] group-hover:text-white relative z-10 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </div>
-              </button>
+          {/* Desktop links */}
+          <div className="nb-links">
+            {navItems.map(item => (
+              <a
+                key={item.name}
+                href={item.href}
+                className={`nb-link${activeItem === item.name ? ' nb-active' : ''}`}
+                onClick={() => setActiveItem(item.name)}
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+
+          {/* Right side */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <div className="nb-loc">
+              <div className="nb-loc-dot" />
+              Abu Dhabi, UAE
             </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden w-12 h-12 flex items-center justify-center border border-white/10 hover:border-[#0af]/30 transition-all duration-500 relative overflow-hidden group"
-            >
-              <div className="absolute inset-0 bg-[#0af]/5 scale-0 group-hover:scale-100 transition-transform duration-500" />
-              {isMobileMenuOpen ? (
-                <X className="w-5 h-5 text-white/60 relative z-10" />
-              ) : (
-                <Menu className="w-5 h-5 text-white/60 relative z-10" />
-              )}
+            <button className="nb-cta">
+              Get Started <ArrowUpRight size={13} />
+            </button>
+            {/* Mobile toggle */}
+            <button className="nb-toggle" onClick={() => setMobileOpen(true)} aria-label="Open menu">
+              <Menu />
             </button>
           </div>
-        </div>
 
-        {/* Elegant bottom accent line */}
-        <div 
-          className={`h-[1px] bg-gradient-to-r from-transparent via-[#0af]/20 to-transparent transition-opacity duration-700 ${
-            isScrolled ? 'opacity-0' : 'opacity-100'
-          }`}
-        />
+        </div>
       </nav>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.5, ease: [0.87, 0, 0.13, 1] }}
-            className="fixed inset-0 z-40 lg:hidden"
-          >
-            {/* Backdrop */}
-            <div 
-              className="absolute inset-0 bg-[#050507]/95 backdrop-blur-xl"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            
-            {/* Menu Content */}
-            <div className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-[#050507] border-l border-[#0af]/10">
-              <div className="flex flex-col h-full">
-                {/* Header */}
-                <div className="flex items-center justify-between px-8 h-24 border-b border-white/5">
-                  <span className="text-white/30 text-[10px] tracking-[0.3em] uppercase">Menu</span>
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="w-12 h-12 flex items-center justify-center border border-white/10 hover:border-[#0af]/30 transition-all duration-500"
-                  >
-                    <X className="w-5 h-5 text-white/60" />
-                  </button>
-                </div>
+      {/* ── MOBILE OVERLAY ── */}
+      <div
+        className={`nb-overlay${mobileOpen ? ' open' : ''}`}
+        onClick={() => setMobileOpen(false)}
+      />
 
-                {/* Navigation Items */}
-                <div className="flex-1 px-8 py-12 space-y-2">
-                  {navItems.map((item, index) => (
-                    <motion.a
-                      key={item.name}
-                      href={item.href}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1, duration: 0.5 }}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="group block py-4 border-b border-white/5 hover:border-[#0af]/20 transition-all duration-500"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-white text-2xl font-light group-hover:text-[#0af] transition-colors duration-500" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                          {item.name}
-                        </span>
-                        <ArrowUpRight className="w-5 h-5 text-white/20 group-hover:text-[#0af] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                      </div>
-                      <span className="text-white/20 text-[10px] tracking-[0.3em] uppercase mt-1 block">
-                        0{index + 1}
-                      </span>
-                    </motion.a>
-                  ))}
-                </div>
+      {/* ── MOBILE DRAWER ── */}
+      <div ref={drawerRef} className={`nb-drawer${mobileOpen ? ' open' : ''}`}>
+        <div className="nb-drawer-head">
+          <div className="nb-drawer-label">Navigation</div>
+          <button className="nb-drawer-close" onClick={() => setMobileOpen(false)} aria-label="Close menu">
+            <X />
+          </button>
+        </div>
 
-                {/* Footer CTA */}
-                <div className="px-8 py-8 border-t border-white/5">
-                  <motion.button
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4, duration: 0.5 }}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="group w-full relative overflow-hidden border border-[#0af]/30 hover:border-[#0af] py-5 flex items-center justify-between px-6 transition-all duration-500"
-                  >
-                    <div className="absolute inset-0 bg-[#0af] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                    <span className="text-[#0af] group-hover:text-white text-[10px] tracking-[0.3em] uppercase relative z-10 transition-colors duration-500">
-                      Get Started
-                    </span>
-                    <ArrowUpRight className="w-5 h-5 text-[#0af] group-hover:text-white relative z-10 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                  </motion.button>
-
-                  {/* Contact info */}
-                  <div className="mt-8 space-y-3">
-                    <div>
-                      <div className="text-white/20 text-[9px] tracking-[0.3em] uppercase mb-1">Email</div>
-                      <a href="mailto:info@shaas.com" className="text-white/40 hover:text-[#0af] text-sm transition-colors duration-300">
-                        info@shaas.com
-                      </a>
-                    </div>
-                    <div>
-                      <div className="text-white/20 text-[9px] tracking-[0.3em] uppercase mb-1">Phone</div>
-                      <a href="tel:+1234567890" className="text-white/40 hover:text-[#0af] text-sm transition-colors duration-300">
-                        +1 (234) 567-890
-                      </a>
-                    </div>
-                  </div>
-                </div>
+        <div className="nb-drawer-links">
+          {navItems.map((item, idx) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className="nb-drawer-link"
+              onClick={() => setMobileOpen(false)}
+            >
+              <div className="nb-drawer-link-left">
+                <div className="nb-drawer-link-num">0{idx + 1}</div>
+                <div className="nb-drawer-link-name">{item.name}</div>
               </div>
+              <ArrowUpRight />
+            </a>
+          ))}
+        </div>
 
-              {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-24 h-24 border-r border-t border-[#0af]/10 pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-24 h-24 border-l border-b border-[#0af]/10 pointer-events-none" />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Styles */}
-      <style jsx>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Karla:wght@300;400;500&display=swap');
-      `}</style>
+        <div className="nb-drawer-footer">
+          <button className="nb-drawer-cta" onClick={() => setMobileOpen(false)}>
+            Get Started <ArrowUpRight size={14} />
+          </button>
+          <div className="nb-drawer-contact-label">Contact</div>
+          <a href="mailto:info@shaas.com" className="nb-drawer-contact-val">info@shaas.com</a>
+          <a href="tel:+97100000000" className="nb-drawer-contact-val">+971 XX XXX XXXX</a>
+          <div style={{ marginTop: 16 }} className="nb-loc">
+            <div className="nb-loc-dot" />
+            Abu Dhabi, UAE
+          </div>
+        </div>
+      </div>
     </>
   )
 }

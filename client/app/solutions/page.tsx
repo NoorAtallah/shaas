@@ -1,559 +1,568 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useInView, useScroll, useTransform } from 'framer-motion'
-import { 
-  Brain, Cloud, Database, Shield, Code, Rocket,
-  Sparkles, ArrowRight, Zap, Star, Hexagon, Orbit
-} from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+
+const BLUE = '#00aaff'
+const INK  = '#0a0a0a'
+
+function useInView(threshold = 0.15) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [inView, setInView] = useState(false)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setInView(true) },
+      { threshold }
+    )
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+  return { ref, inView }
+}
+
+const services = [
+  {
+    code: '7020039',
+    short: 'AI & Innovation',
+    title: 'Innovation & AI Research',
+    sub: 'Consultancies',
+    icon: '◈',
+    img: 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1000&q=85',
+    tagline: 'Harnessing intelligence to drive transformation.',
+    desc: 'We help organisations navigate the rapidly evolving landscape of artificial intelligence and emerging technologies. From feasibility assessments to full-scale AI adoption roadmaps, our team brings both technical depth and strategic clarity to every engagement.',
+    offerings: ['AI Readiness Assessment', 'Digital Transformation Strategy', 'Innovation Lab Design', 'Technology Vendor Selection', 'AI Ethics & Governance Frameworks'],
+    outcome: 'Clients typically achieve 30–50% reduction in manual process time and identify 3–5 high-impact AI use cases within the first engagement.',
+  },
+  {
+    code: '7320001',
+    short: 'Marketing',
+    title: 'Marketing Consultancy',
+    sub: 'And Studies',
+    icon: '◇',
+    img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1000&q=85',
+    tagline: 'Strategic clarity. Market-defining narratives.',
+    desc: 'Our marketing consultancy practice combines rigorous market analysis with creative strategic thinking. We develop brand narratives, positioning frameworks, and go-to-market strategies tailored to the UAE and broader MENA markets.',
+    offerings: ['Brand Strategy & Positioning', 'Market Entry Studies', 'Consumer Research & Insights', 'Campaign Strategy', 'Competitive Intelligence'],
+    outcome: 'Our clients consistently outperform sector benchmarks in brand recall and market penetration within 12 months of engagement.',
+  },
+  {
+    code: '7020020',
+    short: 'Project Dev',
+    title: 'Consultancy Project',
+    sub: 'Development',
+    icon: '△',
+    img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1000&q=85',
+    tagline: 'From concept to completion — with precision.',
+    desc: 'We translate visionary concepts into delivery-ready programmes. Our project development consultancy covers the full lifecycle — from initial feasibility and stakeholder mapping through to launch and post-delivery review.',
+    offerings: ['Feasibility Studies', 'Project Governance Design', 'Stakeholder Management', 'Risk Assessment & Mitigation', 'Programme Management Office Setup'],
+    outcome: 'Over 500 projects delivered on time and within budget across the UAE and GCC, with a 98% client retention rate.',
+  },
+  {
+    code: '0910018',
+    short: 'Oil & Gas',
+    title: 'Oil & Gas Fields',
+    sub: 'And Facilities Services',
+    icon: '◉',
+    img: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1000&q=85',
+    tagline: 'Specialist expertise for the energy sector.',
+    desc: 'We provide consultancy for onshore and offshore oil and gas infrastructure, covering operational optimisation, regulatory compliance, and facilities management. Our team understands the unique demands of Abu Dhabi\'s energy ecosystem.',
+    offerings: ['Operations Optimisation', 'Facilities Management Consulting', 'HSE Compliance Advisory', 'Asset Lifecycle Management', 'Regulatory & Licensing Support'],
+    outcome: 'Clients achieve measurable improvements in operational efficiency and regulatory compliance across upstream and downstream operations.',
+  },
+  {
+    code: '7020003',
+    short: 'Administrative',
+    title: 'Administrative Consultancy',
+    sub: 'And Studies',
+    icon: '▣',
+    img: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1000&q=85',
+    tagline: 'Precision-engineered operating models.',
+    desc: 'We redesign governance structures, workflows, and operating models to eliminate friction and create scalable, high-performance organisations. Our administrative consultancy practice is grounded in data and driven by results.',
+    offerings: ['Organisational Design', 'Process Re-engineering', 'Governance Framework Design', 'Policy & Procedure Development', 'Performance Management Systems'],
+    outcome: 'Organisations typically reduce administrative overhead by 20–35% and report significant improvements in cross-functional coordination.',
+  },
+  {
+    code: '7020008',
+    short: 'Human Resources',
+    title: 'Human Resources',
+    sub: 'Consultancy',
+    icon: '○',
+    img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1000&q=85',
+    tagline: 'Talent is your most enduring advantage.',
+    desc: 'Our HR consultancy covers the full people lifecycle — from talent acquisition strategy and Emiratisation planning to leadership development and culture transformation. We help organisations build the human foundations for sustained performance.',
+    offerings: ['Talent Strategy & Workforce Planning', 'Emiratisation Advisory', 'Leadership Development Programmes', 'Culture Transformation', 'Compensation & Benefits Benchmarking'],
+    outcome: 'Clients see measurable improvements in employee engagement, retention rates, and Emiratisation compliance within the first year.',
+  },
+  {
+    code: '7020028',
+    short: 'Logistics',
+    title: 'Logistics',
+    sub: 'Consultancy',
+    icon: '◻',
+    img: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1000&q=85',
+    tagline: 'Supply chains built for competitive advantage.',
+    desc: 'We apply advanced analytics and network modelling to transform supply chains into strategic assets. Leveraging Abu Dhabi\'s world-class logistics infrastructure including Khalifa Port and KIZAD, we design distribution networks that deliver speed and cost efficiency.',
+    offerings: ['Supply Chain Optimisation', 'Logistics Network Design', 'Warehousing & Distribution Strategy', 'Last-Mile Delivery Solutions', 'Customs & Trade Compliance'],
+    outcome: 'Average 18–25% reduction in logistics costs and significant improvements in delivery lead times across client supply chains.',
+  },
+  {
+    code: '7220005',
+    short: 'Legal Sciences',
+    title: 'Legal Sciences',
+    sub: 'Consultancy & Research',
+    icon: '⬡',
+    img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1000&q=85',
+    tagline: 'Regulatory clarity in a complex landscape.',
+    desc: 'Our legal sciences practice provides research, regulatory advisory, and compliance studies across UAE federal and emirate-level frameworks. We support businesses in navigating the legal landscape of Abu Dhabi, ADGM, and the wider Gulf region.',
+    offerings: ['Regulatory Compliance Audits', 'Legal Research & Studies', 'Contract Review & Advisory', 'ADGM Regulatory Guidance', 'Policy Impact Assessments'],
+    outcome: 'Clients achieve full regulatory compliance and reduce legal risk exposure significantly across their UAE and GCC operations.',
+  },
+]
+
+const process = [
+  { num: '01', title: 'Discovery', desc: 'We immerse ourselves in your business — understanding your context, challenges, stakeholders, and ambitions before any recommendations are made.' },
+  { num: '02', title: 'Diagnosis', desc: 'Through rigorous analysis of data, interviews, and benchmarking, we identify the root causes and opportunities that matter most.' },
+  { num: '03', title: 'Strategy', desc: 'We co-develop a clear, actionable strategy with your leadership team — one that is grounded in evidence and aligned to your goals.' },
+  { num: '04', title: 'Delivery', desc: 'We work alongside your team through implementation — not just as advisors, but as active partners in execution and change management.' },
+  { num: '05', title: 'Impact', desc: 'We measure, refine, and report on outcomes — ensuring every engagement delivers the tangible, lasting value we promised.' },
+]
+
+const caseStudies = [
+  {
+    tag: 'AI & Innovation',
+    title: 'AI Transformation for a UAE Financial Institution',
+    result: '40% reduction in manual processing time',
+    img: 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80',
+  },
+  {
+    tag: 'Human Resources',
+    title: 'Emiratisation Programme for a Government Entity',
+    result: 'Exceeded Emiratisation targets by 22%',
+    img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80',
+  },
+  {
+    tag: 'Logistics',
+    title: 'Supply Chain Redesign for FMCG Distributor',
+    result: '23% cost reduction across distribution network',
+    img: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
+  },
+]
 
 export default function SolutionsPage() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const heroRef = useRef<HTMLDivElement>(null)
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  })
-  
-  const heroInView = useInView(heroRef, { once: true, amount: 0.2 })
-  
-  const rotate1 = useTransform(scrollYProgress, [0, 1], [0, 360])
-  const rotate2 = useTransform(scrollYProgress, [0, 1], [0, -360])
-  const x1 = useTransform(scrollYProgress, [0, 1], [0, 300])
-  const x2 = useTransform(scrollYProgress, [0, 1], [0, -300])
+  const [activeTab, setActiveTab] = useState(0)
+  const [imgFade, setImgFade]     = useState(true)
+  const heroRef    = useInView(0.1)
+  const tabsRef    = useInView(0.05)
+  const processRef = useInView(0.1)
+  const casesRef   = useInView(0.1)
+  const ctaRef     = useInView(0.2)
+
+  function switchTab(idx: number) {
+    if (idx === activeTab) return
+    setImgFade(false)
+    setTimeout(() => { setActiveTab(idx); setImgFade(true) }, 250)
+  }
+
+  const s = services[activeTab]
 
   return (
-    <div ref={containerRef} className="relative w-full bg-black text-white overflow-hidden">
-      
-      {/* Hero - Extreme Diagonal Layout */}
-      <section 
-        ref={heroRef}
-        className="relative min-h-screen flex items-center px-4 sm:px-6 lg:px-8 py-20 sm:py-32"
-      >
-        {/* Massive diagonal glow - responsive */}
-        <div className="absolute inset-0 -rotate-12">
-          <div className="absolute top-[30%] left-[-40%] sm:left-[-20%] w-[600px] sm:w-[1200px] h-[600px] sm:h-[1200px] bg-[#2de2fa]/25 rounded-full blur-[100px] sm:blur-[180px] animate-pulse" />
-          <div className="absolute bottom-[20%] right-[-20%] sm:right-[-10%] w-[500px] sm:w-[1000px] h-[500px] sm:h-[1000px] bg-[#0079bf]/25 rounded-full blur-[100px] sm:blur-[180px] animate-pulse" style={{ animationDelay: '2s' }} />
+    <div style={{ background: '#fff', color: INK, fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,300;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
+
+        .sl-fade { opacity:0; transform:translateY(28px); transition:opacity .65s ease,transform .65s ease; }
+        .sl-fade.in { opacity:1; transform:translateY(0); }
+
+        /* ── SERVICE TABS ── */
+        .sl-tab-bar {
+          display: grid; grid-template-columns: repeat(8,1fr);
+          border-bottom: 1px solid rgba(0,0,0,0.08);
+          overflow-x: auto;
+        }
+        .sl-tab {
+          padding: 16px 14px; cursor: pointer;
+          border-right: 1px solid rgba(0,0,0,0.07);
+          position: relative; overflow: hidden;
+          transition: background 0.2s;
+          white-space: nowrap;
+        }
+        .sl-tab:last-child { border-right: none; }
+        .sl-tab:hover { background: rgba(0,170,255,0.03); }
+        .sl-tab.active { background: rgba(0,170,255,0.04); }
+        .sl-tab::after {
+          content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+          background:${BLUE}; transform:scaleX(0); transform-origin:left;
+          transition: transform 0.35s ease;
+        }
+        .sl-tab.active::after { transform:scaleX(1); }
+        .sl-tab-code { font-family:'Bebas Neue',sans-serif; font-size:10px; letter-spacing:0.15em; color:#ddd; margin-bottom:4px; transition:color 0.25s; }
+        .sl-tab.active .sl-tab-code { color:${BLUE}; }
+        .sl-tab-name { font-family:'Fraunces',serif; font-weight:800; font-size:13px; color:#bbb; line-height:1.1; transition:color 0.25s; }
+        .sl-tab.active .sl-tab-name { color:${INK}; }
+        .sl-tab-icon { font-size:14px; color:rgba(0,170,255,0.2); margin-bottom:6px; transition:color 0.25s; }
+        .sl-tab.active .sl-tab-icon { color:${BLUE}; }
+
+        /* ── SERVICE PANEL ── */
+        .sl-panel {
+          display: grid; grid-template-columns: 1fr 420px;
+          border-bottom: 1px solid rgba(0,0,0,0.08);
+          min-height: 520px;
+        }
+        .sl-panel-img img {
+          width:100%; height:100%; object-fit:cover; display:block;
+          filter:grayscale(15%) contrast(1.05);
+          transition: opacity 0.35s ease, transform 0.8s ease;
+        }
+        .sl-img-tag {
+          position:absolute; top:20px; left:20px;
+          background:${BLUE}; color:#fff;
+          font-size:8px; letter-spacing:0.3em; text-transform:uppercase;
+          padding:4px 10px; font-family:'DM Sans',sans-serif; font-weight:500;
+        }
+        .sl-offering {
+          display:flex; align-items:center; gap:10px;
+          padding:9px 0; border-bottom:1px solid rgba(0,0,0,0.06);
+          font-size:12px; color:#555; font-weight:300;
+          transition: color 0.2s, padding-left 0.2s;
+          cursor:default;
+        }
+        .sl-offering:hover { color:${INK}; padding-left:4px; }
+        .sl-offering:hover .sl-offering-dot { background:${BLUE}; }
+        .sl-offering-dot { width:4px; height:4px; border-radius:50%; background:#ccc; flex-shrink:0; transition:background 0.2s; }
+
+        /* ── PROCESS ── */
+        .sl-proc-row {
+          display:grid; grid-template-columns:80px 1fr;
+          padding:28px 0; border-bottom:1px solid rgba(0,0,0,0.07);
+          position:relative; overflow:hidden; transition:padding-left 0.25s;
+          cursor:default;
+        }
+        .sl-proc-row::before {
+          content:''; position:absolute; left:0; top:0; bottom:0;
+          width:0; background:${BLUE}; transition:width 0.3s ease;
+        }
+        .sl-proc-row:hover::before { width:3px; }
+        .sl-proc-row:hover { padding-left:14px; }
+        .sl-proc-row:hover .sl-proc-num { color:${BLUE}; }
+        .sl-proc-num { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:0.05em; color:#e0e0e0; line-height:1; transition:color 0.3s; }
+        .sl-proc-title { font-family:'Fraunces',serif; font-weight:800; font-size:20px; color:${INK}; margin-bottom:6px; }
+        .sl-proc-desc { font-size:12px; color:#888; font-weight:300; line-height:1.7; }
+
+        /* ── CASE STUDIES ── */
+        .sl-case-card {
+          position:relative; overflow:hidden; cursor:pointer;
+        }
+        .sl-case-card img {
+          width:100%; height:220px; object-fit:cover; display:block;
+          filter:grayscale(20%); transition:transform 0.7s ease, filter 0.4s ease;
+        }
+        .sl-case-card:hover img { transform:scale(1.04); filter:grayscale(0%); }
+        .sl-case-card::after {
+          content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+          background:${BLUE}; transform:scaleX(0); transform-origin:left;
+          transition:transform 0.35s ease;
+        }
+        .sl-case-card:hover::after { transform:scaleX(1); }
+
+        /* ── CTA ── */
+        .sl-cta-btn {
+          display:inline-flex; align-items:center; gap:12px;
+          background:${INK}; color:#fff; border:none;
+          padding:14px 32px; font-size:10px; letter-spacing:0.3em;
+          text-transform:uppercase; font-family:'DM Sans',sans-serif;
+          font-weight:500; cursor:pointer; transition:background 0.25s;
+        }
+        .sl-cta-btn:hover { background:${BLUE}; }
+        .sl-cta-ghost {
+          display:inline-flex; align-items:center; gap:12px;
+          background:transparent; border:1px solid rgba(0,0,0,0.15); color:#888;
+          padding:14px 32px; font-size:10px; letter-spacing:0.3em;
+          text-transform:uppercase; font-family:'DM Sans',sans-serif;
+          font-weight:500; cursor:pointer; transition:border-color 0.25s,color 0.25s;
+        }
+        .sl-cta-ghost:hover { border-color:${BLUE}; color:${INK}; }
+
+        .sl-loc-dot {
+          width:6px; height:6px; border-radius:50%; background:${BLUE};
+          animation:slpulse 2s infinite; flex-shrink:0;
+        }
+        @keyframes slpulse {
+          0%,100%{box-shadow:0 0 0 0 rgba(0,170,255,0.5);}
+          50%{box-shadow:0 0 0 5px rgba(0,170,255,0);}
+        }
+
+        @media(max-width:900px){
+          .sl-tab-bar{grid-template-columns:repeat(4,1fr);}
+          .sl-panel{grid-template-columns:1fr;}
+          .sl-panel-img{height:260px;}
+          .sl-process-grid{grid-template-columns:1fr!important;}
+          .sl-cases-grid{grid-template-columns:1fr!important;}
+        }
+      `}</style>
+
+      {/* ── HERO ── */}
+      <div ref={heroRef.ref} style={{ display:'grid', gridTemplateColumns:'1fr 440px', borderBottom:`1px solid rgba(0,0,0,0.08)` }}>
+        <div style={{ padding:'80px 48px 72px', borderRight:'1px solid rgba(0,0,0,0.08)' }}>
+          <div className={`sl-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'0ms', display:'flex', alignItems:'center', gap:8, marginBottom:28 }}>
+            <div style={{ width:20, height:2, background:BLUE }} />
+            <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>Our Solutions</span>
+          </div>
+          <div className={`sl-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'80ms' }}>
+            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:'clamp(44px,5.5vw,76px)', lineHeight:0.9, letterSpacing:'-0.025em', color:INK }}>
+              Eight disciplines.
+            </div>
+          </div>
+          <div className={`sl-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'150ms', marginBottom:36 }}>
+            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(44px,5.5vw,76px)', lineHeight:0.9, letterSpacing:'-0.025em', color:BLUE }}>
+              One partner.
+            </div>
+          </div>
+          <div className={`sl-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'220ms', marginBottom:40 }}>
+            <p style={{ fontFamily:"'Fraunces',serif", fontStyle:'italic', fontSize:15, color:'#888', lineHeight:1.7, maxWidth:460, margin:0, fontWeight:300 }}>
+              From AI and strategy to logistics, HR, and legal sciences — SHAAS delivers integrated, expert consultancy across every discipline your enterprise demands. All under one roof, in Abu Dhabi.
+            </p>
+          </div>
+          <div className={`sl-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'290ms', display:'flex', gap:12 }}>
+            <button className="sl-cta-btn">Explore Services ↓</button>
+            <button className="sl-cta-ghost">Contact Us</button>
+          </div>
         </div>
 
-        {/* Scattered particles - fewer on mobile */}
-        <div className="absolute inset-0">
-          {[...Array(60)].map((_, i) => (
-            <motion.div
-              key={i}
-              className={`absolute rounded-full bg-[#2de2fa] ${i > 30 ? 'hidden sm:block' : ''}`}
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                width: `${2 + Math.random() * 4}px`,
-                height: `${2 + Math.random() * 4}px`,
-              }}
-              animate={{
-                y: [0, Math.random() * -300, 0],
-                x: [0, Math.random() * 100 - 50, 0],
-                opacity: [0, 1, 0],
-                scale: [0, 1.5, 0]
-              }}
-              transition={{
-                duration: 5 + Math.random() * 5,
-                repeat: Infinity,
-                delay: Math.random() * 5,
-                ease: "easeInOut"
-              }}
-            />
+        {/* right image */}
+        <div style={{ position:'relative', overflow:'hidden' }}>
+          <img
+            src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&q=85"
+            alt="Solutions"
+            style={{ width:'100%', height:'100%', objectFit:'cover', display:'block', filter:'grayscale(10%) contrast(1.05)',
+              opacity:heroRef.inView?1:0, transform:heroRef.inView?'scale(1)':'scale(1.04)',
+              transition:'opacity 0.9s ease 0.3s, transform 1.2s ease 0.3s' }}
+          />
+          <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right,rgba(255,255,255,0.3) 0%,transparent 40%)' }} />
+          <div className="sl-img-tag">Abu Dhabi, UAE</div>
+          <div style={{ position:'absolute', bottom:-8, right:12, fontFamily:"'Bebas Neue',sans-serif", fontSize:110, lineHeight:1, color:'transparent', WebkitTextStroke:'1px rgba(0,0,0,0.06)', pointerEvents:'none', userSelect:'none' }}>8</div>
+        </div>
+      </div>
+
+      {/* ── SERVICES TABS ── */}
+      <div ref={tabsRef.ref}>
+
+        {/* Tab bar */}
+        <div className="sl-tab-bar">
+          {services.map((svc,idx) => (
+            <div
+              key={svc.code}
+              className={`sl-tab${idx===activeTab?' active':''}`}
+              onClick={() => switchTab(idx)}
+            >
+              <div className="sl-tab-icon">{svc.icon}</div>
+              <div className="sl-tab-code">{svc.code}</div>
+              <div className="sl-tab-name">{svc.short}</div>
+            </div>
           ))}
         </div>
 
-        {/* Diagonal robots */}
-        <motion.img
-          src="/images/4.png"
-          className="absolute top-[5%] right-[15%] w-32 sm:w-40 lg:w-56 h-32 sm:h-40 lg:h-56 object-contain opacity-10 pointer-events-none hidden md:block -rotate-12"
-          style={{ rotate: rotate1 }}
-        />
+        {/* Service panel */}
+        <div className="sl-panel">
 
-        <motion.img
-          src="/images/11.png"
-          className="absolute bottom-[10%] left-[10%] w-48 sm:w-56 xl:w-72 h-48 sm:h-56 xl:h-72 object-contain opacity-15 pointer-events-none hidden lg:block rotate-12"
-          style={{ rotate: rotate2 }}
-        />
-
-        <div className="relative z-10 w-full max-w-7xl mx-auto">
-          {/* Diagonal text layout */}
-          <motion.div
-            initial={{ opacity: 0, y: 80, rotate: -5 }}
-            animate={heroInView ? { opacity: 1, y: 0, rotate: 0 } : {}}
-            transition={{ duration: 1.2 }}
-            className="transform -rotate-1 sm:-rotate-2"
-          >
-            <div className="inline-block mb-4 sm:mb-8">
-              <Sparkles className="w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 text-[#2de2fa] inline-block" />
+          {/* Left — text */}
+          <div style={{ padding:'56px 52px', borderRight:'1px solid rgba(0,0,0,0.08)' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:20 }}>
+              <div style={{ width:20, height:2, background:BLUE }} />
+              <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>{s.code}</span>
             </div>
 
-            <h1 className="text-6xl sm:text-8xl md:text-9xl lg:text-[12rem] xl:text-[15rem] font-bold leading-[0.85] mb-4 sm:mb-8">
-              <motion.span 
-                className="block text-white"
-                initial={{ opacity: 0, x: -100, rotate: -3 }}
-                animate={heroInView ? { opacity: 1, x: 0, rotate: 0 } : {}}
-                transition={{ duration: 1, delay: 0.3 }}
-              >
-                Next
-              </motion.span>
-              <motion.span 
-                className="block bg-gradient-to-r from-[#2de2fa] to-[#0079bf] bg-clip-text text-transparent ml-8 sm:ml-16 lg:ml-24"
-                initial={{ opacity: 0, x: 100, rotate: 3 }}
-                animate={heroInView ? { opacity: 1, x: 0, rotate: 0 } : {}}
-                transition={{ duration: 1, delay: 0.5 }}
-              >
-                Level
-              </motion.span>
-            </h1>
-          </motion.div>
+            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:'clamp(32px,4vw,52px)', lineHeight:0.92, letterSpacing:'-0.02em', color:INK, opacity:imgFade?1:0, transition:'opacity 0.3s ease' }}>
+              {s.title}
+            </div>
+            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(32px,4vw,52px)', lineHeight:0.92, letterSpacing:'-0.02em', color:'#777', marginBottom:20, opacity:imgFade?1:0, transition:'opacity 0.3s ease 0.05s' }}>
+              {s.sub}
+            </div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={heroInView ? { opacity: 1 } : {}}
-            transition={{ duration: 1, delay: 0.8 }}
-            className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-400 max-w-2xl ml-4 sm:ml-16 lg:ml-32 mt-6 sm:mt-12 leading-relaxed"
-          >
-            Solutions that don't just solve problems—they redefine what's possible
-          </motion.p>
+            <div style={{ fontFamily:"'Fraunces',serif", fontStyle:'italic', fontSize:15, color:BLUE, marginBottom:20, opacity:imgFade?1:0, transition:'opacity 0.3s ease 0.08s' }}>
+              "{s.tagline}"
+            </div>
 
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={heroInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="group mt-8 sm:mt-12 lg:mt-16 ml-8 sm:ml-24 lg:ml-48 px-8 sm:px-10 lg:px-14 py-4 sm:py-5 lg:py-6 bg-gradient-to-r from-[#2de2fa] to-[#0079bf] rounded-full text-base sm:text-lg lg:text-xl font-bold hover:shadow-[0_0_80px_rgba(45,226,250,0.8)] transition-all duration-300 inline-flex items-center gap-3 sm:gap-4"
-          >
-            Discover
-            <ArrowRight className="w-5 sm:w-6 h-5 sm:h-6 group-hover:translate-x-2 transition-transform" />
-          </motion.button>
+            <p style={{ fontSize:13, color:'#666', lineHeight:1.8, fontWeight:300, marginBottom:32, opacity:imgFade?1:0, transition:'opacity 0.3s ease 0.1s' }}>
+              {s.desc}
+            </p>
+
+            <div style={{ marginBottom:28, opacity:imgFade?1:0, transition:'opacity 0.3s ease 0.12s' }}>
+              <div style={{ fontSize:9, letterSpacing:'0.35em', textTransform:'uppercase', color:'#aaa', marginBottom:12 }}>What We Offer</div>
+              {s.offerings.map(o => (
+                <div key={o} className="sl-offering">
+                  <div className="sl-offering-dot" />
+                  {o}
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background:'rgba(0,170,255,0.04)', borderLeft:`3px solid ${BLUE}`, padding:'16px 20px', opacity:imgFade?1:0, transition:'opacity 0.3s ease 0.15s' }}>
+              <div style={{ fontSize:8, letterSpacing:'0.35em', textTransform:'uppercase', color:BLUE, marginBottom:6 }}>Typical Outcome</div>
+              <div style={{ fontSize:12, color:'#555', fontWeight:300, lineHeight:1.6 }}>{s.outcome}</div>
+            </div>
+          </div>
+
+          {/* Right — image */}
+          <div className="sl-panel-img" style={{ position:'relative', overflow:'hidden' }}>
+            <img
+              src={s.img}
+              alt={s.title}
+              style={{ opacity:imgFade?1:0, transform:imgFade?'scale(1)':'scale(1.03)' }}
+            />
+            <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom,transparent 50%,rgba(255,255,255,0.5) 100%)', pointerEvents:'none' }} />
+            <div className="sl-img-tag">{s.short}</div>
+            <div style={{ position:'absolute', bottom:-8, right:16, fontFamily:"'Bebas Neue',sans-serif", fontSize:130, lineHeight:1, color:'transparent', WebkitTextStroke:'1px rgba(0,0,0,0.05)', pointerEvents:'none', userSelect:'none', opacity:imgFade?1:0, transition:'opacity 0.4s' }}>{String(activeTab+1).padStart(2,'0')}</div>
+          </div>
         </div>
-      </section>
+      </div>
 
-      {/* AI Solution - Diagonal Composition */}
-      <section className="relative py-24 sm:py-32 lg:py-48 px-4 sm:px-6 lg:px-8">
-        <div className="relative max-w-7xl mx-auto">
-          {/* Background blur - diagonal */}
-          <div className="absolute top-[20%] right-[10%] w-[500px] sm:w-[700px] lg:w-[900px] h-[500px] sm:h-[700px] lg:h-[900px] bg-[#2de2fa]/20 rounded-full blur-[80px] sm:blur-[120px] lg:blur-[150px] -rotate-45" />
-
-          {/* Content scattered diagonally */}
-          <div className="relative">
-            {/* Icon floating */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0, rotate: -45 }}
-              whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1 }}
-              className="absolute -top-8 sm:-top-12 lg:-top-16 left-[5%] sm:left-[8%] z-10"
-            >
-              <div className="relative">
-                <Brain className="w-20 sm:w-28 lg:w-40 h-20 sm:h-28 lg:h-40 text-[#2de2fa]" strokeWidth={1} />
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                >
-                  <Hexagon className="w-20 sm:w-28 lg:w-40 h-20 sm:h-28 lg:h-40 text-[#2de2fa]/30" strokeWidth={1} />
-                </motion.div>
+      {/* ── PROCESS ── */}
+      <div ref={processRef.ref} style={{ borderTop:`2px solid ${INK}` }}>
+        <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', padding:'56px 48px 40px', borderBottom:'1px solid rgba(0,0,0,0.08)' }}>
+          <div>
+            <div className={`sl-fade${processRef.inView?' in':''}`} style={{ transitionDelay:'0ms', display:'flex', alignItems:'center', gap:8, marginBottom:14 }}>
+              <div style={{ width:20, height:2, background:BLUE }} />
+              <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>How We Work</span>
+            </div>
+            <div className={`sl-fade${processRef.inView?' in':''}`} style={{ transitionDelay:'80ms' }}>
+              <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:'clamp(36px,4vw,56px)', lineHeight:0.92, letterSpacing:'-0.025em', color:INK }}>
+                Our <em style={{ fontWeight:300, fontStyle:'italic', color:'#777' }}>Process</em>
               </div>
-            </motion.div>
-
-            {/* Title - extreme diagonal */}
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2 }}
-              className="ml-4 sm:ml-12 lg:ml-24 mt-20 sm:mt-28 lg:mt-32 transform -rotate-1"
-            >
-              <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-none">
-                <span className="block text-white mb-2 sm:mb-4">Artificial</span>
-                <span className="block text-[#2de2fa] ml-4 sm:ml-8 lg:ml-16">Intelligence</span>
-              </h2>
-            </motion.div>
-
-            {/* Description - offset */}
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, delay: 0.3 }}
-              className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-2xl ml-auto mr-4 sm:mr-10 lg:mr-20 mt-8 sm:mt-12 lg:mt-16 leading-relaxed"
-            >
-              Neural networks that evolve. Machine learning that predicts before you ask. 
-              Deep learning architectures that rewrite the rules.
-            </motion.p>
-
-            {/* Robot - large background */}
-            <motion.img
-              src="/images/11.png"
-              initial={{ opacity: 0, scale: 1.3, rotate: 20 }}
-              whileInView={{ opacity: 0.5, scale: 1, rotate: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 2 }}
-              className="absolute -top-16 sm:-top-24 lg:-top-32 right-0 w-[400px] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[600px] lg:h-[800px] object-contain pointer-events-none hidden lg:block"
-            />
-
-            {/* Features - completely scattered - stacked on mobile */}
-            <div className="relative mt-16 sm:mt-24 lg:mt-32 min-h-[300px] sm:min-h-[400px]">
-              {[
-                { text: 'Neural Networks', delay: 0.4 },
-                { text: 'Deep Learning', delay: 0.5 },
-                { text: 'Computer Vision', delay: 0.6 },
-                { text: 'Predictive Analytics', delay: 0.7 },
-                { text: 'NLP Integration', delay: 0.8 }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, rotate: -5 }}
-                  whileInView={{ opacity: 1, rotate: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: item.delay }}
-                  className="mb-4 sm:mb-0 sm:absolute transform -rotate-1 sm:rotate-0"
-                  style={{
-                    top: i % 2 === 0 ? `${i * 60}px` : `${i * 75}px`,
-                    left: i % 2 === 0 ? `${12 + (i * 2)}%` : 'auto',
-                    right: i % 2 === 0 ? 'auto' : `${15 + (i * 2)}%`,
-                  }}
-                >
-                  <Star className="w-4 sm:w-5 h-4 sm:h-5 text-[#2de2fa] inline mr-2 sm:mr-3" />
-                  <span className="text-base sm:text-lg lg:text-xl text-gray-300">{item.text}</span>
-                </motion.div>
-              ))}
             </div>
+          </div>
+          <p style={{ maxWidth:340, fontSize:13, color:'#aaa', lineHeight:1.7, fontWeight:300, fontFamily:"'Fraunces',serif", fontStyle:'italic', margin:0 }}>
+            A structured, five-stage methodology proven across 500+ engagements.
+          </p>
+        </div>
 
-            {/* Stat - floating */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="mt-12 sm:mt-0 sm:absolute sm:bottom-16 sm:left-[15%] transform rotate-3"
-            >
-              <div className="text-6xl sm:text-7xl lg:text-8xl font-bold text-[#2de2fa]">10x</div>
-              <div className="text-sm sm:text-base lg:text-lg text-gray-500 mt-2">Performance</div>
-            </motion.div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', padding:'0 48px 56px' }} className="sl-process-grid">
+          <div>
+            {process.map((p,idx) => (
+              <div
+                key={p.num}
+                className="sl-proc-row"
+                style={{
+                  opacity:processRef.inView?1:0,
+                  transform:processRef.inView?'translateY(0)':'translateY(24px)',
+                  transition:`opacity 0.6s ease ${idx*80}ms,transform 0.6s ease ${idx*80}ms`,
+                }}
+              >
+                <div className="sl-proc-num">{p.num}</div>
+                <div>
+                  <div className="sl-proc-title">{p.title}</div>
+                  <div className="sl-proc-desc">{p.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Right — process image */}
+          <div style={{ paddingLeft:56, display:'flex', alignItems:'center' }}>
+            <div style={{ position:'relative', width:'100%', overflow:'hidden' }}>
+              <img
+                src="https://images.unsplash.com/photo-1542744094-3a31f272c490?w=900&q=85"
+                alt="Our process"
+                style={{ width:'100%', height:420, objectFit:'cover', display:'block', filter:'grayscale(15%)',
+                  opacity:processRef.inView?1:0, transition:'opacity 0.9s ease 0.3s' }}
+              />
+              <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom,transparent 50%,rgba(255,255,255,0.5) 100%)' }} />
+              <div className="sl-img-tag">Methodology</div>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Cloud - Opposite Diagonal */}
-      <section className="relative py-24 sm:py-32 lg:py-48 px-4 sm:px-6 lg:px-8">
-        <div className="relative max-w-7xl mx-auto">
-          <div className="absolute bottom-[10%] left-[5%] w-[500px] sm:w-[700px] lg:w-[1000px] h-[500px] sm:h-[700px] lg:h-[1000px] bg-[#0079bf]/20 rounded-full blur-[80px] sm:blur-[120px] lg:blur-[150px] rotate-45" />
-
-          <div className="relative">
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="absolute -top-12 sm:-top-16 lg:-top-24 right-[5%]"
-            >
-              <Cloud className="w-24 sm:w-32 lg:w-48 h-24 sm:h-32 lg:h-48 text-[#0079bf]" strokeWidth={1} />
-            </motion.div>
-
-            <motion.img
-              src="/images/3.png"
-              initial={{ opacity: 0, x: -200 }}
-              whileInView={{ opacity: 0.4, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 2 }}
-              className="absolute top-0 left-[-10%] w-[400px] sm:w-[500px] lg:w-[700px] h-[400px] sm:h-[500px] lg:h-[700px] object-contain pointer-events-none hidden lg:block"
-            />
-
-            <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="ml-auto mr-4 sm:mr-12 lg:mr-24 mt-28 sm:mt-36 lg:mt-48 max-w-4xl text-right transform rotate-1"
-            >
-              <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-none">
-                <span className="block text-white mb-2 sm:mb-4 mr-4 sm:mr-8 lg:mr-12">Cloud</span>
-                <span className="block text-[#0079bf]">Architecture</span>
-              </h2>
-            </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-2xl ml-4 sm:ml-16 lg:ml-32 mt-8 sm:mt-12 lg:mt-16 leading-relaxed"
-            >
-              Infinite scale. Zero downtime. Multi-cloud mastery that adapts in milliseconds.
-            </motion.p>
-
-            <div className="relative mt-20 sm:mt-32 lg:mt-40 min-h-[300px] sm:min-h-[400px]">
-              {['Multi-Cloud', 'Serverless', 'Containers', 'Auto-Scale', 'Edge Computing'].map((feature, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 + i * 0.1 }}
-                  className="mb-4 sm:mb-0 sm:absolute text-gray-300 transform"
-                  style={{
-                    top: `${i * 60}px`,
-                    left: i % 2 === 0 ? `${15 + i * 3}%` : 'auto',
-                    right: i % 2 === 0 ? 'auto' : `${10 + i * 2}%`,
-                    rotate: `${Math.random() * 4 - 2}deg`
-                  }}
-                >
-                  <Orbit className="w-5 sm:w-6 h-5 sm:h-6 text-[#0079bf] inline mr-2 sm:mr-3" />
-                  <span className="text-base sm:text-lg lg:text-xl">{feature}</span>
-                </motion.div>
-              ))}
+      {/* ── CASE STUDIES ── */}
+      <div ref={casesRef.ref} style={{ borderTop:`1px solid rgba(0,0,0,0.08)` }}>
+        <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', padding:'56px 48px 40px', borderBottom:'1px solid rgba(0,0,0,0.08)' }}>
+          <div>
+            <div className={`sl-fade${casesRef.inView?' in':''}`} style={{ transitionDelay:'0ms', display:'flex', alignItems:'center', gap:8, marginBottom:14 }}>
+              <div style={{ width:20, height:2, background:BLUE }} />
+              <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>Proof of Impact</span>
             </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="mt-12 sm:mt-0 sm:absolute sm:bottom-24 sm:right-[20%]"
-            >
-              <div className="text-6xl sm:text-7xl lg:text-8xl font-bold text-[#0079bf]">99.9%</div>
-              <div className="text-sm sm:text-base lg:text-lg text-gray-500 mt-2">Uptime</div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Data Engineering - Chaotic Scatter */}
-      <section className="relative py-24 sm:py-32 lg:py-48 px-4 sm:px-6 lg:px-8">
-        <div className="relative max-w-7xl mx-auto">
-          <div className="absolute top-[30%] left-[40%] w-[400px] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[600px] lg:h-[800px] bg-purple-500/15 rounded-full blur-[80px] sm:blur-[120px] lg:blur-[140px]" />
-
-          <div className="relative">
-            <motion.div
-              initial={{ opacity: 0, y: -100 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="absolute top-[-5%] sm:top-[-10%] left-[10%] sm:left-[20%]"
-            >
-              <Database className="w-28 sm:w-40 lg:w-56 h-28 sm:h-40 lg:h-56 text-purple-400" strokeWidth={1} />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, rotate: -10 }}
-              whileInView={{ opacity: 1, rotate: 0 }}
-              viewport={{ once: true }}
-              className="mt-32 sm:mt-48 lg:mt-64 ml-4 sm:ml-8 lg:ml-16 transform -rotate-2"
-            >
-              <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] font-bold leading-none">
-                <span className="block bg-gradient-to-r from-purple-400 via-[#2de2fa] to-[#0079bf] bg-clip-text text-transparent">
-                  Data
-                </span>
-                <span className="block text-white ml-8 sm:ml-16 lg:ml-32 mt-2 sm:mt-4">
-                  Universe
-                </span>
-              </h2>
-            </motion.div>
-
-            <motion.img
-              src="/images/15.png"
-              initial={{ opacity: 0, scale: 1.5 }}
-              whileInView={{ opacity: 0.35, scale: 1 }}
-              viewport={{ once: true }}
-              className="absolute top-[10%] right-[-5%] w-[300px] sm:w-[450px] lg:w-[600px] h-[300px] sm:h-[450px] lg:h-[600px] object-contain pointer-events-none hidden md:block"
-              style={{ rotate: rotate1 }}
-            />
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-2xl ml-auto mr-4 sm:mr-16 lg:mr-32 mt-8 sm:mt-12 lg:mt-20 leading-relaxed"
-            >
-              Petabyte pipelines. Real-time streams. Data lakes that never overflow.
-            </motion.p>
-
-            <div className="relative mt-16 sm:mt-24 lg:mt-32 min-h-[350px] sm:min-h-[500px]">
-              {[
-                { text: 'Big Data', x: 10, y: 0, delay: 0.3 },
-                { text: 'Real-Time', x: 55, y: 40, delay: 0.4 },
-                { text: 'Data Lakes', x: 25, y: 100, delay: 0.5 },
-                { text: 'ETL Pipeline', x: 65, y: 160, delay: 0.6 },
-                { text: 'Analytics', x: 15, y: 220, delay: 0.7 },
-                { text: 'Warehousing', x: 50, y: 280, delay: 0.8 }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: item.delay }}
-                  className="mb-4 sm:mb-0 sm:absolute text-gray-300"
-                  style={{ left: `${item.x}%`, top: `${item.y}px` }}
-                >
-                  <Zap className="w-4 sm:w-5 h-4 sm:h-5 text-purple-400 inline mr-2 sm:mr-3" />
-                  <span className="text-base sm:text-lg lg:text-xl">{item.text}</span>
-                </motion.div>
-              ))}
+            <div className={`sl-fade${casesRef.inView?' in':''}`} style={{ transitionDelay:'80ms' }}>
+              <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:'clamp(36px,4vw,56px)', lineHeight:0.92, letterSpacing:'-0.025em', color:INK }}>
+                Case <em style={{ fontWeight:300, fontStyle:'italic', color:'#777' }}>Studies</em>
+              </div>
             </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="mt-12 sm:mt-0 sm:absolute sm:bottom-0 sm:left-[30%] transform rotate-3"
-            >
-              <div className="text-6xl sm:text-7xl lg:text-8xl font-bold text-purple-400">1PB+</div>
-              <div className="text-sm sm:text-base lg:text-lg text-gray-500 mt-2">Processed</div>
-            </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Security - Angular Asymmetric */}
-      <section className="relative py-24 sm:py-32 lg:py-48 px-4 sm:px-6 lg:px-8">
-        <div className="relative max-w-7xl mx-auto">
-          <div className="absolute top-[20%] right-[20%] w-[500px] sm:w-[700px] lg:w-[900px] h-[500px] sm:h-[700px] lg:h-[900px] bg-red-500/15 rounded-full blur-[80px] sm:blur-[120px] lg:blur-[140px] -rotate-12" />
-
-          <div className="relative">
-            <motion.div
-              initial={{ opacity: 0, rotate: 90 }}
-              whileInView={{ opacity: 1, rotate: 0 }}
-              viewport={{ once: true }}
-              className="absolute -top-12 sm:-top-16 lg:-top-20 right-[5%] sm:right-[10%]"
-            >
-              <Shield className="w-28 sm:w-36 lg:w-52 h-28 sm:h-36 lg:h-52 text-red-500" strokeWidth={1} />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="ml-auto mr-4 sm:mr-8 lg:mr-16 mt-28 sm:mt-32 lg:mt-40 max-w-4xl text-right transform rotate-2"
-            >
-              <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] font-bold leading-none">
-                <span className="block text-white mb-2 sm:mb-4 mr-8 sm:mr-16 lg:mr-24">Cyber</span>
-                <span className="block bg-gradient-to-r from-red-500 to-[#2de2fa] bg-clip-text text-transparent">
-                  Fortress
-                </span>
-              </h2>
-            </motion.div>
-
-            <motion.img
-              src="/images/16.png"
-              initial={{ opacity: 0, y: 100 }}
-              whileInView={{ opacity: 0.3, y: 0 }}
-              viewport={{ once: true }}
-              className="absolute bottom-0 left-[5%] w-[250px] sm:w-[350px] lg:w-[500px] h-[250px] sm:h-[350px] lg:h-[500px] object-contain pointer-events-none hidden md:block scale-x-[-1]"
-              style={{ x: x1 }}
-            />
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-2xl ml-4 sm:ml-12 lg:ml-24 mt-8 sm:mt-12 lg:mt-20 leading-relaxed"
-            >
-              Zero-trust. AI-powered threats. Military-grade encryption. Impenetrable.
-            </motion.p>
-
-            <div className="relative mt-20 sm:mt-32 lg:mt-40 min-h-[300px] sm:min-h-[450px]">
-              {[
-                { text: 'Zero Trust', x: 60, y: 0 },
-                { text: 'AI Detection', x: 15, y: 80 },
-                { text: 'Encryption', x: 55, y: 140 },
-                { text: 'Compliance', x: 25, y: 220 },
-                { text: 'Response', x: 65, y: 300 }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, rotate: Math.random() * 20 - 10 }}
-                  whileInView={{ opacity: 1, rotate: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  className="mb-4 sm:mb-0 sm:absolute text-gray-300"
-                  style={{ left: `${item.x}%`, top: `${item.y}px` }}
-                >
-                  <Hexagon className="w-5 sm:w-6 h-5 sm:h-6 text-red-500 inline mr-2 sm:mr-3" />
-                  <span className="text-base sm:text-lg lg:text-xl">{item.text}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="mt-12 sm:mt-0 sm:absolute sm:bottom-32 sm:right-[25%]"
-            >
-              <div className="text-7xl sm:text-8xl lg:text-9xl font-bold text-red-500">0</div>
-              <div className="text-sm sm:text-base lg:text-lg text-gray-500 mt-2">Breaches</div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA - Explosive Finale */}
-      <section className="relative min-h-screen py-24 sm:py-32 lg:py-48 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-        <div className="absolute inset-0">
-          <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] sm:w-[1200px] lg:w-[1500px] h-[800px] sm:h-[1200px] lg:h-[1500px] bg-[#2de2fa]/25 rounded-full blur-[120px] sm:blur-[160px] lg:blur-[200px]"
-            animate={{
-              scale: [1, 1.4, 1],
-              opacity: [0.25, 0.5, 0.25]
-            }}
-            transition={{
-              duration: 12,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
+          <button className="sl-cta-ghost" style={{ flexShrink:0 }}>View All Cases ↗</button>
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            <motion.div
-              animate={{
-                scale: [1, 1.3, 1],
-                rotate: [0, 180, 360]
-              }}
-              transition={{
-                duration: 20,
-                repeat: Infinity,
-                ease: "linear"
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', padding:'0 48px 64px', paddingTop:40, gap:40 }} className="sl-cases-grid">
+          {caseStudies.map((c,idx) => (
+            <div
+              key={c.title}
+              className="sl-case-card"
+              style={{
+                opacity:casesRef.inView?1:0,
+                transform:casesRef.inView?'translateY(0)':'translateY(32px)',
+                transition:`opacity 0.65s ease ${idx*100}ms,transform 0.65s ease ${idx*100}ms`,
               }}
             >
-              <Sparkles className="w-16 sm:w-20 lg:w-24 h-16 sm:h-20 lg:h-24 text-[#2de2fa] mx-auto mb-8 sm:mb-12 lg:mb-16" />
-            </motion.div>
-
-            <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[11rem] font-bold leading-none mb-6 sm:mb-8 lg:mb-12">
-              <span className="block text-white mb-3 sm:mb-4 lg:mb-6">Ready to</span>
-              <span className="block bg-gradient-to-r from-[#2de2fa] via-purple-400 to-[#0079bf] bg-clip-text text-transparent">
-                Disrupt?
-              </span>
-            </h2>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-400 mb-12 sm:mb-16 lg:mb-20 leading-relaxed max-w-4xl mx-auto px-4"
-            >
-              Stop following. Start leading. Transform everything.
-            </motion.p>
-
-            <motion.button
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="group px-12 sm:px-16 lg:px-20 py-5 sm:py-6 lg:py-8 bg-gradient-to-r from-[#2de2fa] via-purple-500 to-[#0079bf] rounded-full text-xl sm:text-2xl lg:text-3xl font-bold hover:shadow-[0_0_100px_rgba(45,226,250,0.9)] transition-all duration-300 hover:scale-110 inline-flex items-center gap-4 sm:gap-5 lg:gap-6"
-            >
-              Let's Go
-              <ArrowRight className="w-6 sm:w-7 lg:w-8 h-6 sm:h-7 lg:h-8 group-hover:translate-x-4 transition-transform" />
-            </motion.button>
-          </motion.div>
+              <div style={{ position:'relative', overflow:'hidden' }}>
+                <img src={c.img} alt={c.title} />
+                <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom,transparent 40%,rgba(255,255,255,0.5) 100%)' }} />
+                <div className="sl-img-tag">{c.tag}</div>
+              </div>
+              <div style={{ paddingTop:20, borderBottom:'1px solid rgba(0,0,0,0.08)', paddingBottom:20 }}>
+                <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:17, color:INK, lineHeight:1.25, marginBottom:10 }}>{c.title}</div>
+                <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                  <div style={{ width:16, height:1, background:BLUE }} />
+                  <div style={{ fontSize:11, color:BLUE, letterSpacing:'0.1em' }}>{c.result}</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
 
+      {/* ── CTA ── */}
+      <div ref={ctaRef.ref} style={{ borderTop:`2px solid ${INK}`, padding:'80px 48px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:64, alignItems:'center' }}>
+        <div>
+          <div className={`sl-fade${ctaRef.inView?' in':''}`} style={{ transitionDelay:'0ms', display:'flex', alignItems:'center', gap:8, marginBottom:20 }}>
+            <div style={{ width:20, height:2, background:BLUE }} />
+            <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>Start Today</span>
+          </div>
+          <div className={`sl-fade${ctaRef.inView?' in':''}`} style={{ transitionDelay:'80ms' }}>
+            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:'clamp(36px,4.5vw,60px)', lineHeight:0.92, letterSpacing:'-0.025em', color:INK }}>
+              Ready to engage
+            </div>
+          </div>
+          <div className={`sl-fade${ctaRef.inView?' in':''}`} style={{ transitionDelay:'150ms', marginBottom:32 }}>
+            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(36px,4.5vw,60px)', lineHeight:0.92, letterSpacing:'-0.025em', color:BLUE }}>
+              SHAAS?
+            </div>
+          </div>
+          <div className={`sl-fade${ctaRef.inView?' in':''}`} style={{ transitionDelay:'220ms', display:'flex', gap:12, flexWrap:'wrap' }}>
+            <button className="sl-cta-btn">Get In Touch ↗</button>
+            <button className="sl-cta-ghost">Download Brochure</button>
+          </div>
+        </div>
+
+        <div className={`sl-fade${ctaRef.inView?' in':''}`} style={{ transitionDelay:'150ms' }}>
+          <p style={{ fontFamily:"'Fraunces',serif", fontStyle:'italic', fontSize:16, color:'#999', lineHeight:1.75, margin:'0 0 32px', fontWeight:300 }}>
+            Our team is based in Abu Dhabi and ready to discuss how SHAAS can support your organisation across any of our eight licensed disciplines.
+          </p>
+          <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+            {[
+              { label:'Email', val:'info@shaas.com' },
+              { label:'Phone', val:'+971 XX XXX XXXX' },
+              { label:'Office', val:'ADGM Square, Al Maryah Island, Abu Dhabi' },
+            ].map(item => (
+              <div key={item.label} style={{ display:'flex', alignItems:'center', gap:12 }}>
+                <div style={{ fontSize:8, letterSpacing:'0.3em', textTransform:'uppercase', color:'#bbb', width:40, flexShrink:0 }}>{item.label}</div>
+                <div style={{ width:1, height:16, background:'rgba(0,0,0,0.1)', flexShrink:0 }} />
+                <div style={{ fontSize:12, color:'#666', fontWeight:300 }}>{item.val}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:24 }}>
+            <div className="sl-loc-dot" />
+            <span style={{ fontSize:9, letterSpacing:'0.3em', textTransform:'uppercase', color:'#aaa' }}>Abu Dhabi, UAE</span>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

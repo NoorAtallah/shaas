@@ -1,408 +1,454 @@
-"use client";
+'use client'
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import React, { useRef } from "react";
-import { Mail, Phone, MapPin, Clock, Linkedin, Twitter, MessageSquare } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react'
 
-const ContactPage = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-  });
+const BLUE = '#00aaff'
+const INK  = '#0a0a0a'
 
-  return (
-    <section
-      ref={ref}
-      className="mx-auto flex min-h-[300vh] w-screen flex-col items-center overflow-hidden bg-black px-4 text-white"
-    >
-      {/* Hero Section - Top */}
-      <div className="relative flex w-fit flex-col items-center justify-center gap-5 text-center pt-32 pb-40">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="inline-flex items-center gap-2 mb-8 px-6 py-3 rounded-full bg-gradient-to-r from-[#0079bf]/10 via-[#2de2fa]/10 to-[#0079bf]/10 border border-[#2de2fa]/20"
-        >
-          <div className="w-2 h-2 rounded-full bg-[#2de2fa] animate-pulse" />
-          <span className="text-sm font-medium text-[#2de2fa]">GET IN TOUCH</span>
-        </motion.div>
+function useInView(threshold = 0.15) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [inView, setInView] = useState(false)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setInView(true) },
+      { threshold }
+    )
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+  return { ref, inView }
+}
 
-        <h1 className="relative z-10 text-7xl font-bold tracking-tight leading-tight lg:text-9xl">
-          Your Journey <br /> 
-          To Innovation <br />
-          <span className="bg-gradient-to-r from-[#2de2fa] via-[#0079bf] to-[#2de2fa] bg-clip-text text-transparent">
-            Starts Here
-          </span>
-        </h1>
-        
-        <p className="relative z-10 max-w-2xl text-xl font-medium text-gray-400 mb-8">
-          Scroll down to discover how to connect with Shaas
-        </p>
+const inquiryTypes = [
+  'Marketing Consultancy',
+  'Project Development',
+  'Administrative Studies',
+  'Human Resources',
+  'Logistics Consultancy',
+  'AI & Innovation',
+  'Oil & Gas Services',
+  'Legal Sciences',
+  'General Inquiry',
+]
 
-        {/* Animated Path */}
-        <AnimatedPath
-          className="absolute -right-[40%] top-0 z-0 hidden lg:block"
-          scrollYProgress={scrollYProgress}
-        />
-      </div>
+const offices = [
+  {
+    city: 'Abu Dhabi',
+    tag: 'Headquarters',
+    address: 'ADGM Square, Al Maryah Island',
+    country: 'Abu Dhabi, UAE',
+    phone: '+971 XX XXX XXXX',
+    email: 'info@shaas.com',
+    img: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=85',
+  },
+]
 
-      {/* Main Content Section */}
-      <div className="w-full max-w-7xl relative pb-20">
-        
-        {/* Background effects */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'linear-gradient(rgba(45, 226, 250, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(45, 226, 250, 0.4) 1px, transparent 1px)',
-            backgroundSize: '100px 100px'
-          }} />
-        </div>
+const faqs = [
+  {
+    q: 'How quickly do you respond to inquiries?',
+    a: 'We respond to all inquiries within 24 business hours. For urgent matters, please call our Abu Dhabi office directly.',
+  },
+  {
+    q: 'Do you work with international clients?',
+    a: 'Yes. While we are based in Abu Dhabi, we serve clients across the GCC, MENA, and internationally — with on-ground teams for regional engagements.',
+  },
+  {
+    q: 'What is the typical engagement timeline?',
+    a: 'Engagements vary by scope. Discovery and diagnostic phases typically run 2–4 weeks. Full strategy and delivery programmes range from 3 to 12 months.',
+  },
+  {
+    q: 'Do you offer retainer arrangements?',
+    a: 'Yes. Many of our clients engage us on an ongoing advisory retainer basis. We can discuss flexible arrangements during your initial consultation.',
+  },
+]
 
-        <div className="absolute inset-0 overflow-hidden opacity-60">
-          <motion.div
-            className="absolute top-[10%] left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#2de2fa] to-transparent shadow-[0_0_15px_rgba(45,226,250,0.8)]"
-            animate={{ x: ['-100%', '100%'] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          />
-        </div>
+export default function ContactPage() {
+  const heroRef  = useInView(0.1)
+  const formRef  = useInView(0.1)
+  const faqRef   = useInView(0.1)
 
-        <div className="absolute top-[10%] left-[10%] w-[600px] h-[600px] bg-[#2de2fa]/20 rounded-full blur-[100px] animate-pulse" />
-        <div className="absolute bottom-[10%] right-[10%] w-[700px] h-[700px] bg-[#0079bf]/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
+  const [form, setForm] = useState({
+    name: '', company: '', email: '', phone: '', inquiry: '', message: '',
+  })
+  const [selectedInquiry, setSelectedInquiry] = useState<string | null>(null)
+  const [submitted, setSubmitted] = useState(false)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
-        {/* Binary rain */}
-        <div className="absolute inset-0 overflow-hidden opacity-40">
-          <motion.div
-            className="absolute top-0 left-[20%] text-[#2de2fa] font-mono text-sm font-bold whitespace-pre drop-shadow-[0_0_10px_rgba(45,226,250,1)]"
-            animate={{ y: ['0%', '100%'] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          >
-            {`1\n0\n1\n1\n0\n1\n0\n1`}
-          </motion.div>
-          <motion.div
-            className="absolute top-0 right-[25%] text-[#0079bf] font-mono text-sm font-bold whitespace-pre drop-shadow-[0_0_10px_rgba(0,121,191,1)]"
-            animate={{ y: ['0%', '100%'] }}
-            transition={{ duration: 18, repeat: Infinity, ease: "linear", delay: 2 }}
-          >
-            {`0\n1\n0\n1\n1\n0\n1\n0`}
-          </motion.div>
-        </div>
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }))
+  }
 
-        {/* Robot decorations */}
-        <motion.div
-          initial={{ x: -100, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 0.3 }}
-          transition={{ duration: 1.5 }}
-          viewport={{ once: true }}
-          className="absolute -left-32 top-[5%] w-72 h-72 pointer-events-none hidden xl:block"
-        >
-          <motion.img 
-            src="/images/4.png" 
-            alt=""
-            className="w-full h-full object-contain"
-            animate={{ y: [0, -15, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-
-        <motion.div
-          initial={{ x: 100, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 0.25 }}
-          transition={{ duration: 1.5 }}
-          viewport={{ once: true }}
-          className="absolute -right-32 bottom-[5%] w-72 h-72 pointer-events-none hidden 2xl:block"
-        >
-          <motion.img 
-            src="/images/4.png" 
-            alt=""
-            className="w-full h-full object-contain scale-x-[-1]"
-            animate={{ y: [0, -12, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-
-        <div className="relative z-10">
-          
-          {/* Contact Cards Section */}
-          <div className="mb-20">
-            <div className="text-center mb-12">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-[#2de2fa]/10 to-transparent backdrop-blur-xl rounded-full"
-              >
-                <span className="text-sm text-[#2de2fa] font-medium">WAYS TO REACH US</span>
-              </motion.div>
-
-              <motion.h2 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                viewport={{ once: true }}
-                className="text-5xl lg:text-7xl font-bold mb-6"
-              >
-                <span className="text-white">Get In</span>{' '}
-                <span className="bg-gradient-to-r from-[#2de2fa] via-[#0079bf] to-[#2de2fa] bg-clip-text text-transparent">
-                  Touch
-                </span>
-              </motion.h2>
-            </div>
-
-            {/* Contact Cards Grid */}
-            <div className="grid md:grid-cols-2 gap-6 mb-20">
-              {[
-                {
-                  icon: Mail,
-                  label: "Email Us",
-                  primary: "info@shaas-consulting.ae",
-                  
-                },
-                {
-                  icon: Phone,
-                  label: "Call Us",
-                  primary: "+971 568474217",
-                  secondary: "Available 24/7"
-                },
-                {
-                  icon: MapPin,
-                  label: "Visit Us",
-                  primary: "United Arab Emirates",
-                  secondary: "Dubai & Abu Dhabi"
-                },
-                {
-                  icon: Clock,
-                  label: "Business Hours",
-                  primary: "Sunday - Thursday",
-                  secondary: "9:00 AM - 6:00 PM GST"
-                }
-              ].map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="group relative"
-                  >
-                    <div className="relative p-8 bg-gradient-to-br from-white/[0.06] to-white/[0.01] backdrop-blur-2xl rounded-3xl hover:from-white/[0.08] hover:to-white/[0.02] transition-all duration-500 border border-white/10 hover:border-[#2de2fa]/30">
-                      <div className="flex items-start gap-5">
-                        <div className="p-3 rounded-xl bg-[#2de2fa]/10 group-hover:bg-[#2de2fa]/20 transition-all duration-300">
-                          <Icon className="w-7 h-7 text-[#2de2fa]" strokeWidth={1.5} />
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">{item.label}</div>
-                          <div className="text-lg font-bold text-white group-hover:text-[#2de2fa] transition-colors duration-300 mb-1">
-                            {item.primary}
-                          </div>
-                          <div className="text-sm text-gray-400">{item.secondary}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* SHAAS Branding */}
-          <div className="text-center mb-12">
-            <motion.h2 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-8xl lg:text-[12rem] font-bold mb-6 leading-none"
-            >
-              <span className="bg-gradient-to-r from-[#2de2fa] via-[#0079bf] to-[#2de2fa] bg-clip-text text-transparent">
-                SHAAS
-              </span>
-            </motion.h2>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="text-xl text-gray-400"
-            >
-              General Consulting • AI Solutions • Business Transformation
-            </motion.p>
-          </div>
-
-          {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent via-[#2de2fa]/30 to-transparent mb-12" />
-
-          {/* Social Links */}
-          <div className="mb-12">
-            <motion.h3 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true, amount: 0.3 }}
-              className="text-3xl font-bold text-white mb-10 text-center"
-            >
-              Connect With Us
-            </motion.h3>
-            <div className="flex flex-wrap justify-center gap-6">
-              {[
-                { icon: Linkedin, name: 'LinkedIn', handle: '@shaas-consulting' },
-                { icon: Twitter, name: 'Twitter', handle: '@shaasconsult' },
-                { icon: MessageSquare, name: 'WhatsApp', handle: '+971 568474217' },
-              ].map((social, index) => {
-                const Icon = social.icon;
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true, amount: 0.5 }}
-                    whileHover={{ scale: 1.05 }}
-                    className="group cursor-pointer"
-                  >
-                    <div className="px-8 py-5 bg-white/[0.03] backdrop-blur-xl rounded-2xl hover:bg-white/[0.06] transition-all duration-300 border border-white/10 hover:border-[#2de2fa]/30">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 rounded-xl bg-[#2de2fa]/10">
-                          <Icon className="w-6 h-6 text-[#2de2fa]" strokeWidth={2} />
-                        </div>
-                        <div className="text-left">
-                          <div className="text-sm text-gray-500">{social.name}</div>
-                          <div className="text-md font-semibold text-white group-hover:text-[#2de2fa] transition-colors duration-300">
-                            {social.handle}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent via-[#2de2fa]/30 to-transparent mb-12" />
-
-          {/* CTA Section */}
-          <div className="text-center mb-12">
-            <motion.h3 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true, amount: 0.5 }}
-              className="text-4xl lg:text-5xl font-bold text-white mb-4"
-            >
-              Ready to Transform?
-            </motion.h3>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true, amount: 0.5 }}
-              className="text-lg text-gray-400 mb-10 max-w-2xl mx-auto"
-            >
-              The future is not waiting. Let us build something extraordinary together.
-            </motion.p>
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              viewport={{ once: true, amount: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-12 py-5 bg-gradient-to-r from-[#0079bf] to-[#2de2fa] rounded-full text-white font-bold text-lg hover:shadow-[0_0_60px_rgba(45,226,250,0.6)] transition-all duration-300"
-              >
-                Send us a Message
-              </motion.button>
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-12 py-5 bg-white/[0.03] backdrop-blur-xl rounded-full text-white font-bold text-lg border border-[#2de2fa]/30 hover:bg-white/[0.06] hover:border-[#2de2fa]/60 transition-all duration-300"
-              >
-                Schedule a Call
-              </motion.button>
-            </motion.div>
-          </div>
-
-          {/* Footer info */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true, amount: 0.5 }}
-            className="pt-8 border-t border-white/10"
-          >
-            <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
-              <div className="text-center">
-                <div className="font-semibold text-white mb-1">Founded</div>
-                <div>2025</div>
-              </div>
-              <div className="text-center">
-                <div className="font-semibold text-white mb-1">Industry</div>
-                <div>AI Consulting</div>
-              </div>
-              <div className="text-center">
-                <div className="font-semibold text-white mb-1">Response Time</div>
-                <div>Within 24 hours</div>
-              </div>
-            </div>
-          </motion.div>
-
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default ContactPage;
-
-const AnimatedPath = ({
-  className,
-  scrollYProgress,
-}: {
-  className: string;
-  scrollYProgress: any;
-}) => {
-  const pathLength = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setSubmitted(true)
+  }
 
   return (
-    <svg
-      width="1278"
-      height="2319"
-      viewBox="0 0 1278 2319"
-      fill="none"
-      overflow="visible"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      <defs>
-        <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#2de2fa" />
-          <stop offset="50%" stopColor="#0079bf" />
-          <stop offset="100%" stopColor="#2de2fa" />
-        </linearGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-          <feMerge>
-            <feMergeNode in="coloredBlur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
-      <motion.path
-        d="M876.605 394.131C788.982 335.917 696.198 358.139 691.836 416.303C685.453 501.424 853.722 498.43 941.95 409.714C1016.1 335.156 1008.64 186.907 906.167 142.846C807.014 100.212 712.699 198.494 789.049 245.127C889.053 306.207 986.062 116.979 840.548 43.3233C743.932 -5.58141 678.027 57.1682 672.279 112.188C666.53 167.208 712.538 172.943 736.353 163.088C760.167 153.234 764.14 120.924 746.651 93.3868C717.461 47.4252 638.894 77.8642 601.018 116.979C568.164 150.908 557 201.079 576.467 246.924C593.342 286.664 630.24 310.55 671.68 302.614C756.114 286.446 729.747 206.546 681.86 186.442C630.54 164.898 492 209.318 495.026 287.644C496.837 334.494 518.402 366.466 582.455 367.287C680.013 368.538 771.538 299.456 898.634 292.434C1007.02 286.446 1192.67 309.384 1242.36 382.258C1266.99 418.39 1273.65 443.108 1247.75 474.477C1217.32 511.33 1149.4 511.259 1096.84 466.093C1044.29 420.928 1029.14 380.576 1033.97 324.172C1038.31 273.428 1069.55 228.986 1117.2 216.384C1152.2 207.128 1188.29 213.629 1194.45 245.127C1201.49 281.062 1132.22 280.104 1100.44 272.673C1065.32 264.464 1044.22 234.837 1032.77 201.413C1019.29 162.061 1029.71 131.126 1056.44 100.965C1086.19 67.4032 1143.96 54.5526 1175.78 86.1513C1207.02 117.17 1186.81 143.379 1156.22 166.691C1112.57 199.959 1052.57 186.238 999.784 155.164C957.312 130.164 899.171 63.7054 931.284 26.3214C952.068 2.12513 996.288 3.87363 1007.22 43.58C1018.15 83.2749 1003.56 122.644 975.969 163.376C948.377 204.107 907.272 255.122 913.558 321.045C919.727 385.734 990.968 497.068 1063.84 503.35C1111.46 507.456 1166.79 511.984 1175.68 464.527C1191.52 379.956 1101.26 334.985 1030.29 377.017C971.109 412.064 956.297 483.647 953.797 561.655C947.587 755.413 1197.56 941.828 936.039 1140.66C745.771 1285.32 321.926 950.737 134.536 1202.19C-6.68295 1391.68 -53.4837 1655.38 131.935 1760.5C478.381 1956.91 1124.19 1515 1201.28 1997.83C1273.66 2451.23 100.805 1864.7 303.794 2668.89"
-        stroke="url(#pathGradient)"
-        strokeWidth="20"
-        filter="url(#glow)"
-        style={{
-          pathLength,
-          strokeDashoffset: useTransform(pathLength, (value) => 1 - value),
-        }}
-      />
-    </svg>
-  );
-};
+    <div style={{ background: '#fff', color: INK, fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,300;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
+
+        .ct-fade { opacity:0; transform:translateY(28px); transition:opacity .65s ease,transform .65s ease; }
+        .ct-fade.in { opacity:1; transform:translateY(0); }
+
+        /* FORM */
+        .ct-field {
+          display:flex; flex-direction:column; gap:6px;
+        }
+        .ct-label {
+          font-size:8px; letter-spacing:0.35em; text-transform:uppercase; color:#bbb;
+        }
+        .ct-input {
+          height:48px; border:none; border-bottom:1px solid rgba(0,0,0,0.12);
+          padding:0 0 0 0; font-size:13px; font-family:'DM Sans',sans-serif;
+          font-weight:300; color:${INK}; background:transparent; outline:none;
+          transition:border-color 0.2s;
+          border-radius:0;
+        }
+        .ct-input:focus { border-bottom-color:${BLUE}; }
+        .ct-input::placeholder { color:#ccc; }
+        .ct-textarea {
+          border:none; border-bottom:1px solid rgba(0,0,0,0.12);
+          padding:12px 0; font-size:13px; font-family:'DM Sans',sans-serif;
+          font-weight:300; color:${INK}; background:transparent; outline:none;
+          resize:none; transition:border-color 0.2s; min-height:100px;
+          border-radius:0;
+        }
+        .ct-textarea:focus { border-bottom-color:${BLUE}; }
+        .ct-textarea::placeholder { color:#ccc; }
+
+        /* Inquiry pills */
+        .ct-pill {
+          padding:8px 16px; border:1px solid rgba(0,0,0,0.1);
+          font-size:10px; letter-spacing:0.15em; text-transform:uppercase;
+          font-family:'DM Sans',sans-serif; font-weight:400;
+          color:#888; background:transparent; cursor:pointer;
+          transition:border-color 0.2s, color 0.2s, background 0.2s;
+        }
+        .ct-pill:hover { border-color:${BLUE}; color:${INK}; }
+        .ct-pill.selected { border-color:${BLUE}; background:${BLUE}; color:#fff; }
+
+        /* Submit */
+        .ct-submit {
+          height:52px; padding:0 36px;
+          background:${INK}; color:#fff; border:none;
+          font-size:10px; letter-spacing:0.3em; text-transform:uppercase;
+          font-family:'DM Sans',sans-serif; font-weight:500;
+          cursor:pointer; transition:background 0.25s; align-self:flex-start;
+        }
+        .ct-submit:hover { background:${BLUE}; }
+
+        /* Office card */
+        .ct-office-card img {
+          width:100%; height:200px; object-fit:cover; display:block;
+          filter:grayscale(20%); transition:transform 0.7s ease;
+        }
+        .ct-office-card:hover img { transform:scale(1.03); }
+
+        /* FAQ */
+        .ct-faq-row {
+          border-bottom:1px solid rgba(0,0,0,0.07);
+          overflow:hidden; cursor:pointer;
+        }
+        .ct-faq-row:first-child { border-top:1px solid rgba(0,0,0,0.07); }
+        .ct-faq-head {
+          display:flex; align-items:center; justify-content:space-between;
+          padding:20px 0; transition:color 0.2s;
+        }
+        .ct-faq-row:hover .ct-faq-q { color:${BLUE}; }
+        .ct-faq-q {
+          font-family:'Fraunces',serif; font-weight:800;
+          font-size:15px; color:${INK}; transition:color 0.2s;
+        }
+        .ct-faq-icon {
+          font-size:20px; color:#ccc; transition:transform 0.3s, color 0.2s;
+          flex-shrink:0; font-weight:300; line-height:1;
+        }
+        .ct-faq-row.open .ct-faq-icon { transform:rotate(45deg); color:${BLUE}; }
+        .ct-faq-body {
+          max-height:0; overflow:hidden;
+          transition:max-height 0.4s ease, padding 0.3s ease;
+          font-size:12px; color:#888; font-weight:300; line-height:1.75;
+        }
+        .ct-faq-row.open .ct-faq-body { max-height:200px; padding-bottom:20px; }
+
+        .ct-loc-dot {
+          width:6px; height:6px; border-radius:50%; background:${BLUE};
+          animation:ctpulse 2s infinite; flex-shrink:0;
+        }
+        @keyframes ctpulse {
+          0%,100%{box-shadow:0 0 0 0 rgba(0,170,255,0.5);}
+          50%{box-shadow:0 0 0 5px rgba(0,170,255,0);}
+        }
+
+        @media(max-width:960px){
+          .ct-main-grid { grid-template-columns:1fr !important; }
+          .ct-bottom-grid { grid-template-columns:1fr !important; }
+        }
+      `}</style>
+
+      {/* ── HERO ── */}
+      <div ref={heroRef.ref} style={{ display:'grid', gridTemplateColumns:'1fr 400px', borderBottom:`1px solid rgba(0,0,0,0.08)` }}>
+
+        {/* Left */}
+        <div style={{ padding:'80px 48px 72px', borderRight:'1px solid rgba(0,0,0,0.08)' }}>
+          <div className={`ct-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'0ms', display:'flex', alignItems:'center', gap:8, marginBottom:28 }}>
+            <div style={{ width:20, height:2, background:BLUE }} />
+            <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>Contact Us</span>
+          </div>
+          <div className={`ct-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'80ms' }}>
+            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:'clamp(44px,5.5vw,76px)', lineHeight:0.9, letterSpacing:'-0.025em', color:INK }}>
+              Let's start
+            </div>
+          </div>
+          <div className={`ct-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'150ms', marginBottom:36 }}>
+            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(44px,5.5vw,76px)', lineHeight:0.9, letterSpacing:'-0.025em', color:BLUE }}>
+              a conversation.
+            </div>
+          </div>
+          <div className={`ct-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'220ms', marginBottom:40 }}>
+            <p style={{ fontFamily:"'Fraunces',serif", fontStyle:'italic', fontSize:15, color:'#888', lineHeight:1.7, maxWidth:440, margin:0, fontWeight:300 }}>
+              Whether you have a defined brief or just an early idea — our Abu Dhabi team is ready to listen, explore, and help you find the right path forward.
+            </p>
+          </div>
+
+          {/* Contact quick links */}
+          <div className={`ct-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'290ms', display:'flex', flexDirection:'column', gap:16 }}>
+            {[
+              { label:'Email us at', val:'info@shaas.com', href:'mailto:info@shaas.com' },
+              { label:'Call us on', val:'+971 XX XXX XXXX', href:'tel:+97100000000' },
+              { label:'Visit us at', val:'ADGM Square, Al Maryah Island, Abu Dhabi', href:'#' },
+            ].map(item => (
+              <a key={item.label} href={item.href} style={{ display:'flex', alignItems:'center', gap:14, textDecoration:'none', padding:'12px 0', borderBottom:'1px solid rgba(0,0,0,0.07)', transition:'padding-left 0.2s' }}
+                onMouseEnter={e => (e.currentTarget.style.paddingLeft = '6px')}
+                onMouseLeave={e => (e.currentTarget.style.paddingLeft = '0')}
+              >
+                <div style={{ width:3, height:32, background:BLUE, flexShrink:0 }} />
+                <div>
+                  <div style={{ fontSize:8, letterSpacing:'0.3em', textTransform:'uppercase', color:'#bbb', marginBottom:2 }}>{item.label}</div>
+                  <div style={{ fontSize:13, color:INK, fontWeight:400 }}>{item.val}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Right image */}
+        <div style={{ position:'relative', overflow:'hidden' }}>
+          <img
+            src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=85"
+            alt="SHAAS office"
+            style={{ width:'100%', height:'100%', objectFit:'cover', display:'block', filter:'grayscale(15%)',
+              opacity:heroRef.inView?1:0, transform:heroRef.inView?'scale(1)':'scale(1.04)',
+              transition:'opacity 0.9s ease 0.2s, transform 1.2s ease 0.2s' }}
+          />
+          <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right,rgba(255,255,255,0.25) 0%,transparent 40%)' }} />
+          <div style={{ position:'absolute', top:20, left:20, background:BLUE, color:'#fff', fontSize:8, letterSpacing:'0.3em', textTransform:'uppercase', padding:'4px 10px', fontFamily:"'DM Sans',sans-serif", fontWeight:500 }}>
+            Abu Dhabi HQ
+          </div>
+          {/* Pulsing location indicator */}
+          <div style={{ position:'absolute', bottom:28, left:24, display:'flex', alignItems:'center', gap:8 }}>
+            <div className="ct-loc-dot" />
+            <span style={{ fontSize:9, letterSpacing:'0.3em', textTransform:'uppercase', color:'rgba(255,255,255,0.8)' }}>Al Maryah Island</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── CONTACT FORM + SIDEBAR ── */}
+      <div ref={formRef.ref}>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 360px', minHeight:600, borderBottom:`1px solid rgba(0,0,0,0.08)` }} className="ct-main-grid">
+
+          {/* FORM */}
+          <div style={{ padding:'64px 48px', borderRight:'1px solid rgba(0,0,0,0.08)' }}>
+            <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'0ms', display:'flex', alignItems:'center', gap:8, marginBottom:28 }}>
+              <div style={{ width:20, height:2, background:BLUE }} />
+              <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>Send a Message</span>
+            </div>
+
+            {submitted ? (
+              <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'80ms' }}>
+                <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:36, color:INK, lineHeight:1, marginBottom:12 }}>
+                  Message sent.
+                </div>
+                <div style={{ fontFamily:"'Fraunces',serif", fontStyle:'italic', fontSize:16, color:BLUE, marginBottom:20 }}>
+                  We'll be in touch within 24 hours.
+                </div>
+                <p style={{ fontSize:13, color:'#888', fontWeight:300, lineHeight:1.7 }}>
+                  Thank you for reaching out to SHAAS. A member of our Abu Dhabi team will review your inquiry and respond shortly.
+                </p>
+                <button
+                  className="ct-submit"
+                  style={{ marginTop:28 }}
+                  onClick={() => { setSubmitted(false); setForm({ name:'',company:'',email:'',phone:'',inquiry:'',message:'' }); setSelectedInquiry(null) }}
+                >
+                  Send Another ↺
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', gap:28 }}>
+                {/* Name + Company */}
+                <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'80ms', display:'grid', gridTemplateColumns:'1fr 1fr', gap:24 }}>
+                  <div className="ct-field">
+                    <label className="ct-label">Full Name *</label>
+                    <input className="ct-input" name="name" value={form.name} onChange={handleChange} placeholder="Your full name" required />
+                  </div>
+                  <div className="ct-field">
+                    <label className="ct-label">Company</label>
+                    <input className="ct-input" name="company" value={form.company} onChange={handleChange} placeholder="Organisation name" />
+                  </div>
+                </div>
+
+                {/* Email + Phone */}
+                <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'140ms', display:'grid', gridTemplateColumns:'1fr 1fr', gap:24 }}>
+                  <div className="ct-field">
+                    <label className="ct-label">Email Address *</label>
+                    <input className="ct-input" type="email" name="email" value={form.email} onChange={handleChange} placeholder="your@email.com" required />
+                  </div>
+                  <div className="ct-field">
+                    <label className="ct-label">Phone Number</label>
+                    <input className="ct-input" name="phone" value={form.phone} onChange={handleChange} placeholder="+971 XX XXX XXXX" />
+                  </div>
+                </div>
+
+                {/* Inquiry type */}
+                <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'200ms' }}>
+                  <div className="ct-label" style={{ marginBottom:12 }}>Area of Interest</div>
+                  <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+                    {inquiryTypes.map(t => (
+                      <button
+                        key={t} type="button"
+                        className={`ct-pill${selectedInquiry===t?' selected':''}`}
+                        onClick={() => setSelectedInquiry(t)}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'260ms' }}>
+                  <div className="ct-field">
+                    <label className="ct-label">Message *</label>
+                    <textarea className="ct-textarea" name="message" value={form.message} onChange={handleChange} placeholder="Tell us about your project or challenge..." required rows={4} />
+                  </div>
+                </div>
+
+                <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'310ms', display:'flex', alignItems:'center', gap:20 }}>
+                  <button type="submit" className="ct-submit">Send Message ↗</button>
+                  <span style={{ fontSize:10, color:'#bbb', letterSpacing:'0.1em' }}>We respond within 24 hours</span>
+                </div>
+              </form>
+            )}
+          </div>
+
+          {/* RIGHT SIDEBAR */}
+          <div style={{ padding:'64px 36px', display:'flex', flexDirection:'column', gap:32 }}>
+
+            {/* Office card */}
+            {offices.map(office => (
+              <div key={office.city} className="ct-office-card" style={{ overflow:'hidden' }}>
+                <div style={{ position:'relative', overflow:'hidden' }}>
+                  <img src={office.img} alt={office.city} />
+                  <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom,transparent 40%,rgba(255,255,255,0.5) 100%)' }} />
+                  <div style={{ position:'absolute', top:12, left:12, background:BLUE, color:'#fff', fontSize:8, letterSpacing:'0.3em', textTransform:'uppercase', padding:'3px 8px', fontFamily:"'DM Sans',sans-serif", fontWeight:500 }}>
+                    {office.tag}
+                  </div>
+                </div>
+                <div style={{ paddingTop:16, borderBottom:'1px solid rgba(0,0,0,0.08)', paddingBottom:20 }}>
+                  <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:18, letterSpacing:'0.1em', color:INK, marginBottom:10 }}>{office.city}</div>
+                  <div style={{ fontSize:11, color:'#888', fontWeight:300, lineHeight:1.7 }}>
+                    {office.address}<br />
+                    {office.country}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Business hours */}
+            <div>
+              <div style={{ fontSize:9, letterSpacing:'0.4em', textTransform:'uppercase', color:'#aaa', marginBottom:14, display:'flex', alignItems:'center', gap:8 }}>
+                <div style={{ width:12, height:1, background:BLUE }} />
+                Business Hours
+              </div>
+              {[
+                ['Sunday – Thursday', '8:00 AM – 5:00 PM'],
+                ['Friday – Saturday', 'Closed'],
+              ].map(([day, hours]) => (
+                <div key={day} style={{ display:'flex', justifyContent:'space-between', padding:'8px 0', borderBottom:'1px solid rgba(0,0,0,0.06)' }}>
+                  <span style={{ fontSize:11, color:'#888', fontWeight:300 }}>{day}</span>
+                  <span style={{ fontSize:11, color:INK, fontWeight:400 }}>{hours}</span>
+                </div>
+              ))}
+              <div style={{ display:'flex', alignItems:'center', gap:6, marginTop:14 }}>
+                <div className="ct-loc-dot" style={{ width:5, height:5 }} />
+                <span style={{ fontSize:10, color:BLUE, letterSpacing:'0.1em' }}>Currently open</span>
+              </div>
+            </div>
+
+            {/* Social */}
+            <div>
+              <div style={{ fontSize:9, letterSpacing:'0.4em', textTransform:'uppercase', color:'#aaa', marginBottom:14, display:'flex', alignItems:'center', gap:8 }}>
+                <div style={{ width:12, height:1, background:BLUE }} />
+                Follow SHAAS
+              </div>
+              {['LinkedIn', 'X (Twitter)', 'Instagram'].map((s, i) => (
+                <div key={s} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 0', borderBottom:'1px solid rgba(0,0,0,0.06)', cursor:'pointer', transition:'padding-left 0.2s' }}
+                  onMouseEnter={e => { e.currentTarget.style.paddingLeft='5px'; (e.currentTarget.querySelector('.ct-soc-name') as HTMLElement).style.color=BLUE }}
+                  onMouseLeave={e => { e.currentTarget.style.paddingLeft='0'; (e.currentTarget.querySelector('.ct-soc-name') as HTMLElement).style.color=INK }}
+                >
+                  <span className="ct-soc-name" style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:14, color:INK, transition:'color 0.2s' }}>{s}</span>
+                  <span style={{ fontSize:12, color:'#ccc' }}>↗</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── FAQ ── */}
+      <div ref={faqRef.ref} style={{ borderBottom:`1px solid rgba(0,0,0,0.08)` }}>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', padding:'64px 48px', gap:64, alignItems:'start' }} className="ct-bottom-grid">
+
+          {/* Left heading */}
+          <div>
+            <div className={`ct-fade${faqRef.inView?' in':''}`} style={{ transitionDelay:'0ms', display:'flex', alignItems:'center', gap:8, marginBottom:20 }}>
+              <div style={{ width:20, height:2, background:BLUE }} />
+              <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>Common Questions</span>
+            </div>
+            <div className={`ct-fade${faqRef.inView?' in':''}`} style={{ transitionDelay:'80ms', marginBottom:16 }}>
+              <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:'clamp(32px,3.5vw,48px)', lineHeight:0.92, letterSpacing:'-0.02em', color:INK }}>
+                Frequently
+              </div>
+              <div style={{ fontFamily:"'Fraunces',serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(32px,3.5vw,48px)', lineHeight:0.92, letterSpacing:'-0.02em', color:'#777' }}>
+                Asked
+              </div>
+            </div>
+            <div className={`ct-fade${faqRef.inView?' in':''}`} style={{ transitionDelay:'160ms' }}>
+              <p style={{ fontSize:13, color:'#aaa', fontWeight:300, lineHeight:1.75, fontFamily:"'Fraunces',serif", fontStyle:'italic', maxWidth:320 }}>
+                Can't find the answer you're looking for? Reach out to our team directly.
+              </p>
+            </div>
+          </div>
+
+          {/* Right FAQs */}
+          <div className={`ct-fade${faqRef.inView?' in':''}`} style={{ transitionDelay:'100ms' }}>
+            {faqs.map((faq, idx) => (
+              <div
+                key={idx}
+                className={`ct-faq-row${openFaq===idx?' open':''}`}
+                onClick={() => setOpenFaq(openFaq===idx ? null : idx)}
+              >
+                <div className="ct-faq-head">
+                  <div className="ct-faq-q">{faq.q}</div>
+                  <div className="ct-faq-icon">+</div>
+                </div>
+                <div className="ct-faq-body">{faq.a}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
