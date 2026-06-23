@@ -111,6 +111,31 @@ export default function ShaasBreaker() {
           transition: color 0.2s; text-decoration: none; display: block;
         }
         .brk-contact-val:hover { color: ${BLUE}; }
+
+        /* New branch announcement badge */
+        .brk-branch {
+          display: inline-flex; align-items: center; gap: 12px;
+          background: rgba(0,170,255,0.08);
+          border: 1px solid rgba(0,170,255,0.25);
+          padding: 9px 18px 9px 14px;
+        }
+        .brk-branch-dot {
+          width: 7px; height: 7px; border-radius: 50%;
+          background: ${BLUE}; flex-shrink: 0;
+          animation: brk-pulse 2s infinite;
+        }
+        @keyframes brk-pulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(0,170,255,0.5); }
+          50%      { box-shadow: 0 0 0 6px rgba(0,170,255,0); }
+        }
+        .brk-branch-new {
+          font-family: 'Bebas Neue', sans-serif; font-size: 12px;
+          letter-spacing: 0.2em; color: ${BLUE};
+        }
+        .brk-branch-txt {
+          font-size: 11px; letter-spacing: 0.04em; color: #555; font-weight: 400;
+        }
+        .brk-branch-txt b { color: ${INK}; font-weight: 600; }
       `}</style>
 
       {/* Subtle mouse-tracking radial */}
@@ -137,8 +162,17 @@ export default function ShaasBreaker() {
       {/* Main content */}
       <div style={{ padding: '80px 48px 72px', maxWidth: 1000, margin: '0 auto' }}>
 
+        {/* New branch announcement */}
+        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '0ms', marginBottom: 24 }}>
+          <div className="brk-branch">
+            <div className="brk-branch-dot" />
+            <span className="brk-branch-new">New</span>
+            <span className="brk-branch-txt">SHAAS has opened a new branch in <b>ADGM, Abu Dhabi</b></span>
+          </div>
+        </div>
+
         {/* Eyebrow */}
-        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '0ms', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 32 }}>
+        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '60ms', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 32 }}>
           <div style={{ width: 20, height: 2, background: BLUE, flexShrink: 0 }} />
           <span style={{ fontSize: 9, letterSpacing: '0.45em', textTransform: 'uppercase', color: BLUE, fontWeight: 500 }}>
             Abu Dhabi · Est. 2009
@@ -146,26 +180,26 @@ export default function ShaasBreaker() {
         </div>
 
         {/* Headline lines */}
-        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '80ms' }}>
+        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '120ms' }}>
           <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 'clamp(48px, 6.5vw, 92px)', lineHeight: 0.9, letterSpacing: '-0.025em', color: INK }}>
             Ready to
           </div>
         </div>
 
-        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '160ms' }}>
+        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '200ms' }}>
           <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 300, fontStyle: 'italic', fontSize: 'clamp(48px, 6.5vw, 92px)', lineHeight: 0.9, letterSpacing: '-0.025em', color: BLUE }}>
             transform your
           </div>
         </div>
 
-        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '240ms', marginBottom: 48 }}>
+        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '280ms', marginBottom: 48 }}>
           <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 'clamp(48px, 6.5vw, 92px)', lineHeight: 0.9, letterSpacing: '-0.025em', color: INK }}>
             enterprise?
           </div>
         </div>
 
         {/* Divider */}
-        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '300ms', marginBottom: 36 }}>
+        <div className={`brk-line${inView ? ' visible' : ''}`} style={{ transitionDelay: '340ms', marginBottom: 36 }}>
           <div style={{ width: '100%', height: 1, background: 'rgba(0,0,0,0.08)' }} />
         </div>
 
@@ -173,7 +207,7 @@ export default function ShaasBreaker() {
         <div
           className={`brk-line${inView ? ' visible' : ''}`}
           style={{
-            transitionDelay: '360ms',
+            transitionDelay: '400ms',
             display: 'flex', alignItems: 'flex-end',
             justifyContent: 'space-between', gap: 40, flexWrap: 'wrap',
           }}
@@ -183,7 +217,7 @@ export default function ShaasBreaker() {
             fontSize: 16, color: '#888',
             lineHeight: 1.7, maxWidth: 440, margin: 0, fontWeight: 300,
           }}>
-            Partner with Abu Dhabi's leading general consultancy — licensed across eight disciplines, trusted by enterprises across the Gulf and beyond.
+            Partner with Abu Dhabi's leading general consultancy — licensed across eight disciplines, trusted by enterprises across the Gulf and beyond, and now serving clients from our new ADGM branch.
           </p>
 
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', flexShrink: 0 }}>
@@ -198,7 +232,7 @@ export default function ShaasBreaker() {
         <div
           className={`brk-line${inView ? ' visible' : ''}`}
           style={{
-            transitionDelay: '420ms',
+            transitionDelay: '460ms',
             display: 'flex', alignItems: 'center', gap: 0,
             marginTop: 48, paddingTop: 28,
             borderTop: '1px solid rgba(0,0,0,0.08)',
@@ -206,9 +240,9 @@ export default function ShaasBreaker() {
           }}
         >
           {[
-            { label: 'Email',  val: 'info@shaas.com' },
-            { label: 'Phone',  val: '+971 XX XXX XXXX' },
-            { label: 'Office', val: 'ADGM Square, Al Maryah Island, Abu Dhabi' },
+            { label: 'Email',  val: 'dia@shaas-consulting.ae' },
+            { label: 'Phone',  val: '+971 56 847 4217' },
+            { label: 'Office', val: 'ADGM, Al Maryah Island, Abu Dhabi' },
           ].map((item, i) => (
             <div key={item.label} style={{ display: 'flex', alignItems: 'center' }}>
               {i > 0 && <div style={{ width: 1, height: 28, background: 'rgba(0,0,0,0.1)', margin: '0 32px' }} />}

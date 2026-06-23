@@ -193,6 +193,9 @@ export default function ShaasFooter() {
           ))}
         </div>
       </div>
+       <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, letterSpacing: '0.2em', color: INK, textAlign: 'center' }}>
+          SHAAS
+        </div>
     </footer>
   )
 }

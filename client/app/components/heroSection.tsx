@@ -7,12 +7,12 @@ const INK  = '#0a0a0a'
 
 const services = [
   {
-    num: '01', tag: 'Strategy',
-    title: 'Marketing', sub: 'Consultancy',
-    img: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1400&q=85',
+    num: '01', tag: 'Legal',
+    title: 'Legal', sub: 'Sciences',
+    img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1400&q=85',
     location: 'Abu Dhabi, UAE',
-    dek: 'Elevating enterprises through precision strategic vision and deep regional market intelligence.',
-    body: 'We craft brand narratives that resonate with Gulf audiences and international investors alike — from positioning frameworks that differentiate to go-to-market strategies that deliver measurable results across the UAE and MENA.',
+    dek: 'Navigating complex regulatory landscapes with rigorous legal research and authoritative advisory.',
+    body: 'We deliver consultancy, studies, and research in legal sciences across UAE federal and emirate-level frameworks — translating intricate regulatory requirements into clear, actionable guidance that protects and empowers enterprises operating in Abu Dhabi and beyond.',
   },
   {
     num: '02', tag: 'Innovation',
@@ -180,6 +180,7 @@ export default function ShaasHeroV3() {
           display: grid; grid-template-columns: 380px 1fr;
           border-bottom: 1px solid ${INK}; overflow: hidden;
           height: calc(100vh - 64px - 48px);
+          margin-top: 65px;
         }
         .v3-sidebar {
           border-right: 1px solid ${INK};
@@ -336,21 +337,7 @@ export default function ShaasHeroV3() {
       `}</style>
 
       {/* ── HEADER ── */}
-      <header className="v3-header">
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
-          <div className="v3-logo">SHAAS</div>
-          <div style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#aaa' }}>General Consulting</div>
-        </div>
-        <nav className="v3-nav">
-          {['Home', 'About', 'Solutions', 'Contact'].map(n => <a key={n}>{n}</a>)}
-        </nav>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#aaa' }}>
-            <div className="v3-loc-dot" /> Abu Dhabi, UAE
-          </div>
-          <button className="v3-cta-btn">Get Started ↗</button>
-        </div>
-      </header>
+
 
       {/* ── HERO ── */}
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -426,47 +413,7 @@ export default function ShaasHeroV3() {
         </div>
       </div>
 
-      {/* ── LICENSED SERVICES SECTION ── */}
-      <section className="svc-section">
-        <div className="svc-section-head">
-          <div>
-            <div style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: BLUE, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{ width: 20, height: 2, background: BLUE }} />
-              Licensed Activities · Abu Dhabi
-            </div>
-            <div className="svc-section-title">
-              What We <em>Do</em>
-            </div>
-          </div>
-          <div className="svc-section-sub">
-            <span>8 Licensed Services</span>
-            Registered & Authorised<br />by Abu Dhabi Authorities
-          </div>
-        </div>
-
-        <div className="svc-grid">
-          {licencedServices.map((svc, idx) => (
-            <div
-              key={svc.code}
-              className="svc-card"
-              onMouseEnter={() => setHoveredSvc(idx)}
-              onMouseLeave={() => setHoveredSvc(null)}
-            >
-              <div className="svc-card-top">
-                <div className="svc-card-code">{svc.code}</div>
-                <div className="svc-card-icon">{svc.icon}</div>
-              </div>
-              <div className="svc-card-en">{svc.en}</div>
-              <div className="svc-card-ar">{svc.ar}</div>
-              <div className="svc-card-desc">{svc.desc}</div>
-              <div className="svc-card-footer">
-                <div className="svc-card-footer-line" />
-                Learn More
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+     
     </div>
   )
 }

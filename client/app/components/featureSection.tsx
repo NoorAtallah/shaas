@@ -1,8 +1,5 @@
 'use client'
 
-const BLUE = '#00aaff'
-const INK  = '#0a0a0a'
-
 const services = [
   {
     code: '7020039',
@@ -56,133 +53,85 @@ const services = [
 
 export default function ShaasServicesSection() {
   return (
-    <section style={{ background: '#fff', borderTop: `2px solid ${INK}`, fontFamily: "'DM Sans', sans-serif", overflow: 'hidden' }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
+    <section className="bg-white border-t-2 border-[#0a0a0a] overflow-hidden font-['DM_Sans',sans-serif]">
+      {/* Google Fonts */}
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');`}</style>
 
-        .ss-head {
-          display: flex; align-items: flex-end; justify-content: space-between;
-          padding: 48px 48px 28px;
-          border-bottom: 1px solid rgba(0,0,0,0.08);
-          flex-wrap: wrap; gap: 16px;
-        }
-        .ss-title {
-          font-family: 'Fraunces', serif; font-weight: 800;
-          font-size: 52px; line-height: 0.95; letter-spacing: -0.02em; color: ${INK};
-        }
-        .ss-title em { font-weight: 300; font-style: italic; color: #777; }
-        .ss-badge {
-          text-align: right; font-size: 9px; letter-spacing: 0.35em;
-          text-transform: uppercase; color: #aaa; line-height: 1.7;
-        }
-        .ss-badge strong {
-          color: ${BLUE}; display: block;
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: 13px; letter-spacing: 0.15em; font-weight: 400;
-        }
-
-        .ss-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-        }
-
-        .ss-card {
-          padding: 32px 28px 28px;
-          border-right: 1px solid rgba(0,0,0,0.07);
-          border-bottom: 1px solid rgba(0,0,0,0.07);
-          position: relative; overflow: hidden;
-          cursor: pointer;
-          transition: background 0.25s;
-        }
-        .ss-card:nth-child(4n) { border-right: none; }
-        .ss-card:hover { background: rgba(0,170,255,0.02); }
-        .ss-card::after {
-          content: ''; position: absolute;
-          bottom: 0; left: 0; right: 0; height: 2px;
-          background: ${BLUE};
-          transform: scaleX(0); transform-origin: left;
-          transition: transform 0.35s ease;
-        }
-        .ss-card:hover::after { transform: scaleX(1); }
-
-        .ss-card-top {
-          display: flex; align-items: flex-start;
-          justify-content: space-between; margin-bottom: 20px;
-        }
-        .ss-code {
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: 11px; letter-spacing: 0.2em; color: #ddd;
-        }
-        .ss-icon {
-          font-size: 18px; color: rgba(0,170,255,0.2);
-          transition: color 0.25s;
-        }
-        .ss-card:hover .ss-icon { color: ${BLUE}; }
-
-        .ss-title-text {
-          font-family: 'Fraunces', serif; font-weight: 800;
-          font-size: 15px; line-height: 1.25; color: ${INK};
-          margin-bottom: 14px;
-        }
-        .ss-desc {
-          font-size: 11px; line-height: 1.7; color: #888; font-weight: 300;
-        }
-        .ss-footer {
-          display: flex; align-items: center; gap: 8px;
-          margin-top: 20px; font-size: 9px;
-          letter-spacing: 0.25em; text-transform: uppercase;
-          color: #ccc; transition: color 0.25s;
-        }
-        .ss-card:hover .ss-footer { color: ${BLUE}; }
-        .ss-footer-line { flex: 0 0 16px; height: 1px; background: currentColor; }
-
-        @media (max-width: 1024px) {
-          .ss-grid { grid-template-columns: repeat(3, 1fr); }
-          .ss-card:nth-child(4n) { border-right: 1px solid rgba(0,0,0,0.07); }
-          .ss-card:nth-child(3n) { border-right: none; }
-        }
-        @media (max-width: 720px) {
-          .ss-grid { grid-template-columns: repeat(2, 1fr); }
-          .ss-card:nth-child(3n) { border-right: 1px solid rgba(0,0,0,0.07); }
-          .ss-card:nth-child(2n) { border-right: none; }
-          .ss-head { flex-direction: column; gap: 16px; padding: 32px 24px 20px; }
-          .ss-badge { text-align: left; }
-          .ss-title { font-size: 38px; }
-          .ss-card { padding: 20px 16px 20px; }
-        }
-        @media (max-width: 480px) {
-          .ss-grid { grid-template-columns: 1fr; }
-          .ss-card { border-right: none !important; }
-        }
-      `}</style>
-
-      {/* Head */}
-      <div className="ss-head">
+      {/* Header */}
+      <div className="flex items-end justify-between flex-wrap gap-4 px-12 pt-12 pb-7 border-b border-black/[0.08] max-sm:flex-col max-sm:items-start max-sm:px-6 max-sm:pt-8 max-sm:pb-5">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: BLUE, marginBottom: 12 }}>
-            <div style={{ width: 20, height: 2, background: BLUE, flexShrink: 0 }} />
+          <div className="flex items-center gap-2 text-[9px] tracking-[0.4em] uppercase text-[#00aaff] mb-3">
+            <div className="w-5 h-0.5 bg-[#00aaff] shrink-0" />
             Licensed Activities · Abu Dhabi
           </div>
-          <div className="ss-title">What We <em>Do</em></div>
+          <h2
+            className="font-['Fraunces',serif] font-extrabold leading-[0.95] tracking-[-0.02em] text-[#0a0a0a] text-[52px] max-sm:text-[38px]"
+          >
+            What We{' '}
+            <em className="font-light not-italic text-[#777]">Do</em>
+          </h2>
         </div>
-        <div className="ss-badge">
-          <strong>8 Services</strong>
-          Registered &amp; Authorised<br />by Abu Dhabi Authorities
+
+        <div className="text-right text-[9px] tracking-[0.35em] uppercase text-[#aaa] leading-[1.7] max-sm:text-left">
+          <strong className="text-[#00aaff] block font-['Bebas_Neue',sans-serif] text-[13px] tracking-[0.15em] font-normal">
+            8 Services
+          </strong>
+          Registered &amp; Authorised
+          <br />
+          by Abu Dhabi Authorities
         </div>
       </div>
 
       {/* Grid */}
-      <div className="ss-grid">
-        {services.map(svc => (
-          <div key={svc.code} className="ss-card">
-            <div className="ss-card-top">
-              <div className="ss-code">{svc.code}</div>
-              <div className="ss-icon">{svc.icon}</div>
+      <div className="grid grid-cols-4 max-[1024px]:grid-cols-3 max-[720px]:grid-cols-2 max-[480px]:grid-cols-1">
+        {services.map((svc, i) => (
+          <div
+            key={svc.code}
+            className="
+              group relative overflow-hidden cursor-pointer
+              px-7 pt-8 pb-7
+              border-r border-b border-black/[0.07]
+              transition-colors duration-[250ms]
+              hover:bg-[#00aaff]/[0.02]
+              [&:nth-child(4n)]:border-r-0
+              max-[1024px]:[&:nth-child(4n)]:border-r max-[1024px]:[&:nth-child(3n)]:border-r-0
+              max-[720px]:[&:nth-child(3n)]:border-r max-[720px]:[&:nth-child(2n)]:border-r-0
+              max-[480px]:border-r-0
+              max-[720px]:px-4 max-[720px]:pt-5
+            "
+          >
+            {/* Bottom accent line */}
+            <span
+              className="
+                absolute bottom-0 left-0 right-0 h-0.5 bg-[#00aaff]
+                scale-x-0 origin-left transition-transform duration-[350ms] ease-in-out
+                group-hover:scale-x-100
+              "
+            />
+
+            {/* Top row: code + icon */}
+            <div className="flex items-start justify-between mb-5">
+              <span className="font-['Bebas_Neue',sans-serif] text-[11px] tracking-[0.2em] text-[#ddd]">
+                {svc.code}
+              </span>
+              <span className="text-[18px] text-[#00aaff]/20 transition-colors duration-[250ms] group-hover:text-[#00aaff]">
+                {svc.icon}
+              </span>
             </div>
-            <div className="ss-title-text">{svc.title}</div>
-            <div className="ss-desc">{svc.desc}</div>
-            <div className="ss-footer">
-              <div className="ss-footer-line" />
+
+            {/* Title */}
+            <p className="font-['Fraunces',serif] font-extrabold text-[15px] leading-[1.25] text-[#0a0a0a] mb-3.5">
+              {svc.title}
+            </p>
+
+            {/* Description */}
+            <p className="text-[11px] leading-[1.7] text-[#888] font-light">
+              {svc.desc}
+            </p>
+
+            {/* Footer */}
+            <div className="flex items-center gap-2 mt-5 text-[9px] tracking-[0.25em] uppercase text-[#ccc] transition-colors duration-[250ms] group-hover:text-[#00aaff]">
+              <span className="w-4 h-px bg-current" />
               Learn More
             </div>
           </div>

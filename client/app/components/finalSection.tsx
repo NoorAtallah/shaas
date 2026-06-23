@@ -151,9 +151,9 @@ export default function ShaasCTA() {
           <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '100ms', marginBottom: 32 }}>
             <div style={{ fontSize: 9, letterSpacing: '0.4em', textTransform: 'uppercase', color: '#aaa', marginBottom: 16 }}>Contact</div>
             {[
-              { label: 'Email',   val: 'info@shaas.com' },
-              { label: 'Phone',   val: '+971 XX XXX XXXX' },
-              { label: 'Address', val: 'ADGM Square, Al Maryah Island\nAbu Dhabi, UAE' },
+              { label: 'Email',   val: 'dia@shaas-consulting.ae' },
+              { label: 'Phone',   val: '+971 56 847 4217' },
+              { label: 'Address', val: 'Building 60, Office 403\nMinistry Complex, Amar Bin Yasir Street\nAl Muntaza, Abu Dhabi — U.A.E' },
             ].map(item => (
               <div key={item.label} style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 8, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#ccc', marginBottom: 3 }}>{item.label}</div>
@@ -177,39 +177,7 @@ export default function ShaasCTA() {
         </div>
       </div>
 
-      {/* ── BOTTOM BAR ── */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr auto 1fr',
-        alignItems: 'center',
-        padding: '16px 48px',
-        borderTop: `1px solid rgba(0,0,0,0.08)`,
-      }}>
-        {/* Left */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <div className="cta-loc-dot" />
-          <span style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#aaa' }}>
-            Abu Dhabi, UAE
-          </span>
-        </div>
-
-        {/* Center — logo */}
-        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, letterSpacing: '0.2em', color: INK, textAlign: 'center' }}>
-          SHAAS
-        </div>
-
-        {/* Right */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20, justifyContent: 'flex-end' }}>
-          {['Privacy', 'Terms', 'Sitemap'].map((l, i) => (
-            <span key={l} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-              {i > 0 && <span style={{ color: '#ddd', fontSize: 10 }}>·</span>}
-              <a className="cta-footer-link">{l}</a>
-            </span>
-          ))}
-          <span style={{ color: '#ddd', fontSize: 10 }}>·</span>
-          <span style={{ fontSize: 9, letterSpacing: '0.15em', color: '#ccc' }}>© 2025 SHAAS</span>
-        </div>
-      </div>
+      
     </footer>
   )
 }
