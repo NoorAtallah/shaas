@@ -1,58 +1,93 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from "react";
 
-const BLUE = '#00aaff'
-const INK  = '#0a0a0a'
+const BLUE = "#00aaff";
+const INK = "#0a0a0a";
 
 function useInView(threshold = 0.15) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [inView, setInView] = useState(false)
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true) },
-      { threshold }
-    )
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
-  return { ref, inView }
+      ([entry]) => {
+        if (entry.isIntersecting) setInView(true);
+      },
+      { threshold },
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+  return { ref, inView };
 }
 
 const inquiryTypes = [
-  'Marketing Consultancy', 'Project Development', 'Administrative Studies',
-  'Human Resources', 'Logistics Consultancy', 'AI & Innovation',
-  'Oil & Gas Services', 'Legal Sciences', 'General Inquiry',
-]
+  "Marketing Consultancy",
+  "Project Development",
+  "Administrative Studies",
+  "Human Resources",
+  "Logistics Consultancy",
+  "AI & Innovation",
+  "Oil & Gas Services",
+  "Legal Sciences",
+  "General Inquiry",
+];
 
 const faqs = [
-  { q: 'How quickly do you respond to inquiries?',     a: 'We respond to all inquiries within 24 business hours. For urgent matters, please call our Abu Dhabi office directly.' },
-  { q: 'Do you work with international clients?',       a: 'Yes. While we are based in Abu Dhabi, we serve clients across the GCC, MENA, and internationally — with on-ground teams for regional engagements.' },
-  { q: 'What is the typical engagement timeline?',      a: 'Engagements vary by scope. Discovery and diagnostic phases typically run 2–4 weeks. Full strategy and delivery programmes range from 3 to 12 months.' },
-  { q: 'Do you offer retainer arrangements?',           a: 'Yes. Many of our clients engage us on an ongoing advisory retainer basis. We can discuss flexible arrangements during your initial consultation.' },
-]
+  {
+    q: "How quickly do you respond to inquiries?",
+    a: "We respond to all inquiries within 24 business hours. For urgent matters, please call our Abu Dhabi office directly.",
+  },
+  {
+    q: "Do you work with international clients?",
+    a: "Yes. While we are based in Abu Dhabi, we serve clients across the GCC, MENA, and internationally — with on-ground teams for regional engagements.",
+  },
+  {
+    q: "What is the typical engagement timeline?",
+    a: "Engagements vary by scope. Discovery and diagnostic phases typically run 2–4 weeks. Full strategy and delivery programmes range from 3 to 12 months.",
+  },
+  {
+    q: "Do you offer retainer arrangements?",
+    a: "Yes. Many of our clients engage us on an ongoing advisory retainer basis. We can discuss flexible arrangements during your initial consultation.",
+  },
+];
 
 export default function ContactPage() {
-  const heroRef = useInView(0.1)
-  const formRef = useInView(0.1)
-  const faqRef  = useInView(0.1)
+  const heroRef = useInView(0.1);
+  const formRef = useInView(0.1);
+  const faqRef = useInView(0.1);
 
-  const [form, setForm]                     = useState({ name: '', company: '', email: '', phone: '', message: '' })
-  const [selectedInquiry, setSelectedInquiry] = useState<string | null>(null)
-  const [submitted, setSubmitted]           = useState(false)
-  const [openFaq, setOpenFaq]               = useState<number | null>(null)
+  const [form, setForm] = useState({
+    name: "",
+    company: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [selectedInquiry, setSelectedInquiry] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }))
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setSubmitted(true)
+    e.preventDefault();
+    setSubmitted(true);
   }
 
   return (
-    <div style={{ background: '#fff', color: INK, fontFamily: "'DM Sans', sans-serif", overflow: 'hidden' }}>
+    <div
+      style={{
+        background: "#fff",
+        color: INK,
+        fontFamily: "'DM Sans', sans-serif",
+        overflow: "hidden",
+      }}
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,800;1,9..144,300;1,9..144,700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
 
@@ -201,32 +236,131 @@ export default function ContactPage() {
       {/* ── HERO ── */}
       <div ref={heroRef.ref} className="ct-hero">
         <div className="ct-hero-left">
-          <div className={`ct-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'0ms', display:'flex', alignItems:'center', gap:8, marginBottom:24 }}>
-            <div style={{ width:20, height:2, background:BLUE }} />
-            <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>Contact Us</span>
+          <div
+            className={`ct-fade${heroRef.inView ? " in" : ""}`}
+            style={{
+              transitionDelay: "0ms",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 24,
+            }}
+          >
+            <div style={{ width: 20, height: 2, background: BLUE }} />
+            <span
+              style={{
+                fontSize: 9,
+                letterSpacing: "0.45em",
+                textTransform: "uppercase",
+                color: BLUE,
+                fontWeight: 500,
+              }}
+            >
+              Contact Us
+            </span>
           </div>
-          <div className={`ct-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'80ms' }}>
-            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:'clamp(40px,5vw,72px)', lineHeight:0.9, letterSpacing:'-0.025em', color:INK }}>Let's start</div>
+          <div
+            className={`ct-fade${heroRef.inView ? " in" : ""}`}
+            style={{ transitionDelay: "80ms" }}
+          >
+            <div
+              style={{
+                fontFamily: "'Fraunces',serif",
+                fontWeight: 800,
+                fontSize: "clamp(40px,5vw,72px)",
+                lineHeight: 0.9,
+                letterSpacing: "-0.025em",
+                color: INK,
+              }}
+            >
+              Let's start
+            </div>
           </div>
-          <div className={`ct-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'150ms', marginBottom:32 }}>
-            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(40px,5vw,72px)', lineHeight:0.9, letterSpacing:'-0.025em', color:BLUE }}>a conversation.</div>
+          <div
+            className={`ct-fade${heroRef.inView ? " in" : ""}`}
+            style={{ transitionDelay: "150ms", marginBottom: 32 }}
+          >
+            <div
+              style={{
+                fontFamily: "'Fraunces',serif",
+                fontWeight: 300,
+                fontStyle: "italic",
+                fontSize: "clamp(40px,5vw,72px)",
+                lineHeight: 0.9,
+                letterSpacing: "-0.025em",
+                color: BLUE,
+              }}
+            >
+              a conversation.
+            </div>
           </div>
-          <div className={`ct-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'220ms', marginBottom:36 }}>
-            <p style={{ fontFamily:"'Fraunces',serif", fontStyle:'italic', fontSize:14, color:'#888', lineHeight:1.7, maxWidth:420, margin:0, fontWeight:300 }}>
-              Whether you have a defined brief or just an early idea — our Abu Dhabi team is ready to listen, explore, and help you find the right path forward.
+          <div
+            className={`ct-fade${heroRef.inView ? " in" : ""}`}
+            style={{ transitionDelay: "220ms", marginBottom: 36 }}
+          >
+            <p
+              style={{
+                fontFamily: "'Fraunces',serif",
+                fontStyle: "italic",
+                fontSize: 14,
+                color: "#888",
+                lineHeight: 1.7,
+                maxWidth: 420,
+                margin: 0,
+                fontWeight: 300,
+              }}
+            >
+              Whether you have a defined brief or just an early idea — our Abu
+              Dhabi team is ready to listen, explore, and help you find the
+              right path forward.
             </p>
           </div>
-          <div className={`ct-fade${heroRef.inView?' in':''}`} style={{ transitionDelay:'290ms' }}>
+          <div
+            className={`ct-fade${heroRef.inView ? " in" : ""}`}
+            style={{ transitionDelay: "290ms" }}
+          >
+            // In the hero contact links — replace the array:
             {[
-              { label:'Email us at',  val:'info@shaas.com',                              href:'mailto:info@shaas.com' },
-              { label:'Call us on',   val:'+971 XX XXX XXXX',                            href:'tel:+97100000000' },
-              { label:'Visit us at',  val:'ADGM Square, Al Maryah Island, Abu Dhabi',    href:'#' },
-            ].map(item => (
+              {
+                label: "Email us at",
+                val: "dia@shaas-consulting.ae",
+                href: "mailto:dia@shaas-consulting.ae",
+              },
+              {
+                label: "Call us on",
+                val: "+971 56 847 4217",
+                href: "tel:+971568474217",
+              },
+              {
+                label: "Visit us at",
+                val: "Building 60, Office 403, Ministry Complex, Al Muntaza, Abu Dhabi",
+                href: "#",
+              },
+            ].map((item) => (
               <a key={item.label} href={item.href} className="ct-contact-link">
-                <div style={{ width:3, height:32, background:BLUE, flexShrink:0 }} />
+                <div
+                  style={{
+                    width: 3,
+                    height: 32,
+                    background: BLUE,
+                    flexShrink: 0,
+                  }}
+                />
                 <div>
-                  <div style={{ fontSize:8, letterSpacing:'0.3em', textTransform:'uppercase', color:'#bbb', marginBottom:2 }}>{item.label}</div>
-                  <div style={{ fontSize:13, color:INK, fontWeight:400 }}>{item.val}</div>
+                  <div
+                    style={{
+                      fontSize: 8,
+                      letterSpacing: "0.3em",
+                      textTransform: "uppercase",
+                      color: "#bbb",
+                      marginBottom: 2,
+                    }}
+                  >
+                    {item.label}
+                  </div>
+                  <div style={{ fontSize: 13, color: INK, fontWeight: 400 }}>
+                    {item.val}
+                  </div>
                 </div>
               </a>
             ))}
@@ -234,88 +368,263 @@ export default function ContactPage() {
         </div>
 
         <div className="ct-hero-img">
-          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=85" alt="SHAAS office"
-            style={{ width:'100%', height:'100%', objectFit:'cover', display:'block', filter:'grayscale(15%)',
-              opacity:heroRef.inView?1:0, transform:heroRef.inView?'scale(1)':'scale(1.04)',
-              transition:'opacity 0.9s ease 0.2s,transform 1.2s ease 0.2s' }}
+          <img
+            src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=85"
+            alt="SHAAS office"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+              filter: "grayscale(15%)",
+              opacity: heroRef.inView ? 1 : 0,
+              transform: heroRef.inView ? "scale(1)" : "scale(1.04)",
+              transition: "opacity 0.9s ease 0.2s,transform 1.2s ease 0.2s",
+            }}
           />
-          <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right,rgba(255,255,255,0.25) 0%,transparent 40%)' }} />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(to right,rgba(255,255,255,0.25) 0%,transparent 40%)",
+            }}
+          />
           <div className="ct-img-tag">Abu Dhabi HQ</div>
-          <div style={{ position:'absolute', bottom:24, left:20, display:'flex', alignItems:'center', gap:8 }}>
+          <div
+            style={{
+              position: "absolute",
+              bottom: 24,
+              left: 20,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
             <div className="ct-loc-dot" />
-            <span style={{ fontSize:9, letterSpacing:'0.3em', textTransform:'uppercase', color:'rgba(255,255,255,0.8)' }}>Al Maryah Island</span>
+            // Also update the hero subtitle paragraph to match the real
+            address:
+            <span
+              style={{
+                fontSize: 9,
+                letterSpacing: "0.3em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.8)",
+              }}
+            >
+              Al Muntaza, Abu Dhabi
+            </span>
           </div>
         </div>
       </div>
 
       {/* ── FORM + SIDEBAR ── */}
       <div ref={formRef.ref} className="ct-form-area">
-
         {/* FORM */}
         <div className="ct-form-col">
-          <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'0ms', display:'flex', alignItems:'center', gap:8, marginBottom:28 }}>
-            <div style={{ width:20, height:2, background:BLUE }} />
-            <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>Send a Message</span>
+          <div
+            className={`ct-fade${formRef.inView ? " in" : ""}`}
+            style={{
+              transitionDelay: "0ms",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 28,
+            }}
+          >
+            <div style={{ width: 20, height: 2, background: BLUE }} />
+            <span
+              style={{
+                fontSize: 9,
+                letterSpacing: "0.45em",
+                textTransform: "uppercase",
+                color: BLUE,
+                fontWeight: 500,
+              }}
+            >
+              Send a Message
+            </span>
           </div>
 
           {submitted ? (
             <div>
-              <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:36, color:INK, lineHeight:1, marginBottom:10 }}>Message sent.</div>
-              <div style={{ fontFamily:"'Fraunces',serif", fontStyle:'italic', fontSize:16, color:BLUE, marginBottom:16 }}>We'll be in touch within 24 hours.</div>
-              <p style={{ fontSize:13, color:'#888', fontWeight:300, lineHeight:1.7, marginBottom:24 }}>
-                Thank you for reaching out to SHAAS. A member of our Abu Dhabi team will review your inquiry and respond shortly.
+              <div
+                style={{
+                  fontFamily: "'Fraunces',serif",
+                  fontWeight: 800,
+                  fontSize: 36,
+                  color: INK,
+                  lineHeight: 1,
+                  marginBottom: 10,
+                }}
+              >
+                Message sent.
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Fraunces',serif",
+                  fontStyle: "italic",
+                  fontSize: 16,
+                  color: BLUE,
+                  marginBottom: 16,
+                }}
+              >
+                We'll be in touch within 24 hours.
+              </div>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "#888",
+                  fontWeight: 300,
+                  lineHeight: 1.7,
+                  marginBottom: 24,
+                }}
+              >
+                Thank you for reaching out to SHAAS. A member of our Abu Dhabi
+                team will review your inquiry and respond shortly.
               </p>
-              <button className="ct-submit" onClick={() => { setSubmitted(false); setForm({ name:'',company:'',email:'',phone:'',message:'' }); setSelectedInquiry(null) }}>
+              <button
+                className="ct-submit"
+                onClick={() => {
+                  setSubmitted(false);
+                  setForm({
+                    name: "",
+                    company: "",
+                    email: "",
+                    phone: "",
+                    message: "",
+                  });
+                  setSelectedInquiry(null);
+                }}
+              >
                 Send Another ↺
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', gap:24 }}>
-              <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'80ms' }}>
+            <form
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: 24 }}
+            >
+              <div
+                className={`ct-fade${formRef.inView ? " in" : ""}`}
+                style={{ transitionDelay: "80ms" }}
+              >
                 <div className="ct-row-2">
                   <div className="ct-field">
                     <label className="ct-label">Full Name *</label>
-                    <input className="ct-input" name="name" value={form.name} onChange={handleChange} placeholder="Your full name" required />
+                    <input
+                      className="ct-input"
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      placeholder="Your full name"
+                      required
+                    />
                   </div>
                   <div className="ct-field">
                     <label className="ct-label">Company</label>
-                    <input className="ct-input" name="company" value={form.company} onChange={handleChange} placeholder="Organisation name" />
+                    <input
+                      className="ct-input"
+                      name="company"
+                      value={form.company}
+                      onChange={handleChange}
+                      placeholder="Organisation name"
+                    />
                   </div>
                 </div>
               </div>
 
-              <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'130ms' }}>
+              <div
+                className={`ct-fade${formRef.inView ? " in" : ""}`}
+                style={{ transitionDelay: "130ms" }}
+              >
                 <div className="ct-row-2">
                   <div className="ct-field">
                     <label className="ct-label">Email Address *</label>
-                    <input className="ct-input" type="email" name="email" value={form.email} onChange={handleChange} placeholder="your@email.com" required />
+                    <input
+                      className="ct-input"
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder="your@email.com"
+                      required
+                    />
                   </div>
                   <div className="ct-field">
                     <label className="ct-label">Phone Number</label>
-                    <input className="ct-input" name="phone" value={form.phone} onChange={handleChange} placeholder="+971 XX XXX XXXX" />
+                    <input
+                      className="ct-input"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      placeholder="+971 XX XXX XXXX"
+                    />
                   </div>
                 </div>
               </div>
 
-              <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'180ms' }}>
-                <div className="ct-label" style={{ marginBottom:10 }}>Area of Interest</div>
+              <div
+                className={`ct-fade${formRef.inView ? " in" : ""}`}
+                style={{ transitionDelay: "180ms" }}
+              >
+                <div className="ct-label" style={{ marginBottom: 10 }}>
+                  Area of Interest
+                </div>
                 <div className="ct-pills">
-                  {inquiryTypes.map(t => (
-                    <button key={t} type="button" className={`ct-pill${selectedInquiry===t?' sel':''}`} onClick={() => setSelectedInquiry(t)}>{t}</button>
+                  {inquiryTypes.map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      className={`ct-pill${selectedInquiry === t ? " sel" : ""}`}
+                      onClick={() => setSelectedInquiry(t)}
+                    >
+                      {t}
+                    </button>
                   ))}
                 </div>
               </div>
 
-              <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'230ms' }}>
+              <div
+                className={`ct-fade${formRef.inView ? " in" : ""}`}
+                style={{ transitionDelay: "230ms" }}
+              >
                 <div className="ct-field">
                   <label className="ct-label">Message *</label>
-                  <textarea className="ct-textarea" name="message" value={form.message} onChange={handleChange} placeholder="Tell us about your project or challenge..." required rows={4} />
+                  <textarea
+                    className="ct-textarea"
+                    name="message"
+                    value={form.message}
+                    onChange={handleChange}
+                    placeholder="Tell us about your project or challenge..."
+                    required
+                    rows={4}
+                  />
                 </div>
               </div>
 
-              <div className={`ct-fade${formRef.inView?' in':''}`} style={{ transitionDelay:'280ms', display:'flex', alignItems:'center', gap:16, flexWrap:'wrap' }}>
-                <button type="submit" className="ct-submit">Send Message ↗</button>
-                <span style={{ fontSize:10, color:'#bbb', letterSpacing:'0.1em' }}>We respond within 24 hours</span>
+              <div
+                className={`ct-fade${formRef.inView ? " in" : ""}`}
+                style={{
+                  transitionDelay: "280ms",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  flexWrap: "wrap",
+                }}
+              >
+                <button type="submit" className="ct-submit">
+                  Send Message ↗
+                </button>
+                <span
+                  style={{
+                    fontSize: 10,
+                    color: "#bbb",
+                    letterSpacing: "0.1em",
+                  }}
+                >
+                  We respond within 24 hours
+                </span>
               </div>
             </form>
           )}
@@ -323,42 +632,101 @@ export default function ContactPage() {
 
         {/* SIDEBAR */}
         <div className="ct-side-col">
-
           {/* Office card */}
           <div>
             <div className="ct-office-img">
-              <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=85" alt="Abu Dhabi" />
-              <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom,transparent 40%,rgba(255,255,255,0.5) 100%)' }} />
+              <img
+                src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=85"
+                alt="Abu Dhabi"
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(to bottom,transparent 40%,rgba(255,255,255,0.5) 100%)",
+                }}
+              />
               <div className="ct-img-tag">Headquarters</div>
             </div>
-            <div style={{ paddingTop:14, borderBottom:'1px solid rgba(0,0,0,0.08)', paddingBottom:16 }}>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:16, letterSpacing:'0.1em', color:INK, marginBottom:6 }}>Abu Dhabi</div>
-              <div style={{ fontSize:11, color:'#888', fontWeight:300, lineHeight:1.6 }}>ADGM Square, Al Maryah Island<br />Abu Dhabi, UAE</div>
+            <div
+              style={{
+                paddingTop: 14,
+                borderBottom: "1px solid rgba(0,0,0,0.08)",
+                paddingBottom: 16,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "'Bebas Neue',sans-serif",
+                  fontSize: 16,
+                  letterSpacing: "0.1em",
+                  color: INK,
+                  marginBottom: 6,
+                }}
+              >
+                Abu Dhabi
+              </div>
+              // In the sidebar office card address — replace the address div:
+              <div
+                style={{
+                  fontSize: 11,
+                  color: "#888",
+                  fontWeight: 300,
+                  lineHeight: 1.6,
+                }}
+              >
+                Building 60, Office 403
+                <br />
+                Ministry Complex, Amar Bin Yasir Street
+                <br />
+                Al Muntaza, Abu Dhabi — U.A.E
+              </div>
             </div>
           </div>
 
           {/* Hours */}
           <div>
-            <div className="ct-col-label"><div className="ct-col-label-line" />Business Hours</div>
-            {[['Sunday – Thursday','8:00 AM – 5:00 PM'],['Friday – Saturday','Closed']].map(([day,hrs]) => (
+            <div className="ct-col-label">
+              <div className="ct-col-label-line" />
+              Business Hours
+            </div>
+            {[
+              ["Sunday – Thursday", "8:00 AM – 5:00 PM"],
+              ["Friday – Saturday", "Closed"],
+            ].map(([day, hrs]) => (
               <div key={day} className="ct-hours-row">
-                <span style={{ color:'#888', fontWeight:300 }}>{day}</span>
-                <span style={{ color:INK, fontWeight:400 }}>{hrs}</span>
+                <span style={{ color: "#888", fontWeight: 300 }}>{day}</span>
+                <span style={{ color: INK, fontWeight: 400 }}>{hrs}</span>
               </div>
             ))}
-            <div style={{ display:'flex', alignItems:'center', gap:6, marginTop:12 }}>
-              <div className="ct-loc-dot" style={{ width:5, height:5 }} />
-              <span style={{ fontSize:10, color:BLUE, letterSpacing:'0.1em' }}>Currently open</span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                marginTop: 12,
+              }}
+            >
+              <div className="ct-loc-dot" style={{ width: 5, height: 5 }} />
+              <span
+                style={{ fontSize: 10, color: BLUE, letterSpacing: "0.1em" }}
+              >
+                Currently open
+              </span>
             </div>
           </div>
 
           {/* Social */}
           <div>
-            <div className="ct-col-label"><div className="ct-col-label-line" />Follow SHAAS</div>
-            {['LinkedIn','X (Twitter)','Instagram'].map(s => (
+            <div className="ct-col-label">
+              <div className="ct-col-label-line" />
+              Follow SHAAS
+            </div>
+            {["LinkedIn", "X (Twitter)", "Instagram"].map((s) => (
               <div key={s} className="ct-social-row">
                 <span className="ct-social-name">{s}</span>
-                <span style={{ fontSize:12, color:'#ccc' }}>↗</span>
+                <span style={{ fontSize: 12, color: "#ccc" }}>↗</span>
               </div>
             ))}
           </div>
@@ -368,24 +736,90 @@ export default function ContactPage() {
       {/* ── FAQ ── */}
       <div ref={faqRef.ref} className="ct-faq-area">
         <div>
-          <div className={`ct-fade${faqRef.inView?' in':''}`} style={{ transitionDelay:'0ms', display:'flex', alignItems:'center', gap:8, marginBottom:18 }}>
-            <div style={{ width:20, height:2, background:BLUE }} />
-            <span style={{ fontSize:9, letterSpacing:'0.45em', textTransform:'uppercase', color:BLUE, fontWeight:500 }}>Common Questions</span>
+          <div
+            className={`ct-fade${faqRef.inView ? " in" : ""}`}
+            style={{
+              transitionDelay: "0ms",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 18,
+            }}
+          >
+            <div style={{ width: 20, height: 2, background: BLUE }} />
+            <span
+              style={{
+                fontSize: 9,
+                letterSpacing: "0.45em",
+                textTransform: "uppercase",
+                color: BLUE,
+                fontWeight: 500,
+              }}
+            >
+              Common Questions
+            </span>
           </div>
-          <div className={`ct-fade${faqRef.inView?' in':''}`} style={{ transitionDelay:'80ms', marginBottom:14 }}>
-            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:800, fontSize:'clamp(28px,3.5vw,44px)', lineHeight:0.92, letterSpacing:'-0.02em', color:INK }}>Frequently</div>
-            <div style={{ fontFamily:"'Fraunces',serif", fontWeight:300, fontStyle:'italic', fontSize:'clamp(28px,3.5vw,44px)', lineHeight:0.92, letterSpacing:'-0.02em', color:'#777' }}>Asked</div>
+          <div
+            className={`ct-fade${faqRef.inView ? " in" : ""}`}
+            style={{ transitionDelay: "80ms", marginBottom: 14 }}
+          >
+            <div
+              style={{
+                fontFamily: "'Fraunces',serif",
+                fontWeight: 800,
+                fontSize: "clamp(28px,3.5vw,44px)",
+                lineHeight: 0.92,
+                letterSpacing: "-0.02em",
+                color: INK,
+              }}
+            >
+              Frequently
+            </div>
+            <div
+              style={{
+                fontFamily: "'Fraunces',serif",
+                fontWeight: 300,
+                fontStyle: "italic",
+                fontSize: "clamp(28px,3.5vw,44px)",
+                lineHeight: 0.92,
+                letterSpacing: "-0.02em",
+                color: "#777",
+              }}
+            >
+              Asked
+            </div>
           </div>
-          <div className={`ct-fade${faqRef.inView?' in':''}`} style={{ transitionDelay:'160ms' }}>
-            <p style={{ fontSize:13, color:'#aaa', fontWeight:300, lineHeight:1.75, fontFamily:"'Fraunces',serif", fontStyle:'italic', maxWidth:300 }}>
-              Can't find the answer you're looking for? Reach out to our team directly.
+          <div
+            className={`ct-fade${faqRef.inView ? " in" : ""}`}
+            style={{ transitionDelay: "160ms" }}
+          >
+            <p
+              style={{
+                fontSize: 13,
+                color: "#aaa",
+                fontWeight: 300,
+                lineHeight: 1.75,
+                fontFamily: "'Fraunces',serif",
+                fontStyle: "italic",
+                maxWidth: 300,
+              }}
+            >
+              Can't find the answer you're looking for? Reach out to our team
+              directly.
             </p>
           </div>
         </div>
 
-        <div className={`ct-fade${faqRef.inView?' in':''}`} style={{ transitionDelay:'100ms' }}>
+        <div
+          className={`ct-fade${faqRef.inView ? " in" : ""}`}
+          style={{ transitionDelay: "100ms" }}
+        >
           {faqs.map((faq, idx) => (
-            <div key={idx} className={`ct-faq-row${openFaq===idx?' open':''}`} onClick={() => setOpenFaq(openFaq===idx?null:idx)}>
+            <div
+              key={idx}
+              className={`ct-faq-row${openFaq === idx ? " open" : ""}`}
+              onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+            >
               <div className="ct-faq-head">
                 <div className="ct-faq-q">{faq.q}</div>
                 <div className="ct-faq-icon">+</div>
@@ -396,5 +830,5 @@ export default function ContactPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
