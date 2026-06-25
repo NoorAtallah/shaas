@@ -402,8 +402,6 @@ export default function ContactPage() {
             }}
           >
             <div className="ct-loc-dot" />
-            // Also update the hero subtitle paragraph to match the real
-            address:
             <span
               style={{
                 fontSize: 9,
