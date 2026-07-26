@@ -34,7 +34,7 @@ export default function ShaasBreaker() {
     return () => el.removeEventListener('mousemove', handler)
   }, [])
 
-  const marqueeItems = ['Strategic Advisory', 'Project Development', 'Human Capital', 'Logistics Intelligence', 'AI & Innovation', 'Legal Sciences', 'Oil & Gas', 'Administrative Excellence']
+  const marqueeItems = ['Legal Advisory', 'Business & Financial Advisory', 'Management Consulting', 'Human Capital Advisory', 'Fractional CFO', 'Corporate Governance', 'Business Transformation', 'Strategic Planning']
   const marqueeLocations = ['Abu Dhabi', 'UAE', 'MENA', 'GCC', 'Gulf Region', 'Al Maryah Island', 'ADGM', 'Khalifa Port']
 
   return (
@@ -240,7 +240,7 @@ export default function ShaasBreaker() {
           }}
         >
           {[
-            { label: 'Email',  val: 'dia@shaas-consulting.ae' },
+            { label: 'Email',  val: 'info@shaas-consulting.ae' },
             { label: 'Phone',  val: '+971 56 847 4217' },
             { label: 'Office', val: 'ADGM, Al Maryah Island, Abu Dhabi' },
           ].map((item, i) => (

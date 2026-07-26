@@ -6,12 +6,12 @@ const BLUE = '#00aaff'
 const INK  = '#0a0a0a'
 
 const stats = [
-  { value: 500, suffix: '+', label: 'Projects Completed',    desc: 'Delivered across the UAE, GCC, and MENA region' },
-  { value: 98,  suffix: '%', label: 'Client Satisfaction',   desc: 'Retained client rate across all service lines' },
-  { value: 15,  suffix: '+', label: 'Years of Excellence',   desc: 'Operating from Abu Dhabi since 2009' },
-  { value: 50,  suffix: '+', label: 'Global Partners',       desc: 'Strategic alliances across 4 continents' },
-  { value: 8,   suffix: '',  label: 'Licensed Activities',   desc: 'Authorised by Abu Dhabi authorities' },
-  { value: 120, suffix: '+', label: 'Experts & Consultants', desc: 'Multidisciplinary professionals on our team' },
+    { value: 4,   suffix: '',  label: 'Advisory Practices',   desc: 'Legal, Business & Financial, Management, and Human Capital' },
+  { value: 49,  suffix: '',  label: 'Advisory Services',     desc: 'Specialist services across the four practices' },
+  { value: 12,  suffix: '',  label: 'Industries Supported',  desc: 'From professional services to real estate and beyond' },
+  { value: 5,   suffix: '',  label: 'Business Stages',       desc: 'Startups, SMEs, family businesses, investor-backed, established' },
+  { value: 5,   suffix: '',  label: 'Step Approach',         desc: 'Understand, Analyse, Design, Implement, Optimise' },
+  { value: 1,   suffix: '',  label: 'Integrated Platform',   desc: 'All advisory expertise under one trusted partner' },
 ]
 
 function useCountUp(target: number, duration = 1800, start = false) {

@@ -7,44 +7,36 @@ const INK  = '#0a0a0a'
 
 const services = [
   {
-    num: '01', tag: 'Legal',
-    title: 'Legal', sub: 'Sciences',
+    num: '01', tag: 'Legal Advisory',
+    title: 'Legal', sub: 'Advisory',
     img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1400&q=85',
     location: 'Abu Dhabi, UAE',
-    dek: 'Navigating complex regulatory landscapes with rigorous legal research and authoritative advisory.',
-    body: 'We deliver consultancy, studies, and research in legal sciences across UAE federal and emirate-level frameworks — translating intricate regulatory requirements into clear, actionable guidance that protects and empowers enterprises operating in Abu Dhabi and beyond.',
+    dek: 'Protecting your business through strategic legal guidance.',
+    body: 'SHAAS provides strategic legal advisory solutions to help businesses navigate commercial complexity, strengthen governance, manage regulatory requirements, and support critical business decisions — from corporate structuring and contracts to compliance, governance, and transactions.',
   },
   {
-    num: '02', tag: 'Innovation',
-    title: 'Project', sub: 'Development',
-    img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1400&q=85',
-    location: 'ADGM Square, Abu Dhabi',
-    dek: 'Transforming visionary concepts into operational reality with precision and agility.',
-    body: 'Our project development team brings structured innovation to every engagement. We translate complex initiatives into delivery-ready programmes, managing risk and stakeholder alignment with the rigour Abu Dhabi demands.',
+    num: '02', tag: 'Business & Financial',
+    title: 'Business &', sub: 'Financial Advisory',
+    img: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1400&q=85',
+    location: 'Abu Dhabi, UAE',
+    dek: 'Turning financial insights into better business decisions.',
+    body: 'SHAAS helps business leaders improve financial performance, strengthen decision-making, enhance operational efficiency, and create long-term value through practical financial and strategic advisory solutions across planning, performance, growth, and corporate finance.',
   },
   {
-    num: '03', tag: 'Operations',
-    title: 'Administrative', sub: 'Excellence',
-    img: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1400&q=85',
-    location: 'Abu Dhabi Global Market',
-    dek: 'Architecting operational mastery — embedding efficiency and control at every layer.',
-    body: 'Administrative excellence means building organisations that run with precision. We redesign workflows, governance structures, and operating models to eliminate friction and create scalable high-performance enterprises.',
+    num: '03', tag: 'Management Consulting',
+    title: 'Management', sub: 'Consulting',
+    img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=85',
+    location: 'Abu Dhabi, UAE',
+    dek: 'Helping businesses improve performance and execute strategy.',
+    body: 'SHAAS works with organisations to improve operational effectiveness, execute strategic initiatives, manage transformation, and build the capabilities that support sustainable growth and measurable results.',
   },
   {
-    num: '04', tag: 'People',
-    title: 'Human', sub: 'Capital',
-    img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=85',
-    location: 'Al Maryah Island, Abu Dhabi',
-    dek: 'Cultivating extraordinary talent — the most enduring competitive advantage.',
-    body: 'Our practice covers talent strategy, leadership development, and culture transformation — creating the conditions for people to perform at their highest potential and organisations to thrive across generations.',
-  },
-  {
-    num: '05', tag: 'Systems',
-    title: 'Logistics', sub: 'Intelligence',
-    img: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1400&q=85',
-    location: 'Khalifa Port, Abu Dhabi',
-    dek: 'Optimising global supply networks — resilient, efficient, intelligently adaptive.',
-    body: 'We apply advanced analytics and network modelling to transform supply chains into strategic assets. Leveraging Abu Dhabi\'s world-class logistics infrastructure, we design distribution networks that deliver competitive advantage.',
+    num: '04', tag: 'Human Capital',
+    title: 'Human', sub: 'Capital Advisory',
+    img: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&q=85',
+    location: 'Abu Dhabi, UAE',
+    dek: 'Building organisations through people, capability, and leadership.',
+    body: 'SHAAS helps businesses build stronger workforce strategies, improve organisational effectiveness, develop leadership capabilities, and create HR frameworks that support long-term business growth.',
   },
 ]
 
@@ -387,8 +379,8 @@ export default function ShaasHeroV3() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <p className="v3-body-text" style={{ opacity: fade ? 1 : 0, margin: 0 }}>{s.body}</p>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <button className="v3-btn-p">Engage Now →</button>
-                  <button className="v3-btn-g">Case Studies</button>
+                  <a className="v3-btn-p" href="/contact" style={{ textDecoration:'none', display:'inline-flex', alignItems:'center' }}>Schedule a Consultation →</a>
+                  <a className="v3-btn-g" href="/services" style={{ textDecoration:'none', display:'inline-flex', alignItems:'center' }}>Explore Services</a>
                 </div>
               </div>
             </div>
@@ -404,7 +396,7 @@ export default function ShaasHeroV3() {
             <span style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#aaa', whiteSpace: 'nowrap' }}>Auto-advance</span>
           </div>
           <div className="v3-bottom-right">
-            <div className="v3-addr">ADGM Square · Al Maryah Island · Abu Dhabi</div>
+            <div className="v3-addr">Abu Dhabi · UAE</div>
             <div style={{ display: 'flex', gap: 16 }} className="v3-social">
               {['LinkedIn','X','Instagram'].map(n => <span key={n}>{n}</span>)}
             </div>

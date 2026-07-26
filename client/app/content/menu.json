@@ -1,0 +1,230 @@
+[
+ {
+  "slug": "legal-advisory",
+  "name": "Legal Advisory",
+  "accent": "#2f5e2f",
+  "href": "/legal-advisory",
+  "items": [
+   {
+    "title": "Corporate & Commercial Advisory",
+    "url": "/legal-advisory/corporate-commercial-advisory"
+   },
+   {
+    "title": "Commercial Contracts",
+    "url": "/legal-advisory/commercial-contracts"
+   },
+   {
+    "title": "External General Counsel",
+    "url": "/legal-advisory/external-general-counsel"
+   },
+   {
+    "title": "Corporate Governance",
+    "url": "/legal-advisory/corporate-governance"
+   },
+   {
+    "title": "Regulatory Compliance",
+    "url": "/legal-advisory/regulatory-compliance"
+   },
+   {
+    "title": "Legal Risk Management",
+    "url": "/legal-advisory/legal-risk-management"
+   },
+   {
+    "title": "Legal Health Check",
+    "url": "/legal-advisory/legal-health-check"
+   },
+   {
+    "title": "Mergers & Acquisitions (M&a)",
+    "url": "/legal-advisory/mergers-acquisitions"
+   },
+   {
+    "title": "Employment & HR Legal Advisory",
+    "url": "/legal-advisory/employment-hr-legal-advisory"
+   },
+   {
+    "title": "Family Business Advisory",
+    "url": "/legal-advisory/family-business-advisory"
+   },
+   {
+    "title": "Company Formation & Corporate Structuring",
+    "url": "/legal-advisory/company-formation-corporate-structuring"
+   },
+   {
+    "title": "Corporate Policies & Internal Documentation",
+    "url": "/legal-advisory/corporate-policies-internal-documentation"
+   }
+  ]
+ },
+ {
+  "slug": "business-advisory",
+  "name": "Business Advisory & Financial Consulting",
+  "accent": "#00aaff",
+  "href": "/business-advisory",
+  "items": [
+   {
+    "title": "Fractional CFO Services",
+    "url": "/business-advisory/fractional-cfo-services"
+   },
+   {
+    "title": "Business Strategy & Growth Advisory",
+    "url": "/business-advisory/business-strategy-growth-advisory"
+   },
+   {
+    "title": "Financial Planning & Analysis (FP&A)",
+    "url": "/business-advisory/financial-planning-analysis-fpa"
+   },
+   {
+    "title": "Financial Modelling & Business Valuation",
+    "url": "/business-advisory/financial-modelling-business-valuation"
+   },
+   {
+    "title": "Corporate Finance Advisory",
+    "url": "/business-advisory/corporate-finance-advisory"
+   },
+   {
+    "title": "Investor Readiness & Capital Raising",
+    "url": "/business-advisory/investor-readiness-capital-raising"
+   },
+   {
+    "title": "Business Performance Improvement",
+    "url": "/business-advisory/business-performance-improvement"
+   },
+   {
+    "title": "Strategic Planning",
+    "url": "/business-advisory/strategic-planning-services"
+   },
+   {
+    "title": "Budgeting & Forecasting",
+    "url": "/business-advisory/budgeting-forecasting-services"
+   },
+   {
+    "title": "Cash Flow & Working Capital Advisory",
+    "url": "/business-advisory/cash-flow-working-capital-advisory"
+   },
+   {
+    "title": "Business Transformation",
+    "url": "/business-advisory/business-transformation-services"
+   },
+   {
+    "title": "Risk Management & Internal Controls",
+    "url": "/business-advisory/risk-management-internal-controls"
+   },
+   {
+    "title": "Internal Audit Advisory",
+    "url": "/business-advisory/internal-audit-advisory"
+   },
+   {
+    "title": "Accounting Advisory",
+    "url": "/business-advisory/accounting-advisory-services"
+   },
+   {
+    "title": "Business Process Optimisation",
+    "url": "/business-advisory/business-process-optimisation"
+   },
+   {
+    "title": "ESG & Sustainability Advisory",
+    "url": "/business-advisory/esg-sustainability-advisory"
+   },
+   {
+    "title": "Family Office Advisory",
+    "url": "/business-advisory/family-office-advisory"
+   },
+   {
+    "title": "Mergers & Acquisitions Financial Advisory",
+    "url": "/business-advisory/mergers-acquisitions-financial-advisory"
+   }
+  ]
+ },
+ {
+  "slug": "human-capital-advisory",
+  "name": "Human Capital Advisory",
+  "accent": "#c79100",
+  "href": "/human-capital-advisory",
+  "items": [
+   {
+    "title": "HR Strategy & Workforce Planning",
+    "url": "/human-capital-advisory/hr-strategy-workforce-planning"
+   },
+   {
+    "title": "Organisation Design & Workforce Structuring/Restructuring",
+    "url": "/human-capital-advisory/organisation-design-workforce-structuring"
+   },
+   {
+    "title": "HR Policies, Procedures & Employee Handbook",
+    "url": "/human-capital-advisory/hr-policies-procedures-employee-handbook"
+   },
+   {
+    "title": "HR Compliance & Employment Advisory",
+    "url": "/human-capital-advisory/hr-compliance-employment-advisory"
+   },
+   {
+    "title": "Recruitment Advisory & Executive Search",
+    "url": "/human-capital-advisory/recruitment-advisory-executive-search"
+   },
+   {
+    "title": "Compensation & Benefits Advisory",
+    "url": "/human-capital-advisory/compensation-benefits-advisory"
+   },
+   {
+    "title": "Performance Management & KPI Frameworks",
+    "url": "/human-capital-advisory/performance-management-kpi-frameworks"
+   },
+   {
+    "title": "Talent Management & Succession Planning",
+    "url": "/human-capital-advisory/talent-management-succession-planning"
+   },
+   {
+    "title": "Learning & Leadership Development",
+    "url": "/human-capital-advisory/learning-leadership-development"
+   },
+   {
+    "title": "HR Transformation & HR Technology Advisory",
+    "url": "/human-capital-advisory/hr-transformation-technology-advisory"
+   }
+  ]
+ },
+ {
+  "slug": "management-consulting",
+  "name": "Management Consulting",
+  "accent": "#7b2fbf",
+  "href": "/management-consulting",
+  "items": [
+   {
+    "title": "Business Strategy Consulting",
+    "url": "/management-consulting/business-strategy-consulting"
+   },
+   {
+    "title": "Operational Excellence Consulting",
+    "url": "/management-consulting/operational-excellence-consulting"
+   },
+   {
+    "title": "Change Management Consulting",
+    "url": "/management-consulting/change-management-consulting"
+   },
+   {
+    "title": "Organisation Design & Development",
+    "url": "/management-consulting/organisation-design-development"
+   },
+   {
+    "title": "Growth & Expansion Advisory",
+    "url": "/management-consulting/growth-expansion-advisory"
+   },
+   {
+    "title": "Digital Transformation Advisory",
+    "url": "/management-consulting/digital-transformation-advisory"
+   },
+   {
+    "title": "Performance Improvement Consulting",
+    "url": "/management-consulting/performance-improvement-consulting"
+   },
+   {
+    "title": "Market Research & Business Intelligence",
+    "url": "/management-consulting/market-research-business-intelligence"
+   },
+   {
+    "title": "Project Management Advisory / PMO Support",
+    "url": "/management-consulting/project-management-advisory-pmo-support"
+   }
+  ]
+ }
+]

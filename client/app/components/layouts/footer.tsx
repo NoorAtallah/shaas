@@ -6,10 +6,22 @@ import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react'
 const BLUE = '#00aaff'
 const INK = '#0a0a0a'
 
-const navLinks = ['Home', 'About', 'Solutions', 'Contact']
+const serviceLinks = [
+  { label: 'Legal Advisory', href: '/legal-advisory' },
+  { label: 'Business & Financial Advisory', href: '/business-advisory' },
+  { label: 'Human Capital Advisory', href: '/human-capital-advisory' },
+  { label: 'Management Consulting', href: '/management-consulting' },
+]
+const companyLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'About Us', href: '/about' },
+  { label: 'All Services', href: '/services' },
+  { label: 'Insights', href: '/insights' },
+  { label: 'Contact Us', href: '/contact' },
+]
 
 const contact = [
-  { icon: Mail, label: 'info@shaas.ae', href: 'mailto:info@shaas.ae' },
+  { icon: Mail, label: 'info@shaas-consulting.ae', href: 'mailto:info@shaas-consulting.ae' },
   { icon: Phone, label: '+971 56 847 4217', href: 'tel:+971568474217' },
 ]
 
@@ -65,34 +77,35 @@ export default function ShaasFooter() {
           </div>
         </div>
 
-        {/* Nav */}
+        {/* Services */}
         <div className="flex-1 px-6 py-9 sm:px-8 sm:py-12 border-b sm:border-b-0 sm:border-r border-black/[0.08]">
           <div className="flex items-center gap-2 mb-5 text-[9px] uppercase text-[#aaa]" style={{ letterSpacing: '0.4em' }}>
             <span className="block w-3 h-px shrink-0" style={{ background: BLUE }} />
-            Navigate
+            Services
           </div>
           <nav className="flex flex-col">
-            {navLinks.map((link) => (
-              <motion.a
-                key={link}
-                href="#"
-                initial="rest"
-                whileHover="hover"
-                className="group flex items-center gap-1.5 py-1.5 text-[13px] font-light text-[#aaa] hover:text-[#0a0a0a] cursor-pointer"
-              >
-                <motion.span
-                  className="block h-px"
-                  style={{ background: BLUE }}
-                  variants={{ rest: { width: 0, opacity: 0 }, hover: { width: 10, opacity: 1 } }}
-                  transition={{ duration: 0.2 }}
-                />
-                {link}
-                <motion.span
-                  variants={{ rest: { opacity: 0, x: -3 }, hover: { opacity: 1, x: 0 } }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <ArrowUpRight size={12} style={{ color: BLUE }} />
-                </motion.span>
+            {serviceLinks.map((link) => (
+              <motion.a key={link.label} href={link.href} whileHover={{ x: 3 }} transition={{ duration: 0.2 }}
+                className="group flex items-center gap-1.5 py-1.5 text-[13px] font-light text-[#aaa] hover:text-[#0a0a0a] cursor-pointer">
+                {link.label}
+                <ArrowUpRight size={12} style={{ color: BLUE }} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+              </motion.a>
+            ))}
+          </nav>
+        </div>
+
+        {/* Company */}
+        <div className="flex-1 px-6 py-9 sm:px-8 sm:py-12 border-b sm:border-b-0 sm:border-r border-black/[0.08]">
+          <div className="flex items-center gap-2 mb-5 text-[9px] uppercase text-[#aaa]" style={{ letterSpacing: '0.4em' }}>
+            <span className="block w-3 h-px shrink-0" style={{ background: BLUE }} />
+            Company
+          </div>
+          <nav className="flex flex-col">
+            {companyLinks.map((link) => (
+              <motion.a key={link.label} href={link.href} whileHover={{ x: 3 }} transition={{ duration: 0.2 }}
+                className="group flex items-center gap-1.5 py-1.5 text-[13px] font-light text-[#aaa] hover:text-[#0a0a0a] cursor-pointer">
+                {link.label}
+                <ArrowUpRight size={12} style={{ color: BLUE }} className="opacity-0 group-hover:opacity-100 transition-opacity" />
               </motion.a>
             ))}
           </nav>

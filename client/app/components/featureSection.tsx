@@ -1,54 +1,14 @@
 'use client'
 
 const services = [
-  {
-    code: '7020039',
-    title: 'Innovation & AI Research and Consultancies',
-    icon: '◈',
-    desc: 'Harnessing artificial intelligence and cutting-edge research to drive transformative innovation across industries.',
-  },
-  {
-    code: '7320001',
-    title: 'Marketing Consultancy And Studies',
-    icon: '◇',
-    desc: 'Strategic marketing analysis and go-to-market frameworks tailored to the UAE and MENA markets.',
-  },
-  {
-    code: '7020020',
-    title: 'Consultancy Project Development',
-    icon: '△',
-    desc: 'End-to-end project development consultancy — from feasibility through delivery and operational handover.',
-  },
-  {
-    code: '0910018',
-    title: 'Onshore & Offshore Oil and Gas Fields and Facilities Services',
-    icon: '◉',
-    desc: 'Specialist consultancy for oil and gas infrastructure, operations optimisation, and regulatory compliance.',
-  },
-  {
-    code: '7020003',
-    title: 'Administrative Consultancy And Studies',
-    icon: '▣',
-    desc: 'Governance frameworks, organisational design, and operational excellence programmes for leading enterprises.',
-  },
-  {
-    code: '7020008',
-    title: 'Human Resources Consultancy',
-    icon: '○',
-    desc: 'Talent strategy, workforce planning, and HR transformation aligned with UAE Emiratisation objectives.',
-  },
-  {
-    code: '7020028',
-    title: 'Logistics Consultancy',
-    icon: '◻',
-    desc: "Supply chain optimisation and logistics network design leveraging Abu Dhabi's world-class infrastructure.",
-  },
-  {
-    code: '7220005',
-    title: 'Consultancy and Studies and Researches In Legal Sciences',
-    icon: '⬡',
-    desc: 'Legal research, regulatory advisory, and compliance studies across UAE federal and emirate-level frameworks.',
-  },
+  { code: '01', icon: '◈', href: '/business-advisory/fractional-cfo-services', title: 'Fractional CFO Services', desc: 'Senior financial leadership on a flexible basis — improving performance, cash flow, and decision-making.' },
+  { code: '02', icon: '◇', href: '/business-advisory/business-strategy-growth-advisory', title: 'Business Strategy & Growth Advisory', desc: 'Practical strategy and growth planning to help businesses scale with clarity and control.' },
+  { code: '03', icon: '⬡', href: '/legal-advisory/corporate-commercial-advisory', title: 'Corporate & Commercial Advisory', desc: 'Stronger corporate foundations — structuring, shareholder arrangements, and governance.' },
+  { code: '04', icon: '▣', href: '/legal-advisory/corporate-governance', title: 'Corporate Governance', desc: 'Governance frameworks that protect stakeholders and support professional, scalable organisations.' },
+  { code: '05', icon: '○', href: '/human-capital-advisory/hr-strategy-workforce-planning', title: 'HR Strategy & Workforce Planning', desc: 'Aligning your workforce with business strategy to improve capability and performance.' },
+  { code: '06', icon: '◻', href: '/human-capital-advisory/talent-management-succession-planning', title: 'Talent Management & Succession Planning', desc: 'Developing, retaining, and preparing the talent your organisation needs for the future.' },
+  { code: '07', icon: '△', href: '/management-consulting/operational-excellence-consulting', title: 'Operational Excellence Consulting', desc: 'Improving efficiency, processes, and operating models to unlock measurable performance gains.' },
+  { code: '08', icon: '◉', href: '/management-consulting/digital-transformation-advisory', title: 'Digital Transformation Advisory', desc: 'Helping businesses modernise operations and adopt technology that supports sustainable growth.' },
 ]
 
 export default function ShaasServicesSection() {
@@ -62,7 +22,7 @@ export default function ShaasServicesSection() {
         <div>
           <div className="flex items-center gap-2 text-[9px] tracking-[0.4em] uppercase text-[#00aaff] mb-3">
             <div className="w-5 h-0.5 bg-[#00aaff] shrink-0" />
-            Licensed Activities · Abu Dhabi
+            Our Expertise
           </div>
           <h2
             className="font-['Fraunces',serif] font-extrabold leading-[0.95] tracking-[-0.02em] text-[#0a0a0a] text-[52px] max-sm:text-[38px]"
@@ -74,21 +34,22 @@ export default function ShaasServicesSection() {
 
         <div className="text-right text-[9px] tracking-[0.35em] uppercase text-[#aaa] leading-[1.7] max-sm:text-left">
           <strong className="text-[#00aaff] block font-['Bebas_Neue',sans-serif] text-[13px] tracking-[0.15em] font-normal">
-            8 Services
+            8 Flagship Services
           </strong>
-          Registered &amp; Authorised
+          Across Four
           <br />
-          by Abu Dhabi Authorities
+          Advisory Practices
         </div>
       </div>
 
       {/* Grid */}
       <div className="grid grid-cols-4 max-[1024px]:grid-cols-3 max-[720px]:grid-cols-2 max-[480px]:grid-cols-1">
         {services.map((svc, i) => (
-          <div
-            key={svc.code}
+          <a
+            key={svc.title}
+            href={svc.href}
             className="
-              group relative overflow-hidden cursor-pointer
+              group relative overflow-hidden cursor-pointer no-underline
               px-7 pt-8 pb-7
               border-r border-b border-black/[0.07]
               transition-colors duration-[250ms]
@@ -134,7 +95,7 @@ export default function ShaasServicesSection() {
               <span className="w-4 h-px bg-current" />
               Learn More
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </section>

@@ -66,6 +66,8 @@ export default function ContactPage() {
   });
   const [selectedInquiry, setSelectedInquiry] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   function handleChange(
@@ -74,9 +76,28 @@ export default function ContactPage() {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSubmitted(true);
+    setErrorMsg(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, inquiryType: selectedInquiry ?? "" }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Something went wrong. Please try again.");
+      }
+      setSubmitted(true);
+      setForm({ name: "", company: "", email: "", phone: "", message: "" });
+      setSelectedInquiry(null);
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -323,8 +344,8 @@ export default function ContactPage() {
             {[
               {
                 label: "Email us at",
-                val: "dia@shaas-consulting.ae",
-                href: "mailto:dia@shaas-consulting.ae",
+                val: "info@shaas-consulting.ae",
+                href: "mailto:info@shaas-consulting.ae",
               },
               {
                 label: "Call us on",
@@ -611,9 +632,12 @@ export default function ContactPage() {
                   flexWrap: "wrap",
                 }}
               >
-                <button type="submit" className="ct-submit">
-                  Send Message ↗
+                <button type="submit" className="ct-submit" disabled={submitting} style={{ opacity: submitting ? 0.6 : 1, cursor: submitting ? "not-allowed" : "pointer" }}>
+                  {submitting ? "Sending…" : "Send Message ↗"}
                 </button>
+                {errorMsg && (
+                  <span style={{ fontSize: 12, color: "#c0392b", fontWeight: 400 }}>{errorMsg}</span>
+                )}
                 <span
                   style={{
                     fontSize: 10,

@@ -1,0 +1,6 @@
+{
+ "legal-advisory": { "name": "Legal Advisory", "tagline": "Protecting Your Business Through Strategic Legal Guidance", "accent": "#2f5e2f", "order": 1 },
+ "business-advisory": { "name": "Business Advisory & Financial Consulting", "tagline": "Turning Financial Intelligence Into Better Business Decisions", "accent": "#00aaff", "order": 2 },
+ "human-capital-advisory": { "name": "Human Capital Advisory", "tagline": "Building Stronger Organisations Through People, Capability, and Leadership", "accent": "#c79100", "order": 3 },
+ "management-consulting": { "name": "Management Consulting", "tagline": "Helping Businesses Improve Performance and Execute Strategy", "accent": "#7b2fbf", "order": 4 }
+}
