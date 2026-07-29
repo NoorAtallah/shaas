@@ -16,7 +16,7 @@ const companyLinks = [
   { label: 'Home', href: '/' },
   { label: 'About Us', href: '/about' },
   { label: 'All Services', href: '/services' },
-  { label: 'Insights', href: '/insights' },
+  // { label: 'Insights', href: '/insights' },
   { label: 'Contact Us', href: '/contact' },
 ]
 

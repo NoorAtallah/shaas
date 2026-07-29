@@ -22,14 +22,10 @@ function useInView(threshold = 0.15) {
 }
 
 const inquiryTypes = [
-  "Marketing Consultancy",
-  "Project Development",
-  "Administrative Studies",
-  "Human Resources",
-  "Logistics Consultancy",
-  "AI & Innovation",
-  "Oil & Gas Services",
-  "Legal Sciences",
+  "Legal Advisory",
+  "Business & Financial Advisory",
+  "Management Consulting",
+  "Human Capital Advisory",
   "General Inquiry",
 ];
 
@@ -340,7 +336,7 @@ export default function ContactPage() {
             className={`ct-fade${heroRef.inView ? " in" : ""}`}
             style={{ transitionDelay: "290ms" }}
           >
-            // In the hero contact links — replace the array:
+           
             {[
               {
                 label: "Email us at",
