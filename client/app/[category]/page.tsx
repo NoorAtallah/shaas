@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import CategoryPage from '../components/service/CategoryPage'
+import type { CategoryPageProps } from '../components/service/CategoryPage'
 import { categories, getCategory, getServices } from '../content/services'
 import mains from '../content/mains.json'
 
@@ -11,16 +12,28 @@ export function generateStaticParams() {
 }
 
 type Params = Promise<{ category: string }>
-type MainEntry = { subtitle: string; intro: string[] }
+type MainEntry = {
+  subtitle: string
+  intro: string[]
+  metaTitle?: string
+  metaDescription?: string
+} & Partial<
+  Pick<
+    CategoryPageProps,
+    'order' | 'narrative' | 'challenges' | 'solve' | 'servicesHeading' | 'servicesLead' | 'who' | 'industries' | 'approach' | 'why' | 'expect' | 'faqs' | 'closing'
+  >
+>
+
+const allMains = mains as unknown as Record<string, MainEntry>
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { category } = await params
   const cat = getCategory(category)
   if (!cat) return {}
-  const m = (mains as Record<string, MainEntry>)[category]
+  const m = allMains[category]
   return {
-    title: `${cat.name} Services UAE | SHAAS`,
-    description: m?.subtitle ?? cat.tagline,
+    title: m?.metaTitle ?? `${cat.name} Services UAE | SHAAS`,
+    description: m?.metaDescription ?? m?.subtitle ?? cat.tagline,
     alternates: { canonical: `/${category}` },
   }
 }
@@ -29,7 +42,7 @@ export default async function Page({ params }: { params: Params }) {
   const { category } = await params
   const cat = getCategory(category)
   if (!cat) notFound()
-  const m = (mains as Record<string, MainEntry>)[category]
+  const m = allMains[category]
   const catIndex = categories.findIndex((c) => c.slug === category)
   return (
     <CategoryPage
@@ -38,6 +51,19 @@ export default async function Page({ params }: { params: Params }) {
       intro={m?.intro ?? []}
       services={getServices(category)}
       catIndex={catIndex}
+      order={m?.order}
+      narrative={m?.narrative}
+      who={m?.who}
+      challenges={m?.challenges}
+      solve={m?.solve}
+      servicesHeading={m?.servicesHeading}
+      servicesLead={m?.servicesLead}
+      industries={m?.industries}
+      approach={m?.approach}
+      why={m?.why}
+      expect={m?.expect}
+      faqs={m?.faqs}
+      closing={m?.closing}
     />
   )
 }
