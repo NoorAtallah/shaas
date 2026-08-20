@@ -115,18 +115,18 @@ export default function ShaasCTA() {
 
           <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '80ms' }}>
             <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 800, fontSize: 'clamp(40px, 5vw, 68px)', lineHeight: 0.92, letterSpacing: '-0.025em', color: INK }}>
-              Let's build
+              Ready to take your business
             </div>
           </div>
           <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '150ms', marginBottom: 32 }}>
             <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 300, fontStyle: 'italic', fontSize: 'clamp(40px, 5vw, 68px)', lineHeight: 0.92, letterSpacing: '-0.025em', color: BLUE }}>
-              something great.
+              to the next level?
             </div>
           </div>
 
           <div className={`cta-reveal${inView ? ' visible' : ''}`} style={{ transitionDelay: '220ms', marginBottom: 36 }}>
             <p style={{ fontFamily: "'Fraunces', serif", fontStyle: 'italic', fontSize: 14, color: '#999', lineHeight: 1.7, maxWidth: 380, margin: 0, fontWeight: 300 }}>
-              Reach out to our Abu Dhabi team and discover how SHAAS can elevate your enterprise across all eight of our licensed disciplines.
+              Whether you are looking to grow, transform, improve performance, manage risks, or prepare for future opportunities, SHAAS provides the advisory expertise and practical solutions to help your organisation succeed.
             </p>
           </div>
 

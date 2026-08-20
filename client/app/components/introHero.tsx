@@ -173,46 +173,7 @@ export default function IntroHero() {
         </div>
 
         {/* pillar strip */}
-        <motion.div
-          variants={rise}
-          className="mt-16 grid grid-cols-1 border-t sm:grid-cols-2 lg:grid-cols-4"
-          style={{ borderColor: INK }}
-        >
-          {pillars.map(({ icon: Icon, label, href }, i) => (
-            <motion.a
-              key={label}
-              href={href}
-              whileHover={{ backgroundColor: 'rgba(0,170,255,0.03)' }}
-              transition={{ duration: 0.25 }}
-              className="group relative flex items-center gap-4 px-5 py-7 lg:px-7"
-              style={{
-                borderRight: i === pillars.length - 1 ? 'none' : '1px solid rgba(0,0,0,0.08)',
-              }}
-            >
-              <span
-                className="text-[11px]"
-                style={{ fontFamily: DISPLAY, letterSpacing: '0.2em', color: '#ccc' }}
-              >
-                0{i + 1}
-              </span>
-              <Icon
-                size={17}
-                strokeWidth={1.4}
-                className="text-neutral-300 transition-colors duration-300 group-hover:text-[#00aaff]"
-              />
-              <span
-                className="flex-1 text-[13px] leading-tight"
-                style={{ fontFamily: SERIF, fontWeight: 800 }}
-              >
-                {label}
-              </span>
-              <ArrowRight
-                size={13}
-                className="text-neutral-200 transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#00aaff]"
-              />
-            </motion.a>
-          ))}
-        </motion.div>
+  
 
         {/* scroll cue */}
         <motion.div

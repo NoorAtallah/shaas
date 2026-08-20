@@ -346,17 +346,7 @@ export default function ShaasHeroV3() {
                 <div className="v3-svc-arr">→</div>
               </div>
             ))}
-            <div className="v3-sidebar-stats">
-              {[['500+','Projects'],['98%','Satisfaction'],['15+','Years'],['50+','Partners']].map(([v,l],i) => (
-                <div className="v3-ss-cell" key={i}>
-                  <div className="v3-ss-val" style={{ color: i === 3 ? BLUE : INK }}>
-                    {v.replace(/[^0-9]/g,'')}
-                    <span className="v3-ss-sym">{v.replace(/[0-9]/g,'')}</span>
-                  </div>
-                  <div className="v3-ss-lbl">{l}</div>
-                </div>
-              ))}
-            </div>
+          
           </div>
 
           <div className="v3-content">
