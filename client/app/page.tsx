@@ -9,6 +9,7 @@ import IndustriesSection from "./components/industriesSection";
 import WhyShaasSection from "./components/whyShaasSection";
 import ApproachSection from "./components/approachSection";
 import SplineBreakerSection from "./components/breakerSection";
+import ClientsSection from "./components/clientsSection";
 import FinalSection from "./components/finalSection";
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <WhoWeSupportSection />
       <IndustriesSection />
       <WhyShaasSection />
+      <ClientsSection />
       <ApproachSection />
       {/* <BenefitsSection /> */}
       <SplineBreakerSection />
